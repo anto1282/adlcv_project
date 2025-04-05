@@ -1,1 +1,1 @@
-from .models import UNetWrapper, TextAdapter
+from .models import UNetWrapper, TextAdapter, MultiScaleControlNet

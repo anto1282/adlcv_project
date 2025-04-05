@@ -340,5 +340,42 @@ class FrozenCLIPEmbedder(nn.Module):
         return z
 
     def encode(self, text):
+
         return self(text)
-    
+
+
+import torch.nn.functional as F
+
+class MultiScaleControlNet(nn.Module):
+    def __init__(self, in_channels=1, base_channels=64):
+        super().__init__()
+
+        self.conv16 = nn.Sequential(
+            nn.Conv2d(in_channels, base_channels, 3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(base_channels, 320, 3, padding=1)
+        )
+
+        self.conv32 = nn.Sequential(
+            nn.Conv2d(in_channels, base_channels, 3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(base_channels, 790, 3, padding=1)
+        )
+
+        self.conv64 = nn.Sequential(
+            nn.Conv2d(in_channels, base_channels, 3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(base_channels, 1430, 3, padding=1)
+        )
+
+    def forward(self, x):
+        # x is the box map: shape [B, 1, H, W]
+        control_16 = F.interpolate(x, scale_factor=1/32, mode='bilinear', align_corners=False)
+        control_32 = F.interpolate(x, scale_factor=1/16, mode='bilinear', align_corners=False)
+        control_64 = F.interpolate(x, scale_factor=1/8, mode='bilinear', align_corners=False)
+
+        out16 = self.conv16(control_16)
+        out32 = self.conv32(control_32)
+        out64 = self.conv64(control_64)
+
+        return [out16, out32, out64]

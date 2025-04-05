@@ -13,7 +13,7 @@ from omegaconf import OmegaConf
 from einops import rearrange, repeat
 import os
 from ldm.util import instantiate_from_config
-from vpd import UNetWrapper, TextAdapter
+from vpd import UNetWrapper, TextAdapter, MultiScaleControlNet
 
 
 @SEGMENTORS.register_module()
@@ -48,6 +48,7 @@ class VPDSeg(BaseSegmentor):
         sd_model = instantiate_from_config(config.model)
         self.encoder_vq = sd_model.first_stage_model
         self.unet = UNetWrapper(sd_model.model, **unet_config)
+        self.control_net = MultiScaleControlNet()
         sd_model.model = None
         sd_model.first_stage_model = None
         del sd_model.cond_stage_model
@@ -87,18 +88,37 @@ class VPDSeg(BaseSegmentor):
             else:
                 self.auxiliary_head = builder.build_head(auxiliary_head)
 
-    def extract_feat(self, img):
-        """Extract features from images."""
+    def extract_feat(self, img, boxes=None):
+        """Extract features from images and apply control if boxes are provided."""
         with torch.no_grad():
             latents = self.encoder_vq.encode(img)
         latents = latents.mode().detach()
 
-        c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma) # NOTE: here the c_crossattn should be expand_dim as latents
-        
-        t = torch.ones((img.shape[0],), device=img.device).long()
-        outs = self.unet(latents, t, c_crossattn=[c_crossattn])
-        return outs
+        # Get box-derived control features
+        if boxes is not None:
+            box_map = self.make_box_map(boxes, img.shape[-2:], img.device)
+            control_feats = self.control_net(box_map)
+        else:
+            control_feats = None
 
+        # Cross-attention conditioning
+        c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma)
+        t = torch.ones((img.shape[0],), device=img.device).long()
+
+        # Send latents, context, and control to UNet
+        outs = self.unet(latents, t, c_crossattn=[c_crossattn], control=control_feats)
+        return outs
+    
+    def make_box_map(self, boxes, img_size, device):
+        """Convert bounding boxes to binary control maps (1 channel)."""
+        B, H, W = len(boxes), *img_size
+        maps = torch.zeros((B, 1, H, W), device=device)
+
+        for i, bboxes in enumerate(boxes):  # boxes[i] = [N, 4] in xyxy format
+            for box in bboxes:
+                x1, y1, x2, y2 = box.int()
+                maps[i, 0, y1:y2, x1:x2] = 1.0
+        return maps
     def _decode_head_forward_train(self, x, img_metas, gt_semantic_seg):
         """Run forward function and calculate loss for decode head in
         training."""
@@ -139,7 +159,7 @@ class VPDSeg(BaseSegmentor):
 
         return seg_logit
 
-    def forward_train(self, img, img_metas, gt_semantic_seg):
+    def forward_train(self, img, img_metas, gt_semantic_seg, gt_bboxes=None):
         """Forward function for training.
 
         Args:
@@ -156,7 +176,7 @@ class VPDSeg(BaseSegmentor):
             dict[str, Tensor]: a dictionary of loss components
         """
 
-        x = self.extract_feat(img)
+        x = self.extract_feat(img, boxes=gt_bboxes)
 
         if self.with_neck:
             x = self.neck(x)
