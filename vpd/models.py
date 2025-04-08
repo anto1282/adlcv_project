@@ -194,8 +194,6 @@ def register_hier_output(model):
             # import pdb; pdb.set_trace()
             h = module(h, emb, context)
             if control is not None and i in [1, 4, 7]:
-                print(h.shape)
-                print(control[ctrl_id].shape)
                 h = h + control[ctrl_id]
                 ctrl_id += 1
             hs.append(h)

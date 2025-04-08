@@ -29,6 +29,7 @@ class VPDSeg(BaseSegmentor):
 
     def __init__(self,
                  decode_head,
+                 base_size = 512,
                  sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
                  sd_config = "../stable-diffusion/configs/stable-diffusion/v1-inference.yaml",
                  unet_config=dict(),
@@ -48,7 +49,7 @@ class VPDSeg(BaseSegmentor):
         # prepare the unet        
         sd_model = instantiate_from_config(config.model)
         self.encoder_vq = sd_model.first_stage_model
-        self.unet = UNetWrapper(sd_model.model, **unet_config)
+        self.unet = UNetWrapper(sd_model.model, base_size=base_size,**unet_config)
         self.control_net = MultiScaleControlNet()
         sd_model.model = None
         sd_model.first_stage_model = None
@@ -102,6 +103,8 @@ class VPDSeg(BaseSegmentor):
             control_feats = self.control_net(box_map)
             for i, feat in enumerate(control_feats):
                 print(f"[control_feats[{i}]] requires_grad: {feat.requires_grad}, grad_fn: {feat.grad_fn}")
+
+            
         else:
             control_feats = None
         

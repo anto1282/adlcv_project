@@ -1,0 +1,26 @@
+Loaded dependency [python3/3.11.4]: gcc/12.3.0-binutils-2.40
+Loaded dependency [python3/3.11.4]: sqlite3/3.42.0
+Loaded module: python3/3.11.4
+
+Loading python3/3.11.4
+  Loading requirement: gcc/12.3.0-binutils-2.40 sqlite3/3.42.0
+Loaded module: cuda/11.3
+/dtu/blackhole/0e/154958/miniconda3/envs/ldm/lib/python3.8/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/dtu/blackhole/0e/154958/miniconda3/envs/ldm/lib/python3.8/site-packages/mmseg/models/losses/cross_entropy_loss.py:235: UserWarning: Default ``avg_non_ignore`` is False, if you would like to ignore the certain label and average loss over non-ignore labels, which is the same with PyTorch official cross_entropy, set ``avg_non_ignore=True``.
+  warnings.warn(
+Epoch 1/5:   0%|          | 0/732 [00:00<?, ?it/s]/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/train_controlnet.py:162: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  gt_segs = torch.stack([torch.tensor(seg, dtype=torch.long) for seg in segs]).to(DEVICE)
+Epoch 1/5:   0%|          | 0/732 [00:00<?, ?it/s, loss=9.09]Epoch 1/5:   0%|          | 0/732 [00:00<?, ?it/s, loss=9.09]
+Traceback (most recent call last):
+  File "/dtu/blackhole/0e/154958/miniconda3/envs/ldm/lib/python3.8/runpy.py", line 194, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/dtu/blackhole/0e/154958/miniconda3/envs/ldm/lib/python3.8/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/train_controlnet.py", line 198, in <module>
+    pred_logits = model.simple_test(imgs, img_metas, rescale=True)
+  File "/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/models/vpd_seg.py", line 321, in simple_test
+    seg_logit = self.inference(img, img_meta, rescale)
+  File "/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/models/vpd_seg.py", line 300, in inference
+    assert self.test_cfg.mode in ['slide', 'whole']
+AttributeError: 'NoneType' object has no attribute 'mode'
