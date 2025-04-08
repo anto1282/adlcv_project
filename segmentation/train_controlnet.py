@@ -1,34 +1,35 @@
+import torch.utils.checkpoint
+
+def safe_no_checkpoint(fn, inputs, params=None, flag=None):
+    if isinstance(inputs, tuple):
+        return fn(*inputs)
+    else:
+        return fn(inputs)
+
+torch.utils.checkpoint.checkpoint = safe_no_checkpoint
+print("[🚫] Overrode torch.utils.checkpoint.checkpoint globally")
+
+import ldm.modules.diffusionmodules.util as diffusion_utils
+
+# ✅ Monkey-patched checkpoint function
+def safe_checkpoint(run_function, inputs, params, flag):
+    if not flag or all(not p.requires_grad for p in params):
+        # No checkpointing needed: skip gradient tracking
+        with torch.no_grad():
+            return run_function(*inputs)
+    else:
+        return diffusion_utils.CheckpointFunction.apply(run_function, len(inputs), *(inputs + params))
+
+# ✅ Apply the monkey patch
+diffusion_utils.checkpoint = safe_checkpoint
+print("[✅] Monkey-patched checkpoint() to safely skip unused gradients")
+
+
+import functools
 import torch
 import torch.nn.functional as F
 import mmseg.models.decode_heads.decode_head as decode_head_module
-
-import traceback
-
-# def safe_resize(input,
-#                 size=None,
-#                 scale_factor=None,
-#                 mode='nearest',
-#                 align_corners=None,
-#                 warning=True):
-#     if isinstance(size, torch.Size):
-#         size = tuple(size)
-#     elif isinstance(size, int):
-#         size = (size, size)
-#     elif isinstance(size, (list, tuple)) and len(size) == 1:
-#         print(f"\n[💥 BAD SIZE DETECTED] size={size}, converting to {(size[0], size[0])}")
-#         traceback.print_stack(limit=5)  # show where this came from
-#         size = (size[0], size[0])
-#     elif isinstance(size, (list, tuple)) and len(size) > 2:
-#         size = tuple(size[:2])
-
-#     print(f"[DEBUG resize] input.shape={input.shape}, size={size}")
-#     return F.interpolate(input, size=size, scale_factor=scale_factor, mode=mode, align_corners=align_corners)
-
-
-# # ⚠️ Patch the resize used directly in decode_head.py
-# decode_head_module.resize = safe_resize
-# print("[INFO] decode_head.resize monkey-patched ✅")
-
+import types
 
 from torchvision import transforms
 from segmentation.dataloader.voc_dataloader import VOCDatasetWithBBoxes
@@ -118,23 +119,6 @@ transform = transforms.Compose([
 train_dataset = VOCDatasetWithBBoxes(root_dir='/work3/s203557/data/VOCdevkit/VOC2012', split='train', transform=transform)
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=lambda x: tuple(zip(*x)))
 
-import ldm.modules.diffusionmodules.util as diffusion_utils
-
-def no_checkpoint(fn, *args, **kwargs):
-    if isinstance(fn, types.FunctionType) or isinstance(fn, types.MethodType):
-        return fn(*args, **kwargs)
-    else:
-        # Some modules may wrap the function with extra metadata, so we try calling `fn.forward`
-        return fn.forward(*args, **kwargs)
-
-diffusion_utils.checkpoint = no_checkpoint
-print("[✅] Patched checkpoint: disabled globally")
-
-import ldm.modules.diffusionmodules.util as diffusion_utils
-
-diffusion_utils.checkpoint = no_checkpoint
-print("[✅] Patched: Gradient checkpointing globally disabled")
-
 # --- Model ---
 model = VPDSeg(base_size = IMG_SIZE[0],
     decode_head=dict(
@@ -159,16 +143,15 @@ model = VPDSeg(base_size = IMG_SIZE[0],
 
 )
 
-
-diffusion_utils.checkpoint = no_checkpoint
-print("[🚫] Disabled gradient checkpointing globally in Stable Diffusion")
-
-
 for name, param in model.named_parameters():
     param.requires_grad = False
 
 for name, param in model.control_net.named_parameters():
     param.requires_grad = True
+
+
+trainable = [name for name, p in model.named_parameters() if p.requires_grad]
+print(f"[🧠 Trainable Params]: {trainable}")
 
 
 checkpoint = torch.load("/work3/s203557/checkpoints/vpd.chkpt", map_location=DEVICE)
@@ -177,7 +160,6 @@ print("✅ Loaded pretrained VPD weights")
 
 model.to(DEVICE)
 model.train()
-
 
 optimizer = torch.optim.AdamW(
     filter(lambda p: p.requires_grad, model.parameters()),
@@ -211,8 +193,10 @@ for epoch in range(NUM_EPOCHS):
 
         loss_dict = model.forward_train(imgs, img_metas=img_metas,
                                         gt_semantic_seg=gt_segs, gt_bboxes=batch_boxes)
+        
         loss = sum(loss_dict.values())
-
+        for k, v in loss_dict.items():
+            print(f"{k}: requires_grad={v.requires_grad}, grad_fn={v.grad_fn}")
         
 
         loss.backward()

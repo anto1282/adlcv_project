@@ -101,8 +101,6 @@ class VPDSeg(BaseSegmentor):
             box_map = self.make_box_map(boxes, img.shape[-2:], img.device)
             control_feats = self.control_net(box_map)
             control_feats = self.control_net(box_map)
-            for i, feat in enumerate(control_feats):
-                print(f"[control_feats[{i}]] requires_grad: {feat.requires_grad}, grad_fn: {feat.grad_fn}")
 
             
         else:
