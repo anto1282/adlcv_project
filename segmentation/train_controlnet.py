@@ -11,18 +11,16 @@ print("[🚫] Overrode torch.utils.checkpoint.checkpoint globally")
 
 import ldm.modules.diffusionmodules.util as diffusion_utils
 
-# ✅ Monkey-patched checkpoint function
 def safe_checkpoint(run_function, inputs, params, flag):
-    if not flag or all(not p.requires_grad for p in params):
-        # No checkpointing needed: skip gradient tracking
-        with torch.no_grad():
-            return run_function(*inputs)
+    # Only checkpoint if any parameter requires gradients
+    requires_grad = any(p.requires_grad for p in params)
+    if not flag or not requires_grad:
+        return run_function(*inputs)
     else:
         return diffusion_utils.CheckpointFunction.apply(run_function, len(inputs), *(inputs + params))
 
-# ✅ Apply the monkey patch
 diffusion_utils.checkpoint = safe_checkpoint
-print("[✅] Monkey-patched checkpoint() to safely skip unused gradients")
+print("[✅] Monkey-patched checkpoint with gradient-safe fallback")
 
 
 import functools
@@ -195,8 +193,7 @@ for epoch in range(NUM_EPOCHS):
                                         gt_semantic_seg=gt_segs, gt_bboxes=batch_boxes)
         
         loss = sum(loss_dict.values())
-        for k, v in loss_dict.items():
-            print(f"{k}: requires_grad={v.requires_grad}, grad_fn={v.grad_fn}")
+
         
 
         loss.backward()
