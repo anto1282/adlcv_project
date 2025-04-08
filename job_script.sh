@@ -20,4 +20,4 @@ module load cuda/11.3
 source /dtu/blackhole/0e/154958/miniconda3/bin/activate ldm
 
 
-python single_inference.py 
+python -m segmentation.train_controlnet

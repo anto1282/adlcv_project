@@ -168,7 +168,7 @@ class AttentionStore(AttentionControl):
 def register_hier_output(model):
     self = model.diffusion_model
     from ldm.modules.diffusionmodules.util import checkpoint, timestep_embedding
-    def forward(x, timesteps=None, context=None, y=None,**kwargs):
+    def forward(x, timesteps=None, context=None, y=None,control = None,**kwargs):
         """
         Apply the model to an input batch.
         :param x: an [N x C x ...] Tensor of inputs.
@@ -189,10 +189,17 @@ def register_hier_output(model):
             emb = emb + self.label_emb(y)
 
         h = x.type(self.dtype)
-        for module in self.input_blocks:
+        ctrl_id = 0
+        for i,module in enumerate(self.input_blocks):
             # import pdb; pdb.set_trace()
             h = module(h, emb, context)
+            if control is not None and i in [1, 4, 7]:
+                print(h.shape)
+                print(control[ctrl_id].shape)
+                h = h + control[ctrl_id]
+                ctrl_id += 1
             hs.append(h)
+
         h = self.middle_block(h, emb, context)
         out_list = []
 
@@ -350,10 +357,15 @@ class MultiScaleControlNet(nn.Module):
     def __init__(self, in_channels=1, base_channels=64):
         super().__init__()
 
-        self.conv16 = nn.Sequential(
+        # These now correspond to the reversed order: 64 → 32 → 16
+        self.adapter64 = nn.Conv2d(1430, 1280, 1)  # for input_block[7]
+        self.adapter32 = nn.Conv2d(790, 640, 1)    # for input_block[4]
+        self.adapter16 = nn.Conv2d(320, 320, 1)    # for input_block[1]
+
+        self.conv64 = nn.Sequential(
             nn.Conv2d(in_channels, base_channels, 3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(base_channels, 320, 3, padding=1)
+            nn.Conv2d(base_channels, 1430, 3, padding=1)
         )
 
         self.conv32 = nn.Sequential(
@@ -362,20 +374,21 @@ class MultiScaleControlNet(nn.Module):
             nn.Conv2d(base_channels, 790, 3, padding=1)
         )
 
-        self.conv64 = nn.Sequential(
+        self.conv16 = nn.Sequential(
             nn.Conv2d(in_channels, base_channels, 3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(base_channels, 1430, 3, padding=1)
+            nn.Conv2d(base_channels, 320, 3, padding=1)
         )
 
     def forward(self, x):
-        # x is the box map: shape [B, 1, H, W]
-        control_16 = F.interpolate(x, scale_factor=1/32, mode='bilinear', align_corners=False)
-        control_32 = F.interpolate(x, scale_factor=1/16, mode='bilinear', align_corners=False)
-        control_64 = F.interpolate(x, scale_factor=1/8, mode='bilinear', align_corners=False)
+        # Downsample to match spatial sizes of blocks 1, 4, 7
+        ctrl_64 = F.interpolate(x, scale_factor=1/32,  mode='bilinear', align_corners=False)
+        ctrl_32 = F.interpolate(x, scale_factor=1/16, mode='bilinear', align_corners=False)
+        ctrl_16 = F.interpolate(x, scale_factor=1/8, mode='bilinear', align_corners=False)
 
-        out16 = self.conv16(control_16)
-        out32 = self.conv32(control_32)
-        out64 = self.conv64(control_64)
+        out64 = self.adapter64(self.conv64(ctrl_64))  # 1280
+        out32 = self.adapter32(self.conv32(ctrl_32))  # 640
+        out16 = self.adapter16(self.conv16(ctrl_16))  # 320
 
-        return [out16, out32, out64]
+        return [out16, out32, out64]  # correct order for input_blocks [1, 4, 7]
+

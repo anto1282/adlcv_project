@@ -1,15 +1,15 @@
 _base_ = [
-    '../_base_/datasets/pascal_voc12.py',  # customize to use bbox maps
-    '../_base_/default_runtime.py',
-    '../_base_/schedules/schedule_20k.py'
+    './_base_/datasets/voc12_controlnet.py',  # customize to use bbox maps
+    './_base_/default_runtime.py',
+    './_base_/schedules/schedule_40k.py'
 ]
 
 norm_cfg = dict(type='SyncBN', requires_grad=True)
 
 model = dict(
     type='EncoderDecoder',
-    backbone=dict(  # Replace with your VPD + ControlNet wrapper
-        type='VPDControlNetBackbone',
+    backbone=dict(  
+        type='VPDSeg',
         controlnet=dict(
             type='MultiScaleControlNet',
             in_channels=1,  # assuming grayscale bbox map
@@ -99,4 +99,4 @@ runner = dict(type='IterBasedRunner', max_iters=20000)
 
 checkpoint_config = dict(by_epoch=False, interval=2000)
 evaluation = dict(interval=2000, metric='mIoU')
-
+work_dir = "./workdirs/"

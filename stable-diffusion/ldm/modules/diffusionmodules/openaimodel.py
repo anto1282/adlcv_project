@@ -735,7 +735,7 @@ class UNetModel(nn.Module):
             h = module(h, emb, context)
 
             # Inject control at selected input blocks
-            if control is not None and i in [1, 2, 3]:  # customize layers
+            if control is not None and i in [1, 4, 7]:  # customize layers
                 h = h + control[ctrl_id]
                 ctrl_id += 1
 

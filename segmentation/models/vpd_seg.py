@@ -9,9 +9,11 @@ from mmseg.models.builder import SEGMENTORS
 from mmseg.models.segmentors.base import BaseSegmentor
 
 import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from omegaconf import OmegaConf
 from einops import rearrange, repeat
-import os
 from ldm.util import instantiate_from_config
 from vpd import UNetWrapper, TextAdapter, MultiScaleControlNet
 
@@ -27,10 +29,10 @@ class VPDSeg(BaseSegmentor):
 
     def __init__(self,
                  decode_head,
-                 sd_path='checkpoints/ddpm.chkpt',
+                 sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
                  sd_config = "../stable-diffusion/configs/stable-diffusion/v1-inference.yaml",
                  unet_config=dict(),
-                 class_embedding_path='./class_embeddings.pth',
+                 class_embedding_path='/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/class_embeddings.pth',
                  gamma_init_value=1e-4,
                  neck=None,
                  auxiliary_head=None,
@@ -39,7 +41,6 @@ class VPDSeg(BaseSegmentor):
                  init_cfg=None,
                  **args):
         super().__init__(init_cfg)
-        print(os.getcwd())
         config = OmegaConf.load(sd_config)
         config.model.params.ckpt_path = f'{sd_path}'
         config.model.params.cond_stage_config.target = 'ldm.modules.encoders.modules.AbstractEncoder'
@@ -98,9 +99,12 @@ class VPDSeg(BaseSegmentor):
         if boxes is not None:
             box_map = self.make_box_map(boxes, img.shape[-2:], img.device)
             control_feats = self.control_net(box_map)
+            control_feats = self.control_net(box_map)
+            for i, feat in enumerate(control_feats):
+                print(f"[control_feats[{i}]] requires_grad: {feat.requires_grad}, grad_fn: {feat.grad_fn}")
         else:
             control_feats = None
-
+        
         # Cross-attention conditioning
         c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma)
         t = torch.ones((img.shape[0],), device=img.device).long()
@@ -119,6 +123,7 @@ class VPDSeg(BaseSegmentor):
                 x1, y1, x2, y2 = box.int()
                 maps[i, 0, y1:y2, x1:x2] = 1.0
         return maps
+    
     def _decode_head_forward_train(self, x, img_metas, gt_semantic_seg):
         """Run forward function and calculate loss for decode head in
         training."""
