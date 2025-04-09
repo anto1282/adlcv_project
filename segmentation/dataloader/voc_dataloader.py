@@ -7,6 +7,52 @@ from torchvision import transforms
 from torchvision.transforms import functional as TF
 from torchvision.ops import masks_to_boxes
 
+class VOCDataset(Dataset):
+    def __init__(self, root_dir, split="train", transform=None, img_size=(512, 512)):
+        self.img_size = img_size
+        self.root_dir = root_dir
+        self.to_tensor = transforms.ToTensor()
+        self.image_dir = os.path.join(root_dir, "JPEGImages")
+        self.mask_dir = os.path.join(root_dir, "SegmentationClass")
+        self.transform = transform
+
+        # Load file list
+        split_file = os.path.join(root_dir, "ImageSets", "Segmentation", f"{split}.txt")
+        with open(split_file, "r") as f:
+            self.file_names = [x.strip() for x in f.readlines()]
+
+        # PASCAL VOC classes (background is 0)
+        self.classes = [
+            'background', 'aeroplane', 'bicycle', 'bird', 'boat',
+            'bottle', 'bus', 'car', 'cat', 'chair', 'cow', 'diningtable',
+            'dog', 'horse', 'motorbike', 'person', 'pottedplant',
+            'sheep', 'sofa', 'train', 'tvmonitor'
+        ]
+
+    def __len__(self):
+        return len(self.file_names)
+
+    def __getitem__(self, idx):
+        name = self.file_names[idx]
+
+        # Load image and mask
+        img_path = os.path.join(self.image_dir, f"{name}.jpg")
+        mask_path = os.path.join(self.mask_dir, f"{name}.png")
+        image = Image.open(img_path).convert("RGB")
+
+        mask = Image.open(mask_path)              # Load color PNG mask
+        mask = mask.resize(self.img_size, Image.NEAREST)  # Resize safely
+        mask = np.array(mask)                     # Now shape is [H, W]
+        mask = torch.from_numpy(mask).long()      # Convert to torch tensor
+
+        if self.transform:
+            image = self.transform(image)
+        else:
+            image = self.to_tensor(image)
+
+        return image, mask
+
+
 class VOCDatasetWithBBoxes(Dataset):
     def __init__(self, root_dir, split="train", transform=None, img_size = (512,512)):
         self.img_size = img_size
