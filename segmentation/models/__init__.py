@@ -1,1 +1,1 @@
-from .vpd_seg import VPDSeg
+from .vpd_seg_og import VPDSeg

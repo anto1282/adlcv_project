@@ -1,9 +1,10 @@
 # configs/vpd/vpd_voc12.py
 
+
 _base_ = [
-    '../_base_/models/fpn_r50.py',
-    '../_base_/default_runtime.py',
-    '../_base_/schedules/schedule_40k.py',
+    '/work3/s204201/adlcv_project/segmentation/configs/_base_/models/fpn_r50.py',
+    '/work3/s204201/adlcv_project/segmentation/configs/_base_/default_runtime.py',
+    '/work3/s204201/adlcv_project/segmentation/configs/_base_/schedules/schedule_40k.py'
 ]
 
 dataset_type = 'PascalVOCDataset'

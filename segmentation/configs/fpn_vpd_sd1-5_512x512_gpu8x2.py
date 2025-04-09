@@ -1,7 +1,13 @@
+
+import sys 
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
 _base_ = [
-    '../_base_/datasets/pascal_voc12.py',  # customize to use bbox maps
-    '../_base_/default_runtime.py',
-    '../_base_/schedules/schedule_20k.py'
+    '/work3/s204201/adlcv_project/segmentation/configs/_base_/datasets/voc_vpd.py',  # customize to use bbox maps
+    '/work3/s204201/adlcv_project/segmentation/configs/_base_/default_runtime.py',
+    '/work3/s204201/adlcv_project/segmentation/configs/_base_/schedules/schedule_40k.py'
 ]
 
 norm_cfg = dict(type='SyncBN', requires_grad=True)

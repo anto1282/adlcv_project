@@ -12,107 +12,37 @@ from mmcv.runner import load_checkpoint
 from mmcv import ConfigDict
 from mmseg.models import build_segmentor
 from mmseg.models.builder import SEGMENTORS
+from tqdm import tqdm
+import matplotlib.pyplot as plt
+
 
 # -------------------------------
-# In segmentation/models/vpd_seg.py
+# Add the parent directory to the Python path to allow imports from sibling modules
 # -------------------------------
-# Ensure you use __file__ instead of _file_
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+# Import custom segmentation model and dataset
+from segmentation.models.vpd_seg_og import VPDSeg
+from segmentation.dataloader.voc_dataloader import VOCDatasetWithBBoxes
 import torch.nn as nn
-
-class VPDSeg(nn.Module):
-    def __init__(self, **kwargs):
-        super(VPDSeg, self).__init__()
-        # Your initialization code here...
-        # For demonstration, we create a dummy layer
-        self.conv = nn.Conv2d(3, 21, kernel_size=1)
-
-    def forward(self, img, img_metas, **kwargs):
-        # Dummy forward: Assume each image in img is a tensor of shape [C, H, W]
-        outputs = []
-        for x in img:
-            # Process image through a dummy convolution and expand dims to mimic [1, C, H, W]
-            out = self.conv(x.unsqueeze(0))
-            outputs.append(out)
-        return outputs
-
-# -------------------------------
-# Register the custom model if not already registered
-# -------------------------------
-SEGMENTORS.register_module(module=VPDSeg)
-
-# -------------------------------
-# Custom Dataset: VOCDatasetWithBBoxes (ignoring bboxes for evaluation)
-# -------------------------------
-class VOCDatasetWithBBoxes(Dataset):
-    def __init__(self, root_dir, split="train", transform=None, img_size=(512,512)):
-        self.img_size = img_size
-        self.root_dir = root_dir
-        self.to_tensor = transforms.ToTensor()
-        self.image_dir = os.path.join(root_dir, "JPEGImages")
-        self.mask_dir = os.path.join(root_dir, "SegmentationClass")
-        self.transform = transform
-
-        # Load file list from split file
-        split_file = os.path.join(root_dir, "ImageSets", "Segmentation", f"{split}.txt")
-        with open(split_file, "r") as f:
-            self.file_names = [x.strip() for x in f.readlines()]
-
-        # PASCAL VOC classes (background is 0)
-        self.classes = [
-            'background', 'aeroplane', 'bicycle', 'bird', 'boat',
-            'bottle', 'bus', 'car', 'cat', 'chair', 'cow', 'diningtable',
-            'dog', 'horse', 'motorbike', 'person', 'pottedplant',
-            'sheep', 'sofa', 'train', 'tvmonitor'
-        ]
-
-    def __len__(self):
-        return len(self.file_names)
-
-    def __getitem__(self, idx):
-        name = self.file_names[idx]
-        # Load image and corresponding mask
-        img_path = os.path.join(self.image_dir, f"{name}.jpg")
-        mask_path = os.path.join(self.mask_dir, f"{name}.png")
-        image = Image.open(img_path).convert("RGB")
-        mask = Image.open(mask_path)  # color PNG mask
-
-        # Resize mask (using NEAREST to preserve label values)
-        mask = mask.resize(self.img_size, Image.NEAREST)
-        mask = np.array(mask)  # shape: [H, W]
-        mask = torch.from_numpy(mask).long()  # ground truth segmentation mask
-
-        # (Optional) extract bounding boxes (ignored during evaluation)
-        obj_ids = np.unique(mask)
-        obj_ids = obj_ids[obj_ids != 0]
-        bboxes = []
-        labels = []
-        for obj_id in obj_ids:
-            binary_mask = (mask == obj_id).to(torch.uint8)
-            if binary_mask.sum() == 0:
-                continue
-            boxes = masks_to_boxes(binary_mask[None])[0]
-            bboxes.append(boxes)
-            labels.append(obj_id)
-        if bboxes:
-            bboxes = torch.stack(bboxes)
-            labels = torch.tensor(labels)
-        else:
-            bboxes = torch.zeros((0, 4))
-            labels = torch.zeros((0,), dtype=torch.long)
-        if self.transform:
-            image = self.transform(image)
-        else:
-            image = self.to_tensor(image)
-        # Return image, bounding boxes, and ground-truth segmentation mask.
-        return image, bboxes, mask
 
 # -------------------------------
 # Helper function: Evaluate segmentation performance
 # -------------------------------
 def evaluate_segmentation(preds, gts, num_classes=21):
+    """
+    Evaluate segmentation performance using metrics such as aAcc, mAcc, and mIoU.
+
+    Args:
+        preds (list): List of predicted masks.
+        gts (list): List of ground truth masks.
+        num_classes (int): Number of classes in the dataset.
+
+    Returns:
+        dict: Dictionary containing evaluation metrics.
+    """
     def fast_hist(a, b, n):
+        # Compute a histogram for evaluating IoU
         k = (a >= 0) & (a < n)
         return np.bincount(n * a[k].astype(int) + b[k].astype(int),
                            minlength=n**2).reshape(n, n)
@@ -123,6 +53,7 @@ def evaluate_segmentation(preds, gts, num_classes=21):
         gt = gt.cpu().numpy().flatten()
         hist += fast_hist(gt, pred, num_classes)
     
+    # Compute overall accuracy, mean accuracy, and mean IoU
     aAcc = np.diag(hist).sum() / hist.sum()
     class_acc = np.diag(hist) / (hist.sum(axis=1) + 1e-10)
     mAcc = np.nanmean(class_acc)
@@ -130,114 +61,233 @@ def evaluate_segmentation(preds, gts, num_classes=21):
     mIoU = np.nanmean(iou)
     return {"aAcc": aAcc, "mAcc": mAcc, "mIoU": mIoU}
 
-# -------------------------------
-# Custom inference loop for segmentation with dummy img_metas
-# -------------------------------
-def custom_test(seg_model, data_loader, device):
-    seg_model.eval()
-    all_preds = []
-    all_gts = []
-    for batch in data_loader:
-        images, bboxes, masks = batch
-        images = [img.to(device) for img in images]
-        # Create dummy metadata for each image
-        img_metas = []
-        for img in images:
-            # Create a dummy meta dictionary. Adjust fields if your model requires more detailed info.
-            meta = {
-                'ori_shape': tuple(img.shape[1:]),  # (H, W)
-                'img_shape': tuple(img.shape[1:]),
-                'pad_shape': tuple(img.shape[1:]),
-                'scale_factor': 1.0,
-                'flip': False
-            }
-            img_metas.append(meta)
+def visualize_prediction(image, box_map, pred_mask, gt_mask=None, step=None, path="plots" ):
+    """
+    Visualizes input image, control box map, prediction, and optionally ground truth.
+    image: Tensor [C, H, W]
+    box_map: Tensor [1, H, W]
+    pred_mask: Tensor [1, H, W]
+    gt_mask: Tensor [1, H, W] (optional)
+    """
 
-        with torch.no_grad():
-            outputs = seg_model(img=images, img_metas=img_metas, return_loss=False, rescale=True)
-            if not isinstance(outputs, list):
-                outputs = [outputs]
-            for out in outputs:
-                if out.dim() == 4 and out.size(0) == 1:
-                    out = out.squeeze(0)
-                pred_mask = out.argmax(dim=0)
-                all_preds.append(pred_mask)
-        for gt in masks:
-            all_gts.append(gt)
-        torch.cuda.empty_cache()
-    return all_preds, all_gts
+    def to_np(tensor):
+        return tensor.detach().cpu().numpy()
+
+    image_np = to_np(image).transpose(1, 2, 0)
+    box_np = to_np(box_map.squeeze(0))
+    pred_np = to_np(pred_mask.squeeze(0))
+    gt_np = to_np(gt_mask.squeeze(0)) if gt_mask is not None else None
+
+    num_plots = 3 if gt_mask is None else 4
+    fig, axs = plt.subplots(1, num_plots, figsize=(4*num_plots, 4))
+
+    axs[0].imshow(image_np)
+    axs[0].set_title("Input Image")
+    axs[0].axis('off')
+
+    axs[1].imshow(box_np, cmap='Greens')
+    axs[1].set_title("Bounding Box Map")
+    axs[1].axis('off')
+
+    axs[2].imshow(pred_np, cmap='jet')
+    axs[2].set_title("Prediction")
+    axs[2].axis('off')
+
+    if gt_mask is not None:
+        axs[3].imshow(gt_np, cmap='gray')
+        axs[3].set_title("Ground Truth")
+        axs[3].axis('off')
+
+    if step is not None:
+        fig.suptitle(f"Epoch {step}", fontsize=16)
+
+
+    plt.tight_layout()
+    os.makedirs(path, exist_ok=True)
+
+    plt.savefig(f"{path}/pred_plot{step}.png")
 
 # -------------------------------
 # Model configuration and build
 # -------------------------------
-IMG_SIZE_MODEL = (512, 512)
-DEVICE = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-checkpoint_path = "/work3/s203557/checkpoints/vpd.chkpt"
+checkpoint_path = "/work3/s203557/checkpoints/vpd.chkpt"  # Path to the model checkpoint
+DEVICE = 'cpu' if torch.cuda.is_available() else 'cpu'
+print("Training on device",DEVICE)
+BATCH_SIZE = 2
+NUM_EPOCHS = 1
+LR = 1e-4
 
+# --- Dataset & Dataloader ---
+IMG_SIZE = (128, 128)  # or 256x256, 384x384, etc.
+
+# Load the model checkpoint
 checkpoint = torch.load(checkpoint_path, map_location=DEVICE)
 
-model_cfg = dict(
-    type='VPDSeg',
-    base_size=IMG_SIZE_MODEL[0],
+# Define the model configuration
+model = VPDSeg(base_size = IMG_SIZE[0],
     decode_head=dict(
         type='FCNHead',
-        in_channels=1280,
+        in_channels=1280,  # adjust based on your unet wrapper output
         channels=128,
         num_convs=2,
         kernel_size=3,
-        num_classes=21,
+        num_classes=21,  # for VOC
         dropout_ratio=0.1,
         norm_cfg=dict(type='BN', requires_grad=False),
         align_corners=False,
         loss_decode=dict(
             type='CrossEntropyLoss',
             use_sigmoid=False,
-            loss_weight=1.0
-        )
+            loss_weight=1.0)
     ),
     sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
     sd_config='v1-inference.yaml',
     class_embedding_path='class_embeddings.pth',
-    test_cfg=dict(mode='whole')
+    test_cfg=ConfigDict(dict(mode='whole'))
+
 )
-cfg = ConfigDict(
-    dict(
-        model=model_cfg,
-        device=DEVICE,
-    )
+
+# Load the checkpoint into the model
+checkpoint = torch.load("/work3/s203557/checkpoints/vpd.chkpt", map_location=DEVICE)
+model.load_state_dict(checkpoint, strict=False)
+
+model.to(DEVICE)  # Move the model to the specified device
+model.eval()  # Set the model to evaluation mode
+
+# Set the model's class names and palette if missing
+if not hasattr(model, 'CLASSES'):
+    model.CLASSES = [str(i) for i in range(21)]  # VOC has 21 classes including background
+if not hasattr(model, 'PALETTE'):
+    model.PALETTE = [[i, i, i] for i in range(21)]  # grayscale fallback
+
+# Define image transformations
+transform = transforms.Compose([
+    transforms.Resize(IMG_SIZE),  # Resize images to the model's input size
+    transforms.ToTensor()  # Convert images to tensors
+])
+
+# Create the test dataset
+test_dataset = VOCDatasetWithBBoxes(
+    root_dir='/work3/s203557/data/VOCdevkit/VOC2012',  # Path to the dataset
+    split='val',  # Use the validation split
+    transform=transform  # Apply transformations
 )
-cfg.model.train_cfg = None
-seg_model = build_segmentor(cfg.model)
-seg_model.load_state_dict(checkpoint, strict=False)
-seg_model = seg_model.to(DEVICE)
-seg_model.eval()
+
+# Create the DataLoader for the test dataset
+test_loader = DataLoader(
+    test_dataset, batch_size=BATCH_SIZE, shuffle=False,  # Batch size of 1 for inference
+    collate_fn=lambda x: tuple(zip(*x))  # Custom collate function
+)
+
+
+pbar = tqdm(test_loader, desc="Inference", total=len(test_loader))
+
+for batch_idx, (imgs, boxes, segs) in enumerate(pbar):
+    try:
+        imgs = torch.stack(imgs).to(DEVICE)  
+        H, W = imgs.shape[2], imgs.shape[3]
+
+        gt_segs = torch.stack([torch.tensor(seg, dtype=torch.long) for seg in segs]).to(DEVICE)
+        gt_segs = gt_segs.unsqueeze(1)
+
+        img_metas = [
+            dict(
+                ori_shape=(int(H), int(W)),
+                img_shape=(int(H), int(W)),
+                scale_factor=(1.0, 1.0),
+                flip=False,
+                flip_direction='horizontal'
+            )
+            for _ in range(imgs.shape[0])
+        ]
+
+        # Perform inference
+        with torch.no_grad():
+            pred_logits = model.simple_test(imgs, img_metas, rescale=True)
+            # Extract first image's prediction
+            pred = pred_logits[0]
+            pred_tensor = torch.tensor(pred, device=DEVICE).unsqueeze(0)  # [1, H, W]
+            pred_np = pred_tensor.cpu().numpy().squeeze(0)  # [H, W]
+            gt_np = gt_segs[0].cpu().numpy().squeeze(0)  # [H, W]
+
+            # evaluate segmentation performance
+            # metrics = evaluate_segmentation([pred_tensor], [gt_segs[0]], num_classes=21)
+            # pbar.set_postfix(**metrics)
+            # Visualize first sample in the batch
+            visualize_prediction(
+                image=imgs[0].cpu(),
+                box_map=boxes[0].cpu(),
+                pred_mask=pred_tensor.cpu(),
+                gt_mask=gt_segs[0].cpu(),
+                step=batch_idx
+            )
+
+    except RuntimeError as e:
+            if "CUDA out of memory" in str(e):
+                print(f"CUDA out of memory at batch {batch_idx}. Skipping this batch.")
+                torch.cuda.empty_cache()  # Clear the cache to free up memory
+            else:
+                raise e
+
+    # if batch_idx == 0:
+    #     model.eval()
+    #     with torch.no_grad():
+    #         # Assume segmentation prediction via `simple_test`
+    #         pred_logits = model.simple_test(imgs, img_metas, rescale=True)
+    #         # Extract first image's prediction
+    #         pred = pred_logits[0]  # Shape [H, W]
+    #         pred_tensor = torch.tensor(pred, device=DEVICE).unsqueeze(0)  # [1, H, W]
+
+    #         # Visualize first sample in the batch
+    #         visualize_prediction(
+    #             image=imgs[0].cpu(),
+    #             pred_mask=pred_tensor.cpu(),
+    #             gt_mask=gt_segs[0].cpu(),
+    #         )
+
+        
+    
+
 
 # -------------------------------
 # Main function: DataLoader creation, inference, and evaluation
 # -------------------------------
-def main():
-    transform = transforms.Compose([
-        transforms.Resize(IMG_SIZE_MODEL),
-        transforms.ToTensor()
-    ])
-    test_dataset = VOCDatasetWithBBoxes(
-        root_dir='/work3/s203557/data/VOCdevkit/VOC2012',
-        split='val',  # change to 'test' if available
-        transform=transform,
-        img_size=IMG_SIZE_MODEL
-    )
-    test_loader = DataLoader(
-        test_dataset, batch_size=1, shuffle=False,
-        collate_fn=lambda x: tuple(zip(*x))
-    )
-    print(f"Loaded {len(test_dataset)} samples for testing.")
-    print("🚀 Running custom inference loop...")
-    preds, gts = custom_test(seg_model, test_loader, DEVICE)
-    print("\n📊 Evaluating performance (aAcc, mAcc, mIoU)...")
-    metrics = evaluate_segmentation(preds, gts, num_classes=21)
-    print("\n✅ Evaluation Results:")
-    for metric_name, metric_value in metrics.items():
-        print(f"{metric_name}: {metric_value:.4f}")
+# def main():
+#     """
+#     Main function to load the dataset, perform inference, and evaluate the model.
+#     """
 
-if __name__ == '__main__':
-    main()
+#     img_metas = [
+#             dict(
+#                 ori_shape=(int(H), int(W)),
+#                 img_shape=(int(H), int(W)),
+#                 scale_factor=(1.0, 1.0),
+#                 flip=False,
+#                 flip_direction='horizontal'
+#             )
+#             for _ in range(imgs.shape[0])
+#         ]
+    
+#     print(f"Loaded {len(test_dataset)} samples for testing.")
+#     print("🚀 Running custom inference loop...")
+    
+#     # Perform inference
+#     seg_model.eval()  # Set the model to evaluation mode
+#     seg_model.to(DEVICE)  # Move the model to the specified device
+#     output = seg_model.inference(test_loader, , rescale=False)
+#     #preds, gts = custom_test(seg_model, test_loader, DEVICE)
+    
+#     print("\n📊 Evaluating performance (aAcc, mAcc, mIoU)...")
+    
+#     # Evaluate the model's performance
+#     metrics = evaluate_segmentation(preds, gts, num_classes=21)
+    
+#     print("\n✅ Evaluation Results:")
+#     for metric_name, metric_value in metrics.items():
+#         print(f"{metric_name}: {metric_value:.4f}")
+
+# # Entry point of the script
+# if __name__ == '__main__':
+#     main()
+
+    

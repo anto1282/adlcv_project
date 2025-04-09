@@ -34,9 +34,9 @@ if 'VPDSeg' not in MODELS._module_dict:
                      decode_head,
                      base_size = 512,
                      sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
-                     sd_config = "../stable-diffusion/configs/stable-diffusion/v1-inference.yaml",
+                     sd_config = "v1-inference.yaml",
                      unet_config=dict(),
-                     class_embedding_path='/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/class_embeddings.pth',
+                     class_embedding_path='class_embeddings.pth',
                      gamma_init_value=1e-4,
                      neck=None,
                      auxiliary_head=None,
@@ -108,6 +108,7 @@ if 'VPDSeg' not in MODELS._module_dict:
                 
             else:
                 control_feats = None
+                print("No control features provided, using None.")
             
             # Cross-attention conditioning
             c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma)
