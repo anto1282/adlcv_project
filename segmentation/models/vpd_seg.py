@@ -15,7 +15,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from omegaconf import OmegaConf
 from einops import rearrange, repeat
 from ldm.util import instantiate_from_config
-from vpd import UNetWrapper, TextAdapter, MultiScaleControlNet
+from vpd import UNetWrapper, TextAdapter, EncoderControlNet 
+
+import copy
 
 
 @SEGMENTORS.register_module()
@@ -33,7 +35,7 @@ class VPDSeg(BaseSegmentor):
                  sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
                  sd_config = "../stable-diffusion/configs/stable-diffusion/v1-inference.yaml",
                  unet_config=dict(),
-                 class_embedding_path='/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/class_embeddings.pth',
+                 class_embedding_path='/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/voc2012_class_embeddings.pt',
                  gamma_init_value=1e-4,
                  neck=None,
                  auxiliary_head=None,
@@ -45,12 +47,15 @@ class VPDSeg(BaseSegmentor):
         config = OmegaConf.load(sd_config)
         config.model.params.ckpt_path = f'{sd_path}'
         config.model.params.cond_stage_config.target = 'ldm.modules.encoders.modules.AbstractEncoder'
-
+        
         # prepare the unet        
         sd_model = instantiate_from_config(config.model)
         self.encoder_vq = sd_model.first_stage_model
-        self.unet = UNetWrapper(sd_model.model, base_size=base_size,**unet_config)
-        self.control_net = MultiScaleControlNet()
+        unet_a = sd_model.model
+        unet_b = copy.deepcopy(sd_model.model)
+        self.unet = UNetWrapper(unet_a, unet_b, base_size=base_size, **unet_config)
+        self.box_encoder = EncoderControlNet()
+        
         sd_model.model = None
         sd_model.first_stage_model = None
         del sd_model.cond_stage_model
@@ -99,19 +104,17 @@ class VPDSeg(BaseSegmentor):
         # Get box-derived control features
         if boxes is not None:
             box_map = self.make_box_map(boxes, img.shape[-2:], img.device)
-            control_feats = self.control_net(box_map)
-            control_feats = self.control_net(box_map)
-
-            
+            box_feats = self.box_encoder(box_map)
         else:
-            control_feats = None
-        
+            box_feats = None
+
         # Cross-attention conditioning
         c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma)
         t = torch.ones((img.shape[0],), device=img.device).long()
-
+        
         # Send latents, context, and control to UNet
-        outs = self.unet(latents, t, c_crossattn=[c_crossattn], control=control_feats)
+        outs = self.unet(latents, t, context=c_crossattn, box_control=box_feats)
+        
         return outs
     
     def make_box_map(self, boxes, img_size, device):

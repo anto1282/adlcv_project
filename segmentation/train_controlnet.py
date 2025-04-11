@@ -17,7 +17,7 @@ def safe_checkpoint(run_function, inputs, params, flag):
     if not flag or not requires_grad:
         return run_function(*inputs)
     else:
-        return diffusion_utils.CheckpointFunction.apply(run_function, len(inputs), *(inputs + params))
+        return diffusion_utils.CheckpointFunction.apply(run_function, len(inputs), *(inputs + tuple(params)))
 
 diffusion_utils.checkpoint = safe_checkpoint
 print("[✅] Monkey-patched checkpoint with gradient-safe fallback")
@@ -103,12 +103,12 @@ def visualize_prediction(image, box_map, pred_mask, gt_mask=None, step=None, pat
 # --- Configs ---
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 print("Training on device",DEVICE)
-BATCH_SIZE = 2
-NUM_EPOCHS = 5
-LR = 1e-4
+BATCH_SIZE = 5
+NUM_EPOCHS = 10
+LR = 1e-5
 
 # --- Dataset & Dataloader ---
-IMG_SIZE = (128, 128)  # or 256x256, 384x384, etc.
+IMG_SIZE = (256, 256)  # or 256x256, 384x384, etc.
 
 transform = transforms.Compose([
     transforms.Resize(IMG_SIZE),
@@ -121,14 +121,15 @@ train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, co
 model = VPDSeg(base_size = IMG_SIZE[0],
     decode_head=dict(
         type='FCNHead',
-        in_channels=1280,  # adjust based on your unet wrapper output
-        channels=128,
+        in_channels=320,  # adjust based on your unet wrapper output
+        in_index=0,
+        channels=256,
         num_convs=2,
-        kernel_size=3,
         num_classes=21,  # for VOC
+        concat_input = True,
         dropout_ratio=0.1,
-        norm_cfg=dict(type='BN', requires_grad=False),
         align_corners=False,
+        norm_cfg=dict(type='BN', requires_grad=True),
         loss_decode=dict(
             type='CrossEntropyLoss',
             use_sigmoid=False,
@@ -144,9 +145,17 @@ model = VPDSeg(base_size = IMG_SIZE[0],
 for name, param in model.named_parameters():
     param.requires_grad = False
 
-for name, param in model.control_net.named_parameters():
+for name, param in model.box_encoder.named_parameters():
     param.requires_grad = True
 
+for name, param in model.unet.trainable_unet.named_parameters():
+    param.requires_grad = True
+    
+for param in model.unet.zero_convs.parameters():
+    param.requires_grad = True
+
+for name,param in model.decode_head.named_parameters():
+    param.requires_grad = True
 
 trainable = [name for name, p in model.named_parameters() if p.requires_grad]
 print(f"[🧠 Trainable Params]: {trainable}")
@@ -163,6 +172,7 @@ optimizer = torch.optim.AdamW(
     filter(lambda p: p.requires_grad, model.parameters()),
     lr=LR
 )
+
 
 # --- Training Loop ---
 for epoch in range(NUM_EPOCHS):
@@ -194,31 +204,29 @@ for epoch in range(NUM_EPOCHS):
         
         loss = sum(loss_dict.values())
 
-        
-
         loss.backward()
         optimizer.step()
         epoch_loss += loss.item()
         pbar.set_postfix(loss=loss.item())
 
-        # 🧠 Visualization: Only once per epoch, on the first batch
-        if batch_idx == 0:
-            model.eval()
-            with torch.no_grad():
-                # Assume segmentation prediction via `simple_test`
-                pred_logits = model.simple_test(imgs, img_metas, rescale=True)
-                # Extract first image's prediction
-                pred = pred_logits[0]  # Shape [H, W]
-                pred_tensor = torch.tensor(pred, device=DEVICE).unsqueeze(0)  # [1, H, W]
+        # # 🧠 Visualization: Only once per epoch, on the first batch
+        # if batch_idx == 0:
+        #     model.eval()
+        #     with torch.no_grad():
+        #         # Assume segmentation prediction via `simple_test`
+        #         pred_logits = model.simple_test(imgs, img_metas, rescale=True)
+        #         # Extract first image's prediction
+        #         pred = pred_logits[0]  # Shape [H, W]
+        #         pred_tensor = torch.tensor(pred, device=DEVICE).unsqueeze(0)  # [1, H, W]
 
-                # Visualize first sample in the batch
-                visualize_prediction(
-                    image=imgs[0].cpu(),
-                    box_map=batch_boxes[0].cpu(),
-                    pred_mask=pred_tensor.cpu(),
-                    gt_mask=gt_segs[0].cpu(),
-                    step=epoch + 1
-                )
-            model.train()
+        #         # Visualize first sample in the batch
+        #         visualize_prediction(
+        #             image=imgs[0].cpu(),
+        #             box_map=batch_boxes[0].cpu(),
+        #             pred_mask=pred_tensor.cpu(),
+        #             gt_mask=gt_segs[0].cpu(),
+        #             step=epoch + 1
+        #         )
+        #     model.train()
 
     print(f"Epoch {epoch+1} Loss: {epoch_loss / len(train_loader):.4f}")

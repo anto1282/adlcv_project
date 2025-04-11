@@ -1,9 +1,10 @@
 #!/bin/bash
 #BSUB -q gpuv100
+#BSUB -R "select[gpu32gb]"
 #BSUB -J single_inference_VPD_short
 #BSUB -n 4
 #BSUB -gpu "num=1:mode=exclusive_process"
-#BSUB -W 0:15
+#BSUB -W 2:00
 #BSUB -R "rusage[mem=4GB]"
 #BSUB -u s203557@dtu.dk
 #BSUB -B
