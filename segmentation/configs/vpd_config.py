@@ -8,7 +8,7 @@ _base_ = [  # Corrected variable name from 'base' to '_base_'
 model = dict(
     type='VPDSeg',
     sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
-    sd_config='v1-inference.yaml',
+    sd_config='/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/v1-inference.yaml',
     
     neck=dict(
         type='FPN',

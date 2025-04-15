@@ -13,6 +13,8 @@ from transformers import CLIPTokenizer
 from transformers.models.clip.modeling_clip import CLIPTextConfig, CLIPTextModel, CLIPTextTransformer, _expand_mask
 from inspect import isfunction
 
+from ldm.modules.diffusionmodules.util import timestep_embedding
+
 
 def exists(val):
     return val is not None
@@ -213,27 +215,95 @@ def register_hier_output(model):
     
     self.forward = forward
 
+
+
 class UNetWrapper(nn.Module):
-    def __init__(self, unet, use_attn=True, base_size=512, max_attn_size=None, attn_selector='up_cross+down_cross') -> None:
+    def __init__(self, unet_a, unet_b, interleave_indices=[2, 5, 8], use_attn=True, base_size=512, max_attn_size=None, attn_selector='up_cross+down_cross'):
         super().__init__()
-        self.unet = unet
+        self.frozen_unet = unet_a
+        self.trainable_unet = unet_b
+        self.interleave_indices = interleave_indices
+        self.use_attn = use_attn
+        self.zero_convs = nn.ModuleList([
+            ZeroConv2d(320, 320),  # for encoder block 2
+            ZeroConv2d(320, 320),
+            ZeroConv2d(640, 640),  # for encoder block 5
+            ZeroConv2d(640, 640),
+            ZeroConv2d(1280, 1280),  # for encoder block 8
+            ZeroConv2d(1280, 1280),
+        ])
+        # Attention
         self.attention_store = AttentionStore(base_size=base_size // 8, max_size=max_attn_size)
         self.size16 = base_size // 32
         self.size32 = base_size // 16
         self.size64 = base_size // 8
         self.use_attn = use_attn
         if self.use_attn:
-            register_attention_control(unet, self.attention_store)
-        register_hier_output(unet)
+            register_attention_control(unet_a, self.attention_store)
+        if self.use_attn:
+            register_attention_control(unet_b, self.attention_store)
+
+
+        # # Monkey patch both UNets
+        # register_hier_output(self.frozen_unet)
+        # register_hier_output(self.trainable_unet)
         self.attn_selector = attn_selector.split('+')
 
-    def forward(self, *args, control=None, **kwargs):
+    def forward(self, x, timesteps=None, context=None, y=None,box_control = None, **kwargs):
         if self.use_attn:
             self.attention_store.reset()
 
-        # Pass control into the inner UNet
-        out_list = self.unet(*args, control=control, **kwargs)
+        trainable_unet = self.trainable_unet.diffusion_model
+        frozen_unet = self.frozen_unet.diffusion_model
 
+        # Shared embedding
+        t_emb = timestep_embedding(timesteps, trainable_unet.model_channels, repeat_only=False)
+        emb = trainable_unet.time_embed(t_emb)
+        if trainable_unet.num_classes is not None:
+            emb = emb + trainable_unet.label_emb(y)
+
+        h = x.type(trainable_unet.dtype)
+        hs = []
+        ctrl_id = 0 
+        if box_control is not None:
+            for i in range(len(trainable_unet.input_blocks)):
+                if i in [2,5,8]:
+                    if i == 2:
+                        _convs = self.zero_convs[0:2]
+                    if i == 5:
+                        _convs = self.zero_convs[2:4]
+                    if i == 8:
+                        _convs = self.zero_convs[4:6]
+
+                    h_trainable = _convs[0](box_control[ctrl_id]) + h
+                    h_trainable = trainable_unet.input_blocks[i](h_trainable,emb,context)
+                    h_trainable = _convs[1](h_trainable)
+                    ctrl_id +=1
+                    h = frozen_unet.input_blocks[i](h, emb, context) + h_trainable
+
+                else:
+                    h = frozen_unet.input_blocks[i](h, emb, context)
+                hs.append(h)
+        else:
+            for i in range(len(trainable_unet.input_blocks)):
+                h = frozen_unet.input_blocks[i](h, emb, context)
+                hs.append(h)
+
+
+        h = frozen_unet.middle_block(h, emb, context)
+        out_list = []
+        for i_out in range(len(frozen_unet.output_blocks)):
+            h = torch.cat([h, hs.pop()], dim=1)
+            h = frozen_unet.output_blocks[i_out](h, emb, context)
+            if i_out in [1, 4, 7]:
+                out_list.append(h)
+
+
+        h = h.type(x.dtype)
+        out_list.append(h)
+
+
+        #Concat attention after Unet
         if self.use_attn:
             avg_attn = self.attention_store.get_average_attention()
             attn16, attn32, attn64 = self.process_attn(avg_attn)
@@ -252,10 +322,7 @@ class UNetWrapper(nn.Module):
                 attns[size].append(rearrange(up_attn, 'b (h w) c -> b c h w', h=size))
         attn16 = torch.stack(attns[self.size16]).mean(0)
         attn32 = torch.stack(attns[self.size32]).mean(0)
-        if len(attns[self.size64]) > 0:
-            attn64 = torch.stack(attns[self.size64]).mean(0)
-        else:
-            attn64 = None
+        attn64 = torch.stack(attns[self.size64]).mean(0) if attns[self.size64] else None
         return attn16, attn32, attn64
 
 class TextAdapter(nn.Module):
@@ -350,43 +417,100 @@ class FrozenCLIPEmbedder(nn.Module):
 
 
 import torch.nn.functional as F
+from copy import deepcopy
 
-class MultiScaleControlNet(nn.Module):
-    def __init__(self, in_channels=1, base_channels=64):
+
+class ZeroConv2d(nn.Conv2d):
+    def __init__(self, in_channels, out_channels, kernel_size=1, stride=1, padding=0, bias=True):
+        super().__init__(in_channels, out_channels, kernel_size, stride, padding, bias=bias)
+        nn.init.zeros_(self.weight)
+        if self.bias is not None:
+            nn.init.zeros_(self.bias)
+
+
+
+
+class EncoderControlNet(nn.Module):
+    def __init__(self, in_channels=1, base_channels=64, shared = True):
         super().__init__()
 
-        # These now correspond to the reversed order: 64 → 32 → 16
-        self.adapter64 = nn.Conv2d(1430, 1280, 1)  # for input_block[7]
-        self.adapter32 = nn.Conv2d(790, 640, 1)    # for input_block[4]
-        self.adapter16 = nn.Conv2d(320, 320, 1)    # for input_block[1]
-
-        self.conv64 = nn.Sequential(
-            nn.Conv2d(in_channels, base_channels, 3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(base_channels, 1430, 3, padding=1)
-        )
-
-        self.conv32 = nn.Sequential(
-            nn.Conv2d(in_channels, base_channels, 3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(base_channels, 790, 3, padding=1)
-        )
-
-        self.conv16 = nn.Sequential(
-            nn.Conv2d(in_channels, base_channels, 3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(base_channels, 320, 3, padding=1)
-        )
+        self.shared = shared
+        ## Skal de dele vægte?
+        if shared:
+            self.out64 = nn.Sequential(               
+                nn.Conv2d(320, 320, 3, padding=1),
+                nn.ReLU(inplace=True))
+            
+            self.out32 = nn.Sequential(               
+                nn.Conv2d(640, 640, 3, padding=1),
+                nn.ReLU(inplace=True))
+            
+            self.out16 = nn.Sequential(               
+                nn.Conv2d(1280, 1280, 3, padding=1),
+                nn.ReLU(inplace=True))
+            
+                # 1/8 resolution (64x64)
+            self.conv64 = nn.Sequential(
+                nn.Conv2d(in_channels, 128, 3, stride=2, padding=1),  # /2
+                nn.ReLU(inplace=True),
+                nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
+                nn.ReLU(inplace=True),
+                nn.Conv2d(320, 320, 3, stride=2, padding=1),  # /4
+                nn.ReLU(inplace=True),
+            )
+            # 1/16 resolution (32x32)
+            self.conv32 = nn.Sequential(
+                nn.Conv2d(320, 640, 3, stride=2, padding=1),  # /8
+                nn.ReLU(inplace=True),
+            )
+            # 1/32 resolution (16x16)
+            self.conv16 = nn.Sequential(
+                nn.Conv2d(640, 1280, 3, stride=2, padding=1),  # /16
+                nn.ReLU(inplace=True),
+            )
+        else:
+            # 1/8 resolution (64x64)
+            self.conv64 = nn.Sequential(
+                nn.Conv2d(in_channels, 128, 3, stride=2, padding=1),  # /2
+                nn.ReLU(inplace=True),
+                nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
+                nn.ReLU(inplace=True),
+                nn.Conv2d(320, 320, 3, padding=1),
+                nn.ReLU(inplace=True)
+            )
+            # 1/16 resolution (32x32)
+            self.conv32 = nn.Sequential(
+                nn.Conv2d(in_channels, 320, 3, stride=2, padding=1),  # /2
+                nn.ReLU(inplace=True),
+                nn.Conv2d(320, 640, 3, stride=2, padding=1),  # /4
+                nn.ReLU(inplace=True),
+                nn.Conv2d(640, 640, 3, stride=2, padding=1),  # /8
+                nn.ReLU(inplace=True),
+                nn.Conv2d(640, 640, 3, padding=1),
+                nn.ReLU(inplace=True)
+            )
+            # 1/32 resolution (16x16)
+            self.conv16 = nn.Sequential(
+                nn.Conv2d(in_channels, 320, 3, stride=2, padding=1),  # /2
+                nn.ReLU(inplace=True),
+                nn.Conv2d(320, 640, 3, stride=2, padding=1),  # /4
+                nn.ReLU(inplace=True),
+                nn.Conv2d(640, 640, 3, stride=2, padding=1),  # /8
+                nn.ReLU(inplace=True),
+                nn.Conv2d(640, 1280, 3, stride=2, padding=1),  # /16
+                nn.ReLU(inplace=True),
+            )
 
     def forward(self, x):
-        # Downsample to match spatial sizes of blocks 1, 4, 7
-        ctrl_64 = F.interpolate(x, scale_factor=1/32,  mode='bilinear', align_corners=False)
-        ctrl_32 = F.interpolate(x, scale_factor=1/16, mode='bilinear', align_corners=False)
-        ctrl_16 = F.interpolate(x, scale_factor=1/8, mode='bilinear', align_corners=False)
+        if self.shared:
+            out64 = self.conv64(x)
+            out32 = self.conv32(out64)
+            out16 = self.conv16(out32)
+            return [self.out64(out64), self.out32(out32), self.out16(out16)]
 
-        out64 = self.adapter64(self.conv64(ctrl_64))  # 1280
-        out32 = self.adapter32(self.conv32(ctrl_32))  # 640
-        out16 = self.adapter16(self.conv16(ctrl_16))  # 320
-
-        return [out16, out32, out64]  # correct order for input_blocks [1, 4, 7]
-
+        else:
+                
+            out64 = self.conv64(x)
+            out32 = self.conv32(x)
+            out16 = self.conv16(x)
+        return [out64, out32, out16] # correct order for input_blocks [2, 5, 8]

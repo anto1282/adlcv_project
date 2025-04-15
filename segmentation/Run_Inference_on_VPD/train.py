@@ -21,7 +21,6 @@ from mmseg.models import build_segmentor
 from mmseg.utils import (collect_env, get_device, get_root_logger,
                          setup_multi_processes)
 import models
-import datasets
 
 
 def parse_args():
