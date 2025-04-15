@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 from torchvision.transforms import functional as TF
 from torchvision.ops import masks_to_boxes
+from torchvision.ops import clip_boxes_to_image
 
 class VOCDatasetWithBBoxes(Dataset):
     def __init__(self, root_dir, split="train", transform=None, img_size = (512,512)):
@@ -21,7 +22,6 @@ class VOCDatasetWithBBoxes(Dataset):
         with open(split_file, "r") as f:
             self.file_names = [x.strip() for x in f.readlines()]
 
-        # PASCAL VOC classes (background is 0)
         self.classes = [
             'background', 'aeroplane', 'bicycle', 'bird', 'boat',
             'bottle', 'bus', 'car', 'cat', 'chair', 'cow', 'diningtable',

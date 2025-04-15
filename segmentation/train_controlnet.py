@@ -1,5 +1,5 @@
 import torch.utils.checkpoint
-
+import numpy as np
 def safe_no_checkpoint(fn, inputs, params=None, flag=None):
     if isinstance(inputs, tuple):
         return fn(*inputs)
@@ -53,62 +53,71 @@ import torchvision.transforms.functional as TF
 import os
 from mmcv import ConfigDict
 
-def visualize_prediction(image, box_map, pred_mask, gt_mask=None, step=None, path="plots" ):
-    """
-    Visualizes input image, control box map, prediction, and optionally ground truth.
-    image: Tensor [C, H, W]
-    box_map: Tensor [1, H, W]
-    pred_mask: Tensor [1, H, W]
-    gt_mask: Tensor [1, H, W] (optional)
-    """
+def draw_boxes_to_mask(bboxes, size):
+    mask = torch.zeros(size, dtype=torch.uint8)
+    for box in bboxes:
+        x1, y1, x2, y2 = box.int()
+        x1 = max(x1, 0)
+        y1 = max(y1, 0)
+        x2 = min(x2, size[1] - 1)
+        y2 = min(y2, size[0] - 1)
+        mask[y1:y2, x1:x2] = 1
+    return mask.unsqueeze(0)  # shape [1, H, W]
 
-    def to_np(tensor):
-        return tensor.detach().cpu().numpy()
+def visualize_debug(img, bboxes, gt_mask, pred_mask, epoch, sample_idx=0, save_dir="debug_vis", model=None, img_meta=None):
+    os.makedirs(save_dir, exist_ok=True)
+    img = img.squeeze(0)
+    img_np = img.permute(1, 2, 0).cpu().numpy()
+    gt_np = gt_mask.squeeze().cpu().numpy()
+    pred_np = pred_mask.cpu().numpy()
+    box_mask = draw_boxes_to_mask(bboxes, size=gt_mask.shape[1:])  # shape [1, H, W]
+    box_np = box_mask.squeeze(0).cpu().numpy()
 
-    image_np = to_np(image).transpose(1, 2, 0)
-    box_np = to_np(box_map.squeeze(0))
-    pred_np = to_np(pred_mask.squeeze(0))
-    gt_np = to_np(gt_mask.squeeze(0)) if gt_mask is not None else None
+    # NEW: predict without ControlNet (no bounding boxes)
+    if model is not None and img_meta is not None:
+        with torch.no_grad():
+            pred_noctrl = model.simple_test(img.unsqueeze(0), img_meta=[img_meta], gt_bboxes=None, rescale=True)
+            pred_noctrl_np = torch.tensor(pred_noctrl[0]).cpu().numpy()
+    else:
+        pred_noctrl_np = np.zeros_like(pred_np)
 
-    num_plots = 3 if gt_mask is None else 4
-    fig, axs = plt.subplots(1, num_plots, figsize=(4*num_plots, 4))
+    fig, axs = plt.subplots(1, 5, figsize=(20, 4))
 
-    axs[0].imshow(image_np)
+    axs[0].imshow(img_np)
     axs[0].set_title("Input Image")
-    axs[0].axis('off')
+    axs[0].axis("off")
 
-    axs[1].imshow(box_np, cmap='Greens')
-    axs[1].set_title("Bounding Box Map")
-    axs[1].axis('off')
+    axs[1].imshow(box_np, cmap="Greens")
+    axs[1].set_title("Box Mask")
+    axs[1].axis("off")
 
-    axs[2].imshow(pred_np, cmap='jet')
-    axs[2].set_title("Prediction")
-    axs[2].axis('off')
+    axs[2].imshow(pred_np, cmap="jet")
+    axs[2].set_title("Prediction (w/ Box)")
+    axs[2].axis("off")
 
-    if gt_mask is not None:
-        axs[3].imshow(gt_np, cmap='gray')
-        axs[3].set_title("Ground Truth")
-        axs[3].axis('off')
+    axs[3].imshow(pred_noctrl_np, cmap="jet")
+    axs[3].set_title("Prediction (no Box)")
+    axs[3].axis("off")
 
-    if step is not None:
-        fig.suptitle(f"Epoch {step}", fontsize=16)
-
+    axs[4].imshow(gt_np, cmap="tab20")
+    axs[4].set_title("Ground Truth")
+    axs[4].axis("off")
 
     plt.tight_layout()
-    os.makedirs(path, exist_ok=True)
-
-    plt.savefig(f"{path}/pred_plot{step}.png")
+    plt.savefig(os.path.join(save_dir, f"epoch_{epoch}_sample_{sample_idx}.png"))
+    plt.close()
 
 
 # --- Configs ---
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+# DEVICE = "cpu"
 print("Training on device",DEVICE)
-BATCH_SIZE = 5
+BATCH_SIZE = 3
 NUM_EPOCHS = 10
-LR = 1e-5
+LR = 1e-6
 
 # --- Dataset & Dataloader ---
-IMG_SIZE = (256, 256)  # or 256x256, 384x384, etc.
+IMG_SIZE = (512, 512)  # or 256x256, 384x384, etc.
 
 transform = transforms.Compose([
     transforms.Resize(IMG_SIZE),
@@ -119,9 +128,14 @@ train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, co
 
 # --- Model ---
 model = VPDSeg(base_size = IMG_SIZE[0],
+    neck = dict(
+        type='FPN',
+        in_channels=[320, 661, 1301, 1280], # Skal være output a unet + antal klasser
+        out_channels=256,
+        num_outs=4),
     decode_head=dict(
         type='FCNHead',
-        in_channels=320,  # adjust based on your unet wrapper output
+        in_channels=256,  # adjust based on your unet wrapper output
         in_index=0,
         channels=256,
         num_convs=2,
@@ -137,7 +151,7 @@ model = VPDSeg(base_size = IMG_SIZE[0],
     ),
     sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
     sd_config='/zhome/b6/d/154958/ADLCV_Project/VPD/stable-diffusion/configs/stable-diffusion/v1-inference.yaml',
-    class_embedding_path='./segmentation/class_embeddings.pth',
+    class_embedding_path='./segmentation/voc2012_class_embeddings.pt',
     test_cfg=ConfigDict(dict(mode='whole'))
 
 )
@@ -145,20 +159,17 @@ model = VPDSeg(base_size = IMG_SIZE[0],
 for name, param in model.named_parameters():
     param.requires_grad = False
 
-for name, param in model.box_encoder.named_parameters():
-    param.requires_grad = True
-
-for name, param in model.unet.trainable_unet.named_parameters():
-    param.requires_grad = True
-    
-for param in model.unet.zero_convs.parameters():
-    param.requires_grad = True
-
 for name,param in model.decode_head.named_parameters():
     param.requires_grad = True
 
-trainable = [name for name, p in model.named_parameters() if p.requires_grad]
-print(f"[🧠 Trainable Params]: {trainable}")
+for name, param in model.text_adapter.named_parameters():
+    param.requires_grad = True
+
+for name, param in model.box_encoder.named_parameters():
+    param.requires_grad = True
+model.gamma.requires_grad = True
+
+
 
 
 checkpoint = torch.load("/work3/s203557/checkpoints/vpd.chkpt", map_location=DEVICE)
@@ -168,7 +179,7 @@ print("✅ Loaded pretrained VPD weights")
 model.to(DEVICE)
 model.train()
 
-optimizer = torch.optim.AdamW(
+optimizer = torch.optim.Adam(
     filter(lambda p: p.requires_grad, model.parameters()),
     lr=LR
 )
@@ -178,6 +189,15 @@ optimizer = torch.optim.AdamW(
 for epoch in range(NUM_EPOCHS):
     pbar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{NUM_EPOCHS}")
     epoch_loss = 0.0
+    visualized = False
+
+    if epoch == 3:
+        for name, param in model.unet.trainable_unet.named_parameters():
+            param.requires_grad = True
+            
+        for param in model.unet.zero_convs.parameters():
+            param.requires_grad = True
+
 
     for batch_idx, (imgs, boxes, segs) in enumerate(pbar):
         imgs = torch.stack(imgs).to(DEVICE)  
@@ -193,40 +213,54 @@ for epoch in range(NUM_EPOCHS):
                 ori_shape=(int(H), int(W)),
                 img_shape=(int(H), int(W)),
                 scale_factor=(1.0, 1.0),
-                flip=False,
-                flip_direction='horizontal'
+                flip=True,
+                flip_direction='horizontal',
+
             )
             for _ in range(imgs.shape[0])
         ]
+        if visualized == False:
+            model.eval()
+            with torch.no_grad():
+                for i in range(2):  # visualize first 2 samples in the batch
+                    img = imgs[i].unsqueeze(0)
+                    gt = gt_segs[i]
+                    box_list = batch_boxes[i].unsqueeze(0)  # 🆕 clearer name
+                    pred_logits = model.simple_test(
+                        img,
+                        img_meta=[img_metas[i]],
+                        gt_bboxes=box_list,
+                        rescale=False
+                    )
+                    pred_mask = torch.tensor(pred_logits[0]).to(DEVICE)  # [H, W]
 
-        loss_dict = model.forward_train(imgs, img_metas=img_metas,
-                                        gt_semantic_seg=gt_segs, gt_bboxes=batch_boxes)
+                    visualize_debug(
+                        img=img,
+                        bboxes=box_list.squeeze(),
+                        gt_mask=gt,
+                        pred_mask=pred_mask,
+                        epoch=epoch,
+                        sample_idx=i,
+                        save_dir="debug_vis",
+                        model=model,                # pass model here
+                        img_meta=img_metas[i]       # and its metadata
+                    )
+            model.train()
+            visualized = True
+
+        if epoch > 2:
+            loss_dict = model.forward_train(imgs, img_metas=img_metas,
+                                            gt_semantic_seg=gt_segs, gt_bboxes=batch_boxes)
+        else: 
+            loss_dict = model.forward_train(imgs, img_metas=img_metas,
+                                            gt_semantic_seg=gt_segs, gt_bboxes=batch_boxes)
+            
         
         loss = sum(loss_dict.values())
 
         loss.backward()
         optimizer.step()
         epoch_loss += loss.item()
-        pbar.set_postfix(loss=loss.item())
-
-        # # 🧠 Visualization: Only once per epoch, on the first batch
-        # if batch_idx == 0:
-        #     model.eval()
-        #     with torch.no_grad():
-        #         # Assume segmentation prediction via `simple_test`
-        #         pred_logits = model.simple_test(imgs, img_metas, rescale=True)
-        #         # Extract first image's prediction
-        #         pred = pred_logits[0]  # Shape [H, W]
-        #         pred_tensor = torch.tensor(pred, device=DEVICE).unsqueeze(0)  # [1, H, W]
-
-        #         # Visualize first sample in the batch
-        #         visualize_prediction(
-        #             image=imgs[0].cpu(),
-        #             box_map=batch_boxes[0].cpu(),
-        #             pred_mask=pred_tensor.cpu(),
-        #             gt_mask=gt_segs[0].cpu(),
-        #             step=epoch + 1
-        #         )
-        #     model.train()
+        pbar.set_postfix(loss=loss.item(), gamma = model.gamma.mean.item)
 
     print(f"Epoch {epoch+1} Loss: {epoch_loss / len(train_loader):.4f}")

@@ -64,6 +64,7 @@ class VPDSeg(BaseSegmentor):
 
         # class embeddings & text adapter
         class_embeddings = torch.load(class_embedding_path)
+        print(class_embeddings.shape)
         self.register_buffer('class_embeddings', class_embeddings)
         text_dim = class_embeddings.size(-1)
         self.gamma = nn.Parameter(torch.ones(text_dim) * gamma_init_value)
@@ -100,13 +101,14 @@ class VPDSeg(BaseSegmentor):
         with torch.no_grad():
             latents = self.encoder_vq.encode(img)
         latents = latents.mode().detach()
-
         # Get box-derived control features
         if boxes is not None:
             box_map = self.make_box_map(boxes, img.shape[-2:], img.device)
             box_feats = self.box_encoder(box_map)
         else:
             box_feats = None
+        box_feats = [b * 10.0 for b in box_feats]
+
 
         # Cross-attention conditioning
         c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma)
@@ -201,10 +203,10 @@ class VPDSeg(BaseSegmentor):
             losses.update(loss_aux)
         return losses
 
-    def encode_decode(self, img, img_metas):
+    def encode_decode(self, img, img_metas, gt_bboxes=None):
         """Encode images with backbone and decode into a semantic segmentation
         map of the same size as input."""
-        x = self.extract_feat(img)
+        x = self.extract_feat(img, boxes=gt_bboxes)
         if self.with_neck:
             x = list(self.neck(x))
         out = self._decode_head_forward_test(x, img_metas)  
@@ -261,10 +263,10 @@ class VPDSeg(BaseSegmentor):
                 warning=False)
         return preds
 
-    def whole_inference(self, img, img_meta, rescale):
+    def whole_inference(self, img, img_meta, gt_bboxes=None, rescale=True):
         """Inference with full image."""
 
-        seg_logit = self.encode_decode(img, img_meta)
+        seg_logit = self.encode_decode(img, img_meta,gt_bboxes=gt_bboxes)
         if rescale:
             # support dynamic shape for onnx
             if torch.onnx.is_in_onnx_export():
@@ -283,7 +285,7 @@ class VPDSeg(BaseSegmentor):
 
         return seg_logit
 
-    def inference(self, img, img_meta, rescale):
+    def inference(self, img, img_meta, gt_bboxes= None,rescale = True):
         """Inference with slide/whole style.
 
         Args:
@@ -305,7 +307,7 @@ class VPDSeg(BaseSegmentor):
         if self.test_cfg.mode == 'slide':
             seg_logit = self.slide_inference(img, img_meta, rescale)
         else:
-            seg_logit = self.whole_inference(img, img_meta, rescale)
+            seg_logit = self.whole_inference(img, img_meta, gt_bboxes=gt_bboxes, rescale=rescale)
         output = F.softmax(seg_logit, dim=1)
         flip = img_meta[0]['flip']
         if flip:
@@ -318,9 +320,9 @@ class VPDSeg(BaseSegmentor):
 
         return output
 
-    def simple_test(self, img, img_meta, rescale=True):
+    def simple_test(self, img, img_meta, gt_bboxes= None,rescale=True):
         """Simple test with single image."""
-        seg_logit = self.inference(img, img_meta, rescale)
+        seg_logit = self.inference(img, img_meta, gt_bboxes=gt_bboxes,rescale= rescale)
         seg_pred = seg_logit.argmax(dim=1)
         if torch.onnx.is_in_onnx_export():
             # our inference backend only support 4D output

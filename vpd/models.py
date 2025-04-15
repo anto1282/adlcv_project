@@ -265,28 +265,33 @@ class UNetWrapper(nn.Module):
         h = x.type(trainable_unet.dtype)
         hs = []
         ctrl_id = 0 
+        if box_control is not None:
+            for i in range(len(trainable_unet.input_blocks)):
+                if i in [2,5,8]:
+                    if i == 2:
+                        _convs = self.zero_convs[0:2]
+                    if i == 5:
+                        _convs = self.zero_convs[2:4]
+                    if i == 8:
+                        _convs = self.zero_convs[4:6]
 
-        for i in range(len(trainable_unet.input_blocks)):
-            if i in [2,5,8]:
-                if i == 2:
-                    _convs = self.zero_convs[0:2]
-                if i == 5:
-                    _convs = self.zero_convs[2:4]
-                if i == 8:
-                    _convs = self.zero_convs[4:6]
+                    h_trainable = _convs[0](box_control[ctrl_id]) + h
+                    h_trainable = trainable_unet.input_blocks[i](h_trainable,emb,context)
+                    h_trainable = _convs[1](h_trainable)
+                    ctrl_id +=1
+                    h = frozen_unet.input_blocks[i](h, emb, context) + h_trainable
 
-                h_trainable = _convs[0](box_control[ctrl_id]) + h
-                h_trainable = trainable_unet.input_blocks[i](h_trainable,emb,context)
-                h_trainable = _convs[1](h_trainable)
-                ctrl_id +=1
-                h = frozen_unet.input_blocks[i](h, emb, context) + h_trainable
-
-            else:
+                else:
+                    h = frozen_unet.input_blocks[i](h, emb, context)
+                hs.append(h)
+        else:
+            for i in range(len(trainable_unet.input_blocks)):
                 h = frozen_unet.input_blocks[i](h, emb, context)
-            hs.append(h)
+                hs.append(h)
+
+
         h = frozen_unet.middle_block(h, emb, context)
         out_list = []
-
         for i_out in range(len(frozen_unet.output_blocks)):
             h = torch.cat([h, hs.pop()], dim=1)
             h = frozen_unet.output_blocks[i_out](h, emb, context)
