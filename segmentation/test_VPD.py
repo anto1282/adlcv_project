@@ -167,7 +167,7 @@ transform = transforms.Compose([
 
 # Create the test dataset
 test_dataset = VOCDatasetWithBBoxes(
-    root_dir='/work3/s203557/data/VOCdevkit/VOC2012',  # Path to the dataset
+    root_dir='/work3/s203557/data/ade20k-dataset/versions/2/ADEChallengeData2016',  # Path to the dataset
     split='val',  # Use the validation split
     transform=transform  # Apply transformations
 )

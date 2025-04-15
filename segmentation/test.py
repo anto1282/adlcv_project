@@ -1,4 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+
+#checkpoint_path = "/work3/s203557/checkpoints/vpd.chkpt" 
+#config_path = /zhome/45/0/155089/adlcv_project/segmentation/configs/vpd_config.py
+# test.py path = /zhome/45/0/155089/adlcv_project/segmentation/test.py
+
 import argparse
 import os
 import os.path as osp
@@ -10,12 +15,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import mmcv
 import torch
 from mmcv.cnn.utils import revert_sync_batchnorm
-from mmcv.runner import (get_dist_info, init_dist, load_checkpoint,
-                         wrap_fp16_model)
+from mmcv.runner import (get_dist_info, init_dist, load_checkpoint, wrap_fp16_model)
 from mmcv.utils import DictAction
 
 from mmseg import digit_version
-from mmseg.apis import multi_gpu_test, 
+from mmseg.apis import multi_gpu_test, single_gpu_test
 
 from mmseg.datasets import build_dataloader, build_dataset
 from mmseg.models import build_segmentor
