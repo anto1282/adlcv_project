@@ -1,12 +1,12 @@
-2025-04-15 12:01:18,121 - mmseg - INFO - Multi-processing start method is `None`
-2025-04-15 12:01:18,221 - mmseg - INFO - OpenCV num_threads is `1
-2025-04-15 12:01:18,221 - mmseg - INFO - OMP num threads is 1
-2025-04-15 12:01:18,291 - mmseg - INFO - Environment info:
+2025-04-18 16:16:58,840 - mmseg - INFO - Multi-processing start method is `None`
+2025-04-18 16:16:58,921 - mmseg - INFO - OpenCV num_threads is `1
+2025-04-18 16:16:58,921 - mmseg - INFO - OMP num threads is 1
+2025-04-18 16:16:59,012 - mmseg - INFO - Environment info:
 ------------------------------------------------------------
 sys.platform: linux
 Python: 3.8.19 | packaged by conda-forge | (default, Mar 20 2024, 12:47:35) [GCC 12.3.0]
 CUDA available: True
-GPU 0: Tesla V100-SXM2-32GB
+GPU 0: Tesla V100-PCIE-16GB
 CUDA_HOME: None
 GCC: gcc (GCC) 12.3.0
 PyTorch: 1.11.0+cu113
@@ -30,11 +30,11 @@ OpenCV: 4.6.0
 MMCV: 1.5.0
 MMCV Compiler: GCC 7.3
 MMCV CUDA Compiler: 11.3
-MMSegmentation: 0.29.0+26ce347
+MMSegmentation: 0.29.0+45d03f6
 ------------------------------------------------------------
 
-2025-04-15 12:01:18,292 - mmseg - INFO - Distributed training: False
-2025-04-15 12:01:18,605 - mmseg - INFO - Config:
+2025-04-18 16:16:59,012 - mmseg - INFO - Distributed training: False
+2025-04-18 16:16:59,531 - mmseg - INFO - Config:
 norm_cfg = dict(type='SyncBN', requires_grad=True)
 model = dict(
     type='VPDSeg',
@@ -70,7 +70,8 @@ model = dict(
     train_cfg=dict(),
     test_cfg=dict(mode='slide', crop_size=(512, 512), stride=(341, 341)),
     sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
-    sd_config='v1-inference.yaml')
+    sd_config=
+    '/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/v1-inference.yaml')
 dataset_type = 'ADE20KDataset'
 data_root = '/dtu/blackhole/0e/154958/data/ade/ADEChallengeData2016'
 IMG_MEAN = [127.5, 127.5, 127.5]
@@ -91,9 +92,9 @@ train_pipeline = [
         std=[127.5, 127.5, 127.5],
         to_rgb=True),
     dict(type='Pad', size=(512, 512), pad_val=0, seg_pad_val=255),
-    dict(type='GenerateBoundingBoxesFromSeg'),
+    dict(type='GenerateBoundingBoxMasksFromSeg'),
     dict(type='DefaultFormatBundle'),
-    dict(type='Collect', keys=['img', 'gt_semantic_seg', 'gt_bboxes'])
+    dict(type='Collect', keys=['img', 'gt_semantic_seg', 'gt_bbox_masks'])
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile'),
@@ -134,9 +135,11 @@ data = dict(
                 std=[127.5, 127.5, 127.5],
                 to_rgb=True),
             dict(type='Pad', size=(512, 512), pad_val=0, seg_pad_val=255),
-            dict(type='GenerateBoundingBoxesFromSeg'),
+            dict(type='GenerateBoundingBoxMasksFromSeg'),
             dict(type='DefaultFormatBundle'),
-            dict(type='Collect', keys=['img', 'gt_semantic_seg', 'gt_bboxes'])
+            dict(
+                type='Collect',
+                keys=['img', 'gt_semantic_seg', 'gt_bbox_masks'])
         ]),
     val=dict(
         type='ADE20KDataset',
@@ -219,4 +222,4 @@ work_dir = './work_dirs/vpd_config'
 gpu_ids = [0]
 auto_resume = False
 
-2025-04-15 12:01:18,605 - mmseg - INFO - Set random seed to 585512137, deterministic: False
+2025-04-18 16:16:59,531 - mmseg - INFO - Set random seed to 70546940, deterministic: False

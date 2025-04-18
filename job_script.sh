@@ -1,10 +1,12 @@
 #!/bin/bash
-#BSUB -q gpuv100
+#BSUB -q gpua100
 #BSUB -J single_inference_VPD_short
 #BSUB -n 4
 #BSUB -gpu "num=1:mode=exclusive_process"
-#BSUB -W 0:15
+#BSUB -W 8:00
 #BSUB -R "rusage[mem=4GB]"
+#BSUB -R "select[gpu80gb]"
+
 #BSUB -u s203557@dtu.dk
 #BSUB -B
 #BSUB -env "LSB_JOB_REPORT_MAIL=N"
@@ -20,4 +22,4 @@ module load cuda/11.3
 source /dtu/blackhole/0e/154958/miniconda3/bin/activate ldm
 
 
-python -m segmentation.train_controlnet
+python segmentation/train.py segmentation/configs/vpd_config.py --load-from /work3/s203557/checkpoints/vpd.chkpt 

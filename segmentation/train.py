@@ -202,7 +202,33 @@ def main():
         cfg.model,
         train_cfg=cfg.get('train_cfg'),
         test_cfg=cfg.get('test_cfg'))
+
+    
+    # First freeze everything
+    for param in model.parameters():
+        param.requires_grad = False
+
+    # Then unfreeze only what you want
+    for param in model.unet.trainable_unet.parameters():
+        param.requires_grad = True
+
+    for param in model.unet.zero_convs.parameters():
+        param.requires_grad = True
+
+    for param in model.box_encoder.parameters():
+        param.requires_grad = True
+
+    for param in model.decode_head.parameters():
+        param.requires_grad = True
+
     model.init_weights()
+
+    print("Trainable parameters:")
+
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print(f"  {name}")
+
 
     # SyncBN is not support for DP
     if not distributed:

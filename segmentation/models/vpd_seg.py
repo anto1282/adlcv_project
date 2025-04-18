@@ -64,7 +64,6 @@ class VPDSeg(BaseSegmentor):
 
         # class embeddings & text adapter
         class_embeddings = torch.load(class_embedding_path)
-        print(class_embeddings.shape)
         self.register_buffer('class_embeddings', class_embeddings)
         text_dim = class_embeddings.size(-1)
         self.gamma = nn.Parameter(torch.ones(text_dim) * gamma_init_value)
@@ -185,7 +184,7 @@ class VPDSeg(BaseSegmentor):
         Returns:
             dict[str, Tensor]: a dictionary of loss components
         """
-
+        print(len(gt_bbox_masks))
         x = self.extract_feat(img, boxes=gt_bbox_masks)
 
         if self.with_neck:
