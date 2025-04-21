@@ -204,6 +204,12 @@ def main():
         test_cfg=cfg.get('test_cfg'))
 
     
+    
+
+    model.init_weights()
+
+    model.unet.trainable_unet.load_state_dict(model.unet.unet.state_dict())
+
     # First freeze everything
     for param in model.parameters():
         param.requires_grad = False
@@ -220,9 +226,6 @@ def main():
 
     for param in model.decode_head.parameters():
         param.requires_grad = True
-
-    model.init_weights()
-
     print("Trainable parameters:")
 
     for name, param in model.named_parameters():

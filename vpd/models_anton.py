@@ -216,12 +216,13 @@ def register_hier_output(model):
     self.forward = forward
 
 
+import copy
 
 class UNetWrapper(nn.Module):
-    def __init__(self, unet_a, unet_b, interleave_indices=[2, 5, 8], use_attn=True, base_size=512, max_attn_size=None, attn_selector='up_cross+down_cross'):
+    def __init__(self, unet_a, interleave_indices=[2, 5, 8], use_attn=True, base_size=512, max_attn_size=None, attn_selector='up_cross+down_cross'):
         super().__init__()
-        self.frozen_unet = unet_a
-        self.trainable_unet = unet_b
+        self.unet = unet_a
+        self.trainable_unet = copy.deepcopy(self.unet)
         self.interleave_indices = interleave_indices
         self.use_attn = use_attn
         self.zero_convs = nn.ModuleList([
@@ -239,9 +240,9 @@ class UNetWrapper(nn.Module):
         self.size64 = base_size // 8
         self.use_attn = use_attn
         if self.use_attn:
-            register_attention_control(unet_a, self.attention_store)
+            register_attention_control(self.unet, self.attention_store)
         if self.use_attn:
-            register_attention_control(unet_b, self.attention_store)
+            register_attention_control(self.trainable_unet, self.attention_store)
 
 
         # # Monkey patch both UNets
@@ -249,12 +250,12 @@ class UNetWrapper(nn.Module):
         # register_hier_output(self.trainable_unet)
         self.attn_selector = attn_selector.split('+')
 
-    def forward(self, x, timesteps=None, context=None, y=None,box_control = None, **kwargs):
+    def forward(self, x, timesteps=None, context=None, y=None, box_control=None, **kwargs):
         if self.use_attn:
             self.attention_store.reset()
 
         trainable_unet = self.trainable_unet.diffusion_model
-        frozen_unet = self.frozen_unet.diffusion_model
+        frozen_unet = self.unet.diffusion_model
 
         # Shared embedding
         t_emb = timestep_embedding(timesteps, trainable_unet.model_channels, repeat_only=False)
@@ -264,46 +265,44 @@ class UNetWrapper(nn.Module):
 
         h = x.type(trainable_unet.dtype)
         hs = []
-        ctrl_id = 0 
-        if box_control is not None:
-            for i in range(len(trainable_unet.input_blocks)):
-                if i in [2,5,8]:
-                    if i == 2:
-                        _convs = self.zero_convs[0:2]
-                    if i == 5:
-                        _convs = self.zero_convs[2:4]
-                    if i == 8:
-                        _convs = self.zero_convs[4:6]
+        ctrl_id = 0
 
-                    h_trainable = _convs[0](box_control[ctrl_id]) + h
-                    h_trainable = trainable_unet.input_blocks[i](h_trainable,emb,context)
-                    h_trainable = _convs[1](h_trainable)
-                    ctrl_id +=1
-                    h = frozen_unet.input_blocks[i](h, emb, context) + h_trainable
+        for i in range(len(trainable_unet.input_blocks)):
+            if box_control is not None and i in [2, 5, 8]:
+                if i == 2:
+                    _convs = self.zero_convs[0:2]
+                elif i == 5:
+                    _convs = self.zero_convs[2:4]
+                elif i == 8:
+                    _convs = self.zero_convs[4:6]
 
-                else:
+                h_trainable = _convs[0](box_control[ctrl_id]) + h
+                h_trainable = trainable_unet.input_blocks[i](h_trainable, emb, context)
+                h_trainable = _convs[1](h_trainable)
+                ctrl_id += 1
+
+                with torch.no_grad():
+                    h_frozen = frozen_unet.input_blocks[i](h, emb, context)
+                h = h_frozen + h_trainable
+            else:
+                with torch.no_grad():
                     h = frozen_unet.input_blocks[i](h, emb, context)
-                hs.append(h)
-        else:
-            for i in range(len(trainable_unet.input_blocks)):
-                h = frozen_unet.input_blocks[i](h, emb, context)
-                hs.append(h)
+            hs.append(h)
 
+        with torch.no_grad():
+            h = frozen_unet.middle_block(h, emb, context)
 
-        h = frozen_unet.middle_block(h, emb, context)
         out_list = []
-        for i_out in range(len(frozen_unet.output_blocks)):
-            h = torch.cat([h, hs.pop()], dim=1)
-            h = frozen_unet.output_blocks[i_out](h, emb, context)
-            if i_out in [1, 4, 7]:
-                out_list.append(h)
-
+        with torch.no_grad():
+            for i_out in range(len(frozen_unet.output_blocks)):
+                h = torch.cat([h, hs.pop()], dim=1)
+                h = frozen_unet.output_blocks[i_out](h, emb, context)
+                if i_out in [1, 4, 7]:
+                    out_list.append(h)
 
         h = h.type(x.dtype)
         out_list.append(h)
 
-
-        #Concat attention after Unet
         if self.use_attn:
             avg_attn = self.attention_store.get_average_attention()
             attn16, attn32, attn64 = self.process_attn(avg_attn)
@@ -431,7 +430,7 @@ class ZeroConv2d(nn.Conv2d):
 
 
 class EncoderControlNet(nn.Module):
-    def __init__(self, in_channels=1, base_channels=64, shared = True):
+    def __init__(self, in_channels=6, base_channels=64, shared = True):
         super().__init__()
 
         self.shared = shared
@@ -508,8 +507,7 @@ class EncoderControlNet(nn.Module):
             out16 = self.conv16(out32)
             return [self.out64(out64), self.out32(out32), self.out16(out16)]
 
-        else:
-                
+        else:  
             out64 = self.conv64(x)
             out32 = self.conv32(x)
             out16 = self.conv16(x)

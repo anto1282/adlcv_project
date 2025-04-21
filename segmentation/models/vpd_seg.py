@@ -52,8 +52,7 @@ class VPDSeg(BaseSegmentor):
         sd_model = instantiate_from_config(config.model)
         self.encoder_vq = sd_model.first_stage_model
         unet_a = sd_model.model
-        unet_b = copy.deepcopy(sd_model.model)
-        self.unet = UNetWrapper(unet_a, unet_b, base_size=base_size, **unet_config)
+        self.unet = UNetWrapper(unet_a, base_size=base_size, **unet_config)
         self.box_encoder = EncoderControlNet()
         
         sd_model.model = None
@@ -101,11 +100,10 @@ class VPDSeg(BaseSegmentor):
             latents = self.encoder_vq.encode(img)
         latents = latents.mode().detach()
         # Get box-derived control features
+        
         if boxes is not None:
             # box_map = self.make_box_map(boxes, img.shape[-2:], img.device)
             box_feats = self.box_encoder(boxes)
-        else:
-            box_feats = None
 
 
         # Cross-attention conditioning
@@ -113,8 +111,9 @@ class VPDSeg(BaseSegmentor):
         t = torch.ones((img.shape[0],), device=img.device).long()
         
         # Send latents, context, and control to UNet
+
         outs = self.unet(latents, t, context=c_crossattn, box_control=box_feats)
-        
+
         return outs
     
     def make_box_map(self, boxes, img_size, device):
@@ -184,7 +183,6 @@ class VPDSeg(BaseSegmentor):
         Returns:
             dict[str, Tensor]: a dictionary of loss components
         """
-        print(len(gt_bbox_masks))
         x = self.extract_feat(img, boxes=gt_bbox_masks)
 
         if self.with_neck:

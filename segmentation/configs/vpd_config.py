@@ -5,6 +5,10 @@ _base_ = [  # Corrected variable name from 'base' to '_base_'
     '_base_/default_runtime.py', '_base_/schedules/schedule_80k.py'
 ]
 
+custom_imports = dict(
+    imports=['segmentation.hooks.visualize_hook'],  # adjust path if needed
+    allow_failed_imports=False
+)
 model = dict(
     type='VPDSeg',
     sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
@@ -38,11 +42,16 @@ optimizer = dict(type='AdamW', lr=0.00008, weight_decay=0.001,
 # ONLY specify the keys you want to override from the base config's 'data' dict.
 # MMCV will automatically merge these changes into the inherited 'data' dictionary.
 data = dict(
-    samples_per_gpu=2,
+    samples_per_gpu=1,
     workers_per_gpu=8
     # DO NOT redefine train, val, test here.
     # They will be inherited correctly from '_base_/datasets/ade20k_vpd.py'
 )
 # --- End Corrected Data Section ---
+work_dir = '/work3/s203557/experiments/control_net_vpd/'
+fp16 = dict(loss_scale=512.0)
 
 log_level = 'INFO'
+custom_hooks = [
+    dict(type='TrainVisualizeHook', interval=1000, num_samples=4, save_dir='vis')
+]

@@ -13,4 +13,3 @@ resume_from = None
 workflow = [('train', 1)]
 cudnn_benchmark = True
 find_unused_parameters = True
-
