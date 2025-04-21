@@ -17,7 +17,7 @@ train_pipeline = [
     dict(type='PhotoMetricDistortion'),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size=crop_size, pad_val=0, seg_pad_val=255),
-    dict(type='GenerateBoundingBoxMasksFromSeg',max_boxes = 4),  
+    dict(type='GenerateBoundingBoxMasksFromSeg',max_boxes = 6),  
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_semantic_seg',"gt_bbox_masks"]),
 ]

@@ -42,6 +42,7 @@ class VPDSeg(BaseSegmentor):
                  train_cfg=None,
                  test_cfg=None,
                  init_cfg=None,
+                 max_boxes = 6,
                  **args):
         super().__init__(init_cfg)
         config = OmegaConf.load(sd_config)
@@ -53,7 +54,7 @@ class VPDSeg(BaseSegmentor):
         self.encoder_vq = sd_model.first_stage_model
         unet_a = sd_model.model
         self.unet = UNetWrapper(unet_a, base_size=base_size, **unet_config)
-        self.box_encoder = EncoderControlNet()
+        self.box_encoder = EncoderControlNet(in_channels = max_boxes )
         
         sd_model.model = None
         sd_model.first_stage_model = None
@@ -297,24 +298,30 @@ class VPDSeg(BaseSegmentor):
             Tensor: The output segmentation map.
         """
 
+        if isinstance(img_meta[0], list):
+            img_meta = [m for meta in img_meta for m in meta]
         assert self.test_cfg.mode in ['slide', 'whole']
-        ori_shape = img_meta[0]['ori_shape']
-        assert all(_['ori_shape'] == ori_shape for _ in img_meta)
-        if self.test_cfg.mode == 'slide':
-            seg_logit = self.slide_inference(img, img_meta, rescale)
-        else:
-            seg_logit = self.whole_inference(img, img_meta, gt_bbox_masks=gt_bbox_masks, rescale=rescale)
-        output = F.softmax(seg_logit, dim=1)
-        flip = img_meta[0]['flip']
-        if flip:
-            flip_direction = img_meta[0]['flip_direction']
-            assert flip_direction in ['horizontal', 'vertical']
-            if flip_direction == 'horizontal':
-                output = output.flip(dims=(3, ))
-            elif flip_direction == 'vertical':
-                output = output.flip(dims=(2, ))
 
-        return output
+        if self.test_cfg.mode == 'slide':
+            seg_logits = self.whole_inference(img, img_meta, gt_bbox_masks=gt_bbox_masks, rescale=rescale)
+        else:
+            seg_logits = self.whole_inference(img, img_meta, gt_bbox_masks=gt_bbox_masks, rescale=rescale)
+
+        seg_logits = F.softmax(seg_logits, dim=1)
+        batch_preds = []
+        for i in range(seg_logits.shape[0]):
+            pred = seg_logits[i:i+1]  # shape: (1, C, H, W)
+            meta = img_meta[i]
+
+            if meta.get('flip', False):
+                flip_direction = meta.get('flip_direction', 'horizontal')
+                if flip_direction == 'horizontal':
+                    pred = pred.flip(dims=(3,))
+                elif flip_direction == 'vertical':
+                    pred = pred.flip(dims=(2,))
+            batch_preds.append(pred)
+
+        return torch.cat(batch_preds, dim=0)  # (B, C, H, W)
 
     def simple_test(self, img, img_meta, gt_bbox_masks= None,rescale=True):
         """Simple test with single image."""

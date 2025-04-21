@@ -1,10 +1,10 @@
 #!/bin/bash
 #BSUB -q gpua100
-#BSUB -J train_vpd_a_que
+#BSUB -J train_vpd_controlNet
 #BSUB -n 4
 #BSUB -gpu "num=1:mode=exclusive_process"
-#BSUB -W 8:00
-#BSUB -R "rusage[mem=4GB]"
+#BSUB -W 4:00
+#BSUB -R "rusage[mem=16GB]"
 #BSUB -u s203557@dtu.dk
 #BSUB -B
 #BSUB -env "LSB_JOB_REPORT_MAIL=N"
