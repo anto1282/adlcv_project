@@ -23,6 +23,7 @@ train_pipeline = [
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', reduce_zero_label=True)
     dict(
         type='MultiScaleFlipAug',
         img_scale=(2048, 512),
@@ -33,11 +34,12 @@ test_pipeline = [
             dict(type='RandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='ImageToTensor', keys=['img']),
-            dict(type='Collect', keys=['img']),
+            dict(type='GenerateBoundingBoxMasksFromSeg',max_boxes = 6),  
+            dict(type='Collect', keys=['img',"gt_semantic_seg","gt_bbox_masks"]),
         ])
 ]
 data = dict(
-    samples_per_gpu=4,
+    samples_per_gpu=1,
     workers_per_gpu=4,
     train=dict(
         type=dataset_type,

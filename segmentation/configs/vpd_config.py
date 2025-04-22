@@ -42,7 +42,7 @@ optimizer = dict(type='AdamW', lr=0.00008, weight_decay=0.001,
 # ONLY specify the keys you want to override from the base config's 'data' dict.
 # MMCV will automatically merge these changes into the inherited 'data' dictionary.
 data = dict(
-    samples_per_gpu=16,
+    samples_per_gpu=1,
     workers_per_gpu=8
     # DO NOT redefine train, val, test here.
     # They will be inherited correctly from '_base_/datasets/ade20k_vpd.py'

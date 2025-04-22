@@ -258,17 +258,19 @@ class UNetWrapper(nn.Module):
         frozen_unet = self.unet.diffusion_model
 
         # Shared embedding
-        t_emb = timestep_embedding(timesteps, trainable_unet.model_channels, repeat_only=False)
-        emb = trainable_unet.time_embed(t_emb)
-        if trainable_unet.num_classes is not None:
+        t_emb = timestep_embedding(timesteps, frozen_unet.model_channels, repeat_only=False)
+        emb = frozen_unet.time_embed(t_emb)
+        
+        if frozen_unet.num_classes is not None:
             emb = emb + trainable_unet.label_emb(y)
 
-        h = x.type(trainable_unet.dtype)
+        h = x.type(frozen_unet.dtype)
         hs = []
         ctrl_id = 0
 
         for i in range(len(trainable_unet.input_blocks)):
             if box_control is not None and i in [2, 5, 8]:
+                print("THERE IS BOX CONTROL!!!")
                 if i == 2:
                     _convs = self.zero_convs[0:2]
                 elif i == 5:

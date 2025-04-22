@@ -105,7 +105,8 @@ class VPDSeg(BaseSegmentor):
         if boxes is not None:
             # box_map = self.make_box_map(boxes, img.shape[-2:], img.device)
             box_feats = self.box_encoder(boxes)
-
+        else:
+            box_feats = None
 
         # Cross-attention conditioning
         c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma)
