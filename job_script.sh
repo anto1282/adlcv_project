@@ -20,4 +20,4 @@ module load cuda/11.3
 source /dtu/blackhole/0e/154958/miniconda3/bin/activate ldm
 
 
-python segmentation/train.py segmentation/configs/vpd_config.py --load-from /work3/s203557/checkpoints/vpd.chkpt 
+python segmentation/train.py segmentation/configs/vpd_config.py --load-from /work3/s203557/checkpoints/vpd.chkpt --no-validate

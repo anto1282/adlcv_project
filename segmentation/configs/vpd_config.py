@@ -38,16 +38,7 @@ optimizer = dict(type='AdamW', lr=0.00008, weight_decay=0.001,
                                         'text_encoder': dict(lr_mult=0.0),
                                         'norm': dict(decay_mult=0.)}))
 
-# --- CORRECTED DATA SECTION ---
-# ONLY specify the keys you want to override from the base config's 'data' dict.
-# MMCV will automatically merge these changes into the inherited 'data' dictionary.
-data = dict(
-    samples_per_gpu=1,
-    workers_per_gpu=8
-    # DO NOT redefine train, val, test here.
-    # They will be inherited correctly from '_base_/datasets/ade20k_vpd.py'
-)
-# --- End Corrected Data Section ---
+
 work_dir = '/work3/s203557/experiments/control_net_vpd/'
 fp16 = dict(loss_scale=512.0)
 

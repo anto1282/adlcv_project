@@ -270,7 +270,6 @@ class UNetWrapper(nn.Module):
 
         for i in range(len(trainable_unet.input_blocks)):
             if box_control is not None and i in [2, 5, 8]:
-                print("THERE IS BOX CONTROL!!!")
                 if i == 2:
                     _convs = self.zero_convs[0:2]
                 elif i == 5:

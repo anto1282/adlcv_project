@@ -21,6 +21,26 @@ train_pipeline = [
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_semantic_seg',"gt_bbox_masks"]),
 ]
+
+val_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', reduce_zero_label=True),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(512, 512),
+        flip=False,
+        transforms=[
+            dict(type='Resize', keep_ratio=True),
+            dict(type='Pad', size=crop_size, pad_val=0, seg_pad_val=255),
+            dict(type='RandomFlip', prob=0.0),
+            dict(type='Normalize', **img_norm_cfg),
+            dict(type='GenerateBoundingBoxMasksFromSeg', max_boxes=6),
+            dict(type='DefaultFormatBundle'),
+            dict(type='Collect', keys=['img', 'gt_bbox_masks']),
+        ]),
+]
+
+
 test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', reduce_zero_label=True),
@@ -52,7 +72,9 @@ data = dict(
         data_root=data_root,
         img_dir='images/validation',
         ann_dir='annotations/validation',
-        pipeline=test_pipeline),
+        pipeline=val_pipeline,
+        test_mode=False
+        ),
     test=dict(
         type=dataset_type,
         data_root=data_root,
