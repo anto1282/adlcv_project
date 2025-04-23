@@ -16,7 +16,7 @@ from omegaconf import OmegaConf
 from einops import rearrange, repeat
 from ldm.util import instantiate_from_config
 from vpd import UNetWrapper, TextAdapter, EncoderControlNet 
-
+import random
 import copy
 
 
@@ -101,13 +101,31 @@ class VPDSeg(BaseSegmentor):
         latents = latents.mode().detach()
 
         # Get box-derived control features
+        box_feats = None
+
         if isinstance(boxes, list):
             boxes = boxes[0] 
 
-        if boxes is not None:
-            box_feats = self.box_encoder(boxes)
-        else:
-            box_feats = None
+        if isinstance(boxes, dict): 
+            temp_feats = {}
+
+            for k, v in boxes.items():
+                if v.dim() == 4:
+                    B, n_cls, H, W = v.shape
+                    selected = []
+                    for i in range(B):
+                        class_idx = random.randint(0, n_cls - 1)
+                        selected_mask = v[i, class_idx]  
+                        selected.append(selected_mask.unsqueeze(0))  
+                    selected = torch.stack(selected, dim=0)  
+                else:
+                    raise ValueError("Expected shape (B, n_cls, H, W) for each annotation type")
+
+                temp_feats[k] = self.box_encoder(selected, input_type=k)
+
+            # Randomly choose one input type
+            selected_type = random.choice(list(temp_feats.keys()))
+            box_feats = temp_feats[selected_type]
 
              
         # Cross-attention conditioning
@@ -171,7 +189,7 @@ class VPDSeg(BaseSegmentor):
 
         return seg_logit
 
-    def forward_train(self, img, img_metas, gt_semantic_seg, gt_bbox_masks=None):
+    def forward_train(self, img, img_metas, gt_semantic_seg, input_type:str, gt_bbox_masks=None):
         """Forward function for training.
 
         Args:
@@ -187,7 +205,7 @@ class VPDSeg(BaseSegmentor):
         Returns:
             dict[str, Tensor]: a dictionary of loss components
         """
-        x = self.extract_feat(img, boxes=gt_bbox_masks)
+        x = self.extract_feat(img, input_type=input_type,boxes=gt_bbox_masks)
 
         if self.with_neck:
             x = self.neck(x)

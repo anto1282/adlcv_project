@@ -441,85 +441,69 @@ class ZeroConv2d(nn.Conv2d):
 
 
 class EncoderControlNet(nn.Module):
-    def __init__(self, in_channels=6, base_channels=64, shared = True):
+    def __init__(self, in_channels=1, base_channels=64):
         super().__init__()
 
-        self.shared = shared
-        ## Skal de dele vægte?
-        if shared:
-            self.out64 = nn.Sequential(               
-                nn.Conv2d(320, 320, 3, padding=1),
-                nn.ReLU(inplace=True))
-            
-            self.out32 = nn.Sequential(               
-                nn.Conv2d(640, 640, 3, padding=1),
-                nn.ReLU(inplace=True))
-            
-            self.out16 = nn.Sequential(               
-                nn.Conv2d(1280, 1280, 3, padding=1),
-                nn.ReLU(inplace=True))
-            
-                # 1/8 resolution (64x64)
-            self.conv64 = nn.Sequential(
-                nn.Conv2d(in_channels, 128, 3, stride=2, padding=1),  # /2
-                nn.ReLU(inplace=True),
-                nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
-                nn.ReLU(inplace=True),
-                nn.Conv2d(320, 320, 3, stride=2, padding=1),  # /4
-                nn.ReLU(inplace=True),
+        self.box_cnn = nn.Sequential(
+            nn.Conv2d(1, 128, 3, stride=2, padding=1),  # /2
+            nn.ReLU(inplace=True),
+            nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
+            nn.ReLU(inplace=True),
+        )
+        self.scribble_cnn = nn.Sequential(
+            nn.Conv2d(1, 128, 3, stride=2, padding=1),  # /2
+            nn.ReLU(inplace=True),
+            nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
+            nn.ReLU(inplace=True)
             )
-            # 1/16 resolution (32x32)
-            self.conv32 = nn.Sequential(
-                nn.Conv2d(320, 640, 3, stride=2, padding=1),  # /8
-                nn.ReLU(inplace=True),
+        self.dot_cnn = nn.Sequential(
+            nn.Conv2d(1, 128, 3, stride=2, padding=1),  # /2
+            nn.ReLU(inplace=True),
+            nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
+            nn.ReLU(inplace=True)
             )
-            # 1/32 resolution (16x16)
-            self.conv16 = nn.Sequential(
-                nn.Conv2d(640, 1280, 3, stride=2, padding=1),  # /16
-                nn.ReLU(inplace=True),
-            )
-        else:
+
+        self.out64 = nn.Sequential(               
+            nn.Conv2d(320, 320, 3, padding=1),
+            nn.ReLU(inplace=True))
+        
+        self.out32 = nn.Sequential(               
+            nn.Conv2d(640, 640, 3, padding=1),
+            nn.ReLU(inplace=True))
+        
+        self.out16 = nn.Sequential(               
+            nn.Conv2d(1280, 1280, 3, padding=1),
+            nn.ReLU(inplace=True))
+        
             # 1/8 resolution (64x64)
-            self.conv64 = nn.Sequential(
-                nn.Conv2d(in_channels, 128, 3, stride=2, padding=1),  # /2
-                nn.ReLU(inplace=True),
-                nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
-                nn.ReLU(inplace=True),
-                nn.Conv2d(320, 320, 3, padding=1),
-                nn.ReLU(inplace=True)
-            )
-            # 1/16 resolution (32x32)
-            self.conv32 = nn.Sequential(
-                nn.Conv2d(in_channels, 320, 3, stride=2, padding=1),  # /2
-                nn.ReLU(inplace=True),
-                nn.Conv2d(320, 640, 3, stride=2, padding=1),  # /4
-                nn.ReLU(inplace=True),
-                nn.Conv2d(640, 640, 3, stride=2, padding=1),  # /8
-                nn.ReLU(inplace=True),
-                nn.Conv2d(640, 640, 3, padding=1),
-                nn.ReLU(inplace=True)
-            )
-            # 1/32 resolution (16x16)
-            self.conv16 = nn.Sequential(
-                nn.Conv2d(in_channels, 320, 3, stride=2, padding=1),  # /2
-                nn.ReLU(inplace=True),
-                nn.Conv2d(320, 640, 3, stride=2, padding=1),  # /4
-                nn.ReLU(inplace=True),
-                nn.Conv2d(640, 640, 3, stride=2, padding=1),  # /8
-                nn.ReLU(inplace=True),
-                nn.Conv2d(640, 1280, 3, stride=2, padding=1),  # /16
-                nn.ReLU(inplace=True),
-            )
+        self.conv64 = nn.Sequential(
+            nn.Conv2d(320, 320, 3, stride=2, padding=1),  # /8
+            nn.ReLU(inplace=True),
+        )
+        # 1/16 resolution (32x32)
+        self.conv32 = nn.Sequential(
+            nn.Conv2d(320, 640, 3, stride=2, padding=1),  # /16
+            nn.ReLU(inplace=True),
+        )
+        # 1/32 resolution (16x16)
+        self.conv16 = nn.Sequential(
+            nn.Conv2d(640, 1280, 3, stride=2, padding=1),  # /32
+            nn.ReLU(inplace=True),
+        )
+    
 
-    def forward(self, x):
-        if self.shared:
-            out64 = self.conv64(x)
-            out32 = self.conv32(out64)
-            out16 = self.conv16(out32)
-            return [self.out64(out64), self.out32(out32), self.out16(out16)]
+    def forward(self, x, input_type: str):
 
-        else:  
-            out64 = self.conv64(x)
-            out32 = self.conv32(x)
-            out16 = self.conv16(x)
-        return [out64, out32, out16] # correct order for input_blocks [2, 5, 8]
+        if input_type == "scribble":
+            x = self.scribble_cnn(x)
+        elif input_type == "box":
+            x = self.box_cnn(x)
+        else:
+            x = self.dot_cnn(x)
+
+
+        out64 = self.conv64(x)
+        out32 = self.conv32(out64)
+        out16 = self.conv16(out32)
+        return [self.out64(out64), self.out32(out32), self.out16(out16)]
+

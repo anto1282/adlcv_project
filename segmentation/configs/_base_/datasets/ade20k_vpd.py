@@ -17,29 +17,35 @@ train_pipeline = [
     dict(type='PhotoMetricDistortion'),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size=crop_size, pad_val=0, seg_pad_val=255),
-    dict(type='GenerateBoundingBoxMasksFromSeg',max_boxes = 6),  
+    dict(
+        type='LoadPerClassMasksFromFolder',
+        mask_root='/work3/s203557/data/bbox_masks/training',
+        types=['box', 'scribble', 'dot'],
+        suffix='.npy'
+    ),
     dict(type='DefaultFormatBundle'),
-    dict(type='Collect', keys=['img', 'gt_semantic_seg',"gt_bbox_masks"]),
+    dict(type='Collect', keys=['img', 'gt_semantic_seg', 'gt_bbox_masks']),
 ]
-
-
 
 
 test_pipeline = [
     dict(type='LoadImageFromFile'),
-    dict(type="LoadAnnotations"),
     dict(
         type='MultiScaleFlipAug',
         img_scale=(512, 512),
-        #img_ratios=[0.5, 0.75, 1.0, 1.25, 1.5, 1.75],
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=False),
             dict(type='RandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
-            dict(type='GenerateBoundingBoxMasksFromSeg',max_boxes = 6),  
-            dict(type='ImageToTensor', keys=['img']),
-            dict(type='Collect', keys=['img']),
+            dict(
+                type='LoadAllAnnotationTypesFromFile',
+                mask_folder='/work3/s203557/data/bbox_masks/validation',
+                suffix='.npy',
+                types=['box', 'scribble', 'dot']
+            ),
+            dict(type='ImageToTensor', keys=['img']),  # masks already tensors
+            dict(type='Collect', keys=['img', 'gt_bbox_masks']),
         ])
 ]
 
