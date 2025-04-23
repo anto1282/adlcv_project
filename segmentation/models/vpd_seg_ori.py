@@ -9,15 +9,11 @@ from mmseg.models.builder import SEGMENTORS
 from mmseg.models.segmentors.base import BaseSegmentor
 
 import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from omegaconf import OmegaConf
 from einops import rearrange, repeat
-from ldm.util import instantiate_from_config
-from vpd import UNetWrapper, TextAdapter, EncoderControlNet 
 
-import copy
+from ldm.util import instantiate_from_config
+from vpd import UNetWrapper, TextAdapter
 
 
 @SEGMENTORS.register_module()
@@ -31,30 +27,25 @@ class VPDSeg(BaseSegmentor):
 
     def __init__(self,
                  decode_head,
-                 base_size = 512,
                  sd_path='/work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt',
-                 sd_config = "/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/v1-inference.yaml",
                  unet_config=dict(),
-                 class_embedding_path='/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/class_embeddings.pth',
+                 class_embedding_path='class_embeddings.pth',
                  gamma_init_value=1e-4,
                  neck=None,
                  auxiliary_head=None,
                  train_cfg=None,
                  test_cfg=None,
                  init_cfg=None,
-                 max_boxes = 6,
                  **args):
         super().__init__(init_cfg)
-        config = OmegaConf.load(sd_config)
-        config.model.params.ckpt_path = f'{sd_path}'
+        config = OmegaConf.load('v1-inference.yaml')
+        config.model.params.ckpt_path = sd_path
         config.model.params.cond_stage_config.target = 'ldm.modules.encoders.modules.AbstractEncoder'
-        
+
         # prepare the unet        
         sd_model = instantiate_from_config(config.model)
         self.encoder_vq = sd_model.first_stage_model
-        self.unet = UNetWrapper(sd_model.model, base_size=base_size, **unet_config)
-        self.box_encoder = EncoderControlNet(in_channels = max_boxes )
-        
+        self.unet = UNetWrapper(sd_model.model, **unet_config)
         sd_model.model = None
         sd_model.first_stage_model = None
         del sd_model.cond_stage_model
@@ -94,43 +85,18 @@ class VPDSeg(BaseSegmentor):
             else:
                 self.auxiliary_head = builder.build_head(auxiliary_head)
 
-    def extract_feat(self, img, boxes=None):
-        """Extract features from images and apply control if boxes are provided."""
+    def extract_feat(self, img):
+        """Extract features from images."""
+        print(img.shape)
         with torch.no_grad():
             latents = self.encoder_vq.encode(img)
         latents = latents.mode().detach()
-
-        # Get box-derived control features
-        if isinstance(boxes, list):
-            boxes = boxes[0] 
-
-        if boxes is not None:
-            box_feats = self.box_encoder(boxes)
-        else:
-            box_feats = None
-
-             
-        # Cross-attention conditioning
-        c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma)
-        t = torch.ones((img.shape[0],), device=img.device).long()
+        c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma) # NOTE: here the c_crossattn should be expand_dim as latents
         
-        # Send latents, context, and control to UNet
-
-        outs = self.unet(latents, t, context=c_crossattn, box_control=box_feats)
-
+        t = torch.ones((img.shape[0],), device=img.device).long()
+        outs = self.unet(latents, t, c_crossattn=[c_crossattn])
         return outs
-    
-    def make_box_map(self, boxes, img_size, device):
-        """Convert bounding boxes to binary control maps (1 channel)."""
-        B, H, W = len(boxes), *img_size
-        maps = torch.zeros((B, 1, H, W), device=device)
 
-        for i, bboxes in enumerate(boxes):  # boxes[i] = [N, 4] in xyxy format
-            for box in bboxes:
-                x1, y1, x2, y2 = box.int()
-                maps[i, 0, y1:y2, x1:x2] = 1.0
-        return maps
-    
     def _decode_head_forward_train(self, x, img_metas, gt_semantic_seg):
         """Run forward function and calculate loss for decode head in
         training."""
@@ -171,7 +137,7 @@ class VPDSeg(BaseSegmentor):
 
         return seg_logit
 
-    def forward_train(self, img, img_metas, gt_semantic_seg, gt_bbox_masks=None):
+    def forward_train(self, img, img_metas, gt_semantic_seg):
         """Forward function for training.
 
         Args:
@@ -187,7 +153,8 @@ class VPDSeg(BaseSegmentor):
         Returns:
             dict[str, Tensor]: a dictionary of loss components
         """
-        x = self.extract_feat(img, boxes=gt_bbox_masks)
+
+        x = self.extract_feat(img)
 
         if self.with_neck:
             x = self.neck(x)
@@ -203,10 +170,10 @@ class VPDSeg(BaseSegmentor):
             losses.update(loss_aux)
         return losses
 
-    def encode_decode(self, img, img_metas, gt_bbox_masks=None):
+    def encode_decode(self, img, img_metas):
         """Encode images with backbone and decode into a semantic segmentation
         map of the same size as input."""
-        x = self.extract_feat(img, boxes=gt_bbox_masks)
+        x = self.extract_feat(img)
         if self.with_neck:
             x = list(self.neck(x))
         out = self._decode_head_forward_test(x, img_metas)  
@@ -263,10 +230,10 @@ class VPDSeg(BaseSegmentor):
                 warning=False)
         return preds
 
-    def whole_inference(self, img, img_meta, gt_bbox_masks=None, rescale=True):
+    def whole_inference(self, img, img_meta, rescale):
         """Inference with full image."""
 
-        seg_logit = self.encode_decode(img, img_meta,gt_bbox_masks=gt_bbox_masks)
+        seg_logit = self.encode_decode(img, img_meta)
         if rescale:
             # support dynamic shape for onnx
             if torch.onnx.is_in_onnx_export():
@@ -285,7 +252,7 @@ class VPDSeg(BaseSegmentor):
 
         return seg_logit
 
-    def inference(self, img, img_meta, gt_bbox_masks= None,rescale = True):
+    def inference(self, img, img_meta, rescale):
         """Inference with slide/whole style.
 
         Args:
@@ -301,34 +268,28 @@ class VPDSeg(BaseSegmentor):
             Tensor: The output segmentation map.
         """
 
-        if isinstance(img_meta[0], list):
-            img_meta = [m for meta in img_meta for m in meta]
         assert self.test_cfg.mode in ['slide', 'whole']
-
+        ori_shape = img_meta[0]['ori_shape']
+        assert all(_['ori_shape'] == ori_shape for _ in img_meta)
         if self.test_cfg.mode == 'slide':
-            seg_logits = self.whole_inference(img, img_meta, gt_bbox_masks=gt_bbox_masks, rescale=rescale)
+            seg_logit = self.slide_inference(img, img_meta, rescale)
         else:
-            seg_logits = self.whole_inference(img, img_meta, gt_bbox_masks=gt_bbox_masks, rescale=rescale)
+            seg_logit = self.whole_inference(img, img_meta, rescale)
+        output = F.softmax(seg_logit, dim=1)
+        flip = img_meta[0]['flip']
+        if flip:
+            flip_direction = img_meta[0]['flip_direction']
+            assert flip_direction in ['horizontal', 'vertical']
+            if flip_direction == 'horizontal':
+                output = output.flip(dims=(3, ))
+            elif flip_direction == 'vertical':
+                output = output.flip(dims=(2, ))
 
-        seg_logits = F.softmax(seg_logits, dim=1)
-        batch_preds = []
-        for i in range(seg_logits.shape[0]):
-            pred = seg_logits[i:i+1]  # shape: (1, C, H, W)
-            meta = img_meta[i]
+        return output
 
-            if meta.get('flip', False):
-                flip_direction = meta.get('flip_direction', 'horizontal')
-                if flip_direction == 'horizontal':
-                    pred = pred.flip(dims=(3,))
-                elif flip_direction == 'vertical':
-                    pred = pred.flip(dims=(2,))
-            batch_preds.append(pred)
-
-        return torch.cat(batch_preds, dim=0)  # (B, C, H, W)
-
-    def simple_test(self, img, img_meta, gt_bbox_masks= None,rescale=True):
+    def simple_test(self, img, img_meta, rescale=True):
         """Simple test with single image."""
-        seg_logit = self.inference(img, img_meta, gt_bbox_masks=gt_bbox_masks,rescale= rescale)
+        seg_logit = self.inference(img, img_meta, rescale)
         seg_pred = seg_logit.argmax(dim=1)
         if torch.onnx.is_in_onnx_export():
             # our inference backend only support 4D output
@@ -339,7 +300,7 @@ class VPDSeg(BaseSegmentor):
         seg_pred = list(seg_pred)
         return seg_pred
 
-    def aug_test(self, imgs, img_metas, gt_bbox_masks= None,rescale=True):
+    def aug_test(self, imgs, img_metas, rescale=True):
         """Test with augmentations.
 
         Only rescale=True is supported.
@@ -347,9 +308,9 @@ class VPDSeg(BaseSegmentor):
         # aug_test rescale all imgs back to ori_shape for now
         assert rescale
         # to save memory, we get augmented seg logit inplace
-        seg_logit = self.inference(imgs[0], img_metas[0], gt_bbox_masks=gt_bbox_masks,rescale= rescale)
+        seg_logit = self.inference(imgs[0], img_metas[0], rescale)
         for i in range(1, len(imgs)):
-            cur_seg_logit = self.inference(imgs[i], img_metas[i],gt_bbox_masks=gt_bbox_masks[i],rescale= rescale)
+            cur_seg_logit = self.inference(imgs[i], img_metas[i], rescale)
             seg_logit += cur_seg_logit
         seg_logit /= len(imgs)
         seg_pred = seg_logit.argmax(dim=1)

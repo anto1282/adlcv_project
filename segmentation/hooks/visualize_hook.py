@@ -132,4 +132,73 @@ class TrainVisualizeHook(Hook):
             mmcv.imwrite(vis_img, os.path.join(self.save_dir, f'{runner.iter}_img_{i}.png'))
             mmcv.imwrite(colored_gt, os.path.join(self.save_dir, f'{runner.iter}_gt_{i}.png'))
             mmcv.imwrite(colored_pred, os.path.join(self.save_dir, f'{runner.iter}_pred_{i}.png'))
+    def before_val_iter(self, runner):
+        if runner.iter % self.interval != 0:
+            return
+
+        # Get the real PyTorch DataLoader
+        dataloader = runner.data_loader._dataloader
+        data_iter = iter(dataloader)
+        batch = next(data_iter)
+
+        imgs = batch['img'].data[0]
+        gts = batch['gt_semantic_seg'].data[0].cpu().numpy()
+        boxes = batch.get('gt_bbox_masks', None)
+
+        # Run inference
+        runner.model.eval()
+        device = next(runner.model.module.parameters()).device 
+        with torch.no_grad():
+            preds = runner.model.module.simple_test(
+                batch['img'].data[0].to(device),
+                batch['img_metas'].data[0],
+                gt_bbox_masks=boxes.data[0].to(device) if boxes is not None else None
+            )
+
+        for i in range(min(self.num_samples, len(imgs))):
+            img = imgs[i]
+            img = self.denormalize_img(img).transpose(1, 2, 0).astype(np.uint8)
+            pred = preds[i].astype(np.uint8)
+            gt = gts[i].squeeze().astype(np.uint8)
+            vis_img = img.copy()
+            # flip = batch["img_metas"].data[0][i].get("flip",False)
+            # flip_direction = batch["img_metas"].data[0][i].get("flip_direction", "horizontal")
+            # # --- reverse flip ---
+            # if flip:
+            #     if flip_direction == 'horizontal':
+            #         vis_img = np.fliplr(vis_img)
+            #         gt = np.fliplr(gt)
+            #         pred = np.fliplr(pred)
+            #     elif flip_direction == 'vertical':
+            #         vis_img = np.flipud(vis_img)
+            #         gt = np.flipud(gt)
+            #         pred = np.flipud(pred)
+            # Draw bounding boxes if available
+            if boxes is not None:
+                # boxes: [C, H, W]ø
+                box_tensor = boxes.data[i].cpu().numpy().astype(np.uint8)
+                vis_img = np.ascontiguousarray(vis_img)
+                count = 0
+                for c in range(box_tensor.shape[0]):
+                    box_mask = box_tensor[c]
+
+                    if box_mask.sum() == 0:
+                        count += 1
+                        continue  # skip empty masks
+                    if box_mask.ndim == 3:
+                        box_mask = box_mask.squeeze()
+
+                    ys, xs = np.where(box_mask)
+                    y1, y2 = ys.min(), ys.max()
+                    x1, x2 = xs.min(), xs.max()
+
+                    color = tuple(random.randint(0, 255) for _ in range(3))
+                    vis_img = cv2.rectangle(vis_img, (x1, y1), (x2, y2), color, 2)
+                print(f"Empty masks = {count}")
+            colored_pred = self.apply_palette(pred, ADE20K_palette)
+            colored_gt = self.apply_palette(gt, ADE20K_palette)
+
+            mmcv.imwrite(vis_img, os.path.join(self.save_dir, f'{runner.iter}_img_{i}.png'))
+            mmcv.imwrite(colored_gt, os.path.join(self.save_dir, f'{runner.iter}_gt_{i}.png'))
+            mmcv.imwrite(colored_pred, os.path.join(self.save_dir, f'{runner.iter}_pred_{i}.png'))
 

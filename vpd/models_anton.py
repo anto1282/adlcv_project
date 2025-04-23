@@ -256,7 +256,6 @@ class UNetWrapper(nn.Module):
 
         trainable_unet = self.trainable_unet.diffusion_model
         frozen_unet = self.unet.diffusion_model
-
         # Shared embedding
         t_emb = timestep_embedding(timesteps, frozen_unet.model_channels, repeat_only=False)
         emb = frozen_unet.time_embed(t_emb)
@@ -276,6 +275,7 @@ class UNetWrapper(nn.Module):
                     _convs = self.zero_convs[2:4]
                 elif i == 8:
                     _convs = self.zero_convs[4:6]
+                
 
                 h_trainable = _convs[0](box_control[ctrl_id]) + h
                 h_trainable = trainable_unet.input_blocks[i](h_trainable, emb, context)
@@ -426,6 +426,16 @@ class ZeroConv2d(nn.Conv2d):
         nn.init.zeros_(self.weight)
         if self.bias is not None:
             nn.init.zeros_(self.bias)
+    
+    def reset_parameters(self):
+    # PyTorch’s default would Kaiming-init here; we override
+        nn.init.constant_(self.weight, 0.)
+        if self.bias is not None:
+            nn.init.constant_(self.bias, 0.)
+
+    # Optional: do nothing when mmseg calls init_weights()
+    def init_weights(self):
+        pass
 
 
 

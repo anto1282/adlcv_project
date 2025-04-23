@@ -226,6 +226,7 @@ class UNetWrapper(nn.Module):
         if self.use_attn:
             self.attention_store.reset()
         out_list = self.unet(*args, **kwargs)
+        
         if self.use_attn:
             avg_attn = self.attention_store.get_average_attention()
             attn16, attn32, attn64 = self.process_attn(avg_attn)
