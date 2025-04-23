@@ -180,7 +180,7 @@ class VPDSeg(BaseSegmentor):
 
         return seg_logit
 
-    def forward_train(self, img, img_metas, gt_semantic_seg, input_type:str, gt_bbox_masks=None):
+    def forward_train(self, img, img_metas, gt_semantic_seg, gt_bbox_masks=None):
         """Forward function for training.
 
         Args:
@@ -196,6 +196,9 @@ class VPDSeg(BaseSegmentor):
         Returns:
             dict[str, Tensor]: a dictionary of loss components
         """
+        input_type = img_metas[0]['input_type']  # assume same for all images
+
+
         x = self.extract_feat(img, input_type=input_type,boxes=gt_bbox_masks)
 
         if self.with_neck:

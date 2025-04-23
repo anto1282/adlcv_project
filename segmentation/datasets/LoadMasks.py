@@ -22,17 +22,17 @@ class LoadPerClassMasksFromFolder:
 
         # Detect split from path
         full_path = results['img_info']['filename']
-        split = 'training' if 'training' in full_path else 'validation'
+        split = 'training' if 'train' in full_path else 'validation'
 
         gt_bbox_masks = {}
 
         for input_type in self.types:
-            # e.g., prompt_masks_box/training
             type_dir = os.path.join(f"{self.mask_root}_{input_type}", split)
             class_masks = []
 
             for file in sorted(os.listdir(type_dir)):
                 if file.startswith(base_name + '_cls') and file.endswith(self.suffix):
+
                     mask = np.load(os.path.join(type_dir, file))
                     class_masks.append(torch.from_numpy(mask))
 
@@ -43,7 +43,7 @@ class LoadPerClassMasksFromFolder:
             gt_bbox_masks[input_type] = stacked
 
         chosen_type = random.choice(list(gt_bbox_masks.keys()))
+        
         results['gt_bbox_masks'] = gt_bbox_masks[chosen_type]
-        results['input_type'] = chosen_type
-
+        results['img_meta']['input_type'] = chosen_type
         return results

@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'ADE20KDataset'
-data_root = '/work3/s203557/data/ade20k-dataset/versions/2/ADEChallengeData2016'
+data_root = '/work3/s203520/advanced_computer_vision/filtered_dataset'
 
 # use the normalization as the VQ-GAN in Stable-Diffusion
 IMG_MEAN = [v * 255 for v in [0.5, 0.5, 0.5]]
@@ -13,7 +13,7 @@ train_pipeline = [
     dict(type='LoadAnnotations', reduce_zero_label=True),
     dict(
         type='LoadPerClassMasksFromFolder',
-        mask_root='/work3/s203557/data/bbox_masks/training',
+        mask_root='/work3/s203520/advanced_computer_vision/filtered_dataset/prompt_masks',
         types=['box', 'scribble', 'dot'],
         suffix='.npy'
     ),
@@ -40,7 +40,7 @@ test_pipeline = [
             dict(type='Normalize', **img_norm_cfg),
             dict(
                 type='LoadPerClassMasksFromFolder',
-                mask_folder='/work3/s203557/data/bbox_masks/validation',
+                mask_root='/work3/s203520/advanced_computer_vision/filtered_dataset/prompt_masks',
                 suffix='.npy',
                 types=['box', 'scribble', 'dot']
             ),
@@ -50,7 +50,7 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=4,
+    samples_per_gpu=1,
     workers_per_gpu=4,
     train=dict(
         type=dataset_type,
