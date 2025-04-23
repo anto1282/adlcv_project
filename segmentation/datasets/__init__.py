@@ -1,1 +1,2 @@
 from .bbox import GenerateBoundingBoxMasksFromSeg
+from .LoadMasks import LoadPerClassMasksFromFolder

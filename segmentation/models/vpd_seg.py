@@ -94,7 +94,7 @@ class VPDSeg(BaseSegmentor):
             else:
                 self.auxiliary_head = builder.build_head(auxiliary_head)
 
-    def extract_feat(self, img, boxes=None):
+    def extract_feat(self, img, boxes=None, input_type=None):
         """Extract features from images and apply control if boxes are provided."""
         with torch.no_grad():
             latents = self.encoder_vq.encode(img)
@@ -106,26 +106,17 @@ class VPDSeg(BaseSegmentor):
         if isinstance(boxes, list):
             boxes = boxes[0] 
 
-        if isinstance(boxes, dict): 
-            temp_feats = {}
+        if boxes is not None and boxes.dim() == 4:  # boxes: (B, n_cls, H, W)
+                B, n_cls, H, W = boxes.shape
+                selected = []
+                for i in range(B):
+                    class_idx = random.randint(0, n_cls - 1)
+                    selected_mask = boxes[i, class_idx]  # (H, W)
+                    selected.append(selected_mask.unsqueeze(0))  # (1, H, W)
+                selected = torch.stack(selected, dim=0)  # (B, 1, H, W)
 
-            for k, v in boxes.items():
-                if v.dim() == 4:
-                    B, n_cls, H, W = v.shape
-                    selected = []
-                    for i in range(B):
-                        class_idx = random.randint(0, n_cls - 1)
-                        selected_mask = v[i, class_idx]  
-                        selected.append(selected_mask.unsqueeze(0))  
-                    selected = torch.stack(selected, dim=0)  
-                else:
-                    raise ValueError("Expected shape (B, n_cls, H, W) for each annotation type")
-
-                temp_feats[k] = self.box_encoder(selected, input_type=k)
-
-            # Randomly choose one input type
-            selected_type = random.choice(list(temp_feats.keys()))
-            box_feats = temp_feats[selected_type]
+                assert input_type is not None, "input_type must be provided when using box_control"
+                box_feats = self.box_encoder(selected, input_type=input_type)
 
              
         # Cross-attention conditioning
