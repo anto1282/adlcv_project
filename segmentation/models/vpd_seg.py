@@ -93,41 +93,88 @@ class VPDSeg(BaseSegmentor):
                     self.auxiliary_head.append(builder.build_head(head_cfg))
             else:
                 self.auxiliary_head = builder.build_head(auxiliary_head)
-
-    def extract_feat(self, img, boxes=None, input_type=None):
-        """Extract features from images and apply control if boxes are provided."""
+    def extract_feat(self, img, img_metas, gt_bbox_masks=None):
+        """Extract features from images and apply control if gt_bbox_masks are provided."""
         with torch.no_grad():
             latents = self.encoder_vq.encode(img)
         latents = latents.mode().detach()
-
-        # Get box-derived control features
         box_feats = None
+        input_type = None
+        
+        # Check if bbox masks are provided
+        if gt_bbox_masks is not None:
+            if isinstance(gt_bbox_masks, dict):
+                # Validation: multiple input types available
+                input_type = random.choice(list(gt_bbox_masks.keys()))
+                masks = gt_bbox_masks[input_type]  # (B, n_cls, H, W)
+            else:
+                # Training: only one input type
+                masks = gt_bbox_masks  # (B, n_cls, H, W)
+                input_type = img_metas[0]['input_type']
 
-        if isinstance(boxes, list):
-            boxes = boxes[0] 
+            # Make sure masks are 4D
+            if torch.is_tensor(masks):
+                if masks.dim() == 3:
+                    masks = masks.unsqueeze(0)  # (1, n_cls, H, W)
+            if isinstance(masks,list):
+                masks = masks[0]
 
-        if boxes is not None and boxes.dim() == 4:  # boxes: (B, n_cls, H, W)
-                B, n_cls, H, W = boxes.shape
-                selected = []
-                for i in range(B):
-                    class_idx = random.randint(0, n_cls - 1)
-                    selected_mask = boxes[i, class_idx]  # (H, W)
-                    selected.append(selected_mask.unsqueeze(0))  # (1, H, W)
-                selected = torch.stack(selected, dim=0)  # (B, 1, H, W)
 
-                assert input_type is not None, "input_type must be provided when using box_control"
-                box_feats = self.box_encoder(selected, input_type=input_type)
+            B,n_cls,H,W = masks.shape
+            
+            selected_masks = []
+            for i in range(B):
+                class_idx = random.randint(0, n_cls - 1)
+                selected_mask = masks[i, class_idx]  # (H, W)
+                selected_masks.append(selected_mask.unsqueeze(0))
+            selected_masks = torch.stack(selected_masks, dim=0)  # (B, 1, H, W)
 
-             
+            # Encode with the box encoder
+            box_feats = self.box_encoder(selected_masks, input_type=input_type)
+
         # Cross-attention conditioning
         c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma)
         t = torch.ones((img.shape[0],), device=img.device).long()
-        
-        # Send latents, context, and control to UNet
 
+        # Send latents, context, and control to UNet
         outs = self.unet(latents, t, context=c_crossattn, box_control=box_feats)
 
         return outs
+    
+    # def extract_feat(self, img, boxes=None, input_type=None):
+    #     """Extract features from images and apply control if boxes are provided."""
+    #     with torch.no_grad():
+    #         latents = self.encoder_vq.encode(img)
+    #     latents = latents.mode().detach()
+
+    #     # Get box-derived control features
+    #     box_feats = None
+
+    #     if isinstance(boxes, list):
+    #         boxes = boxes[0] 
+
+    #     if boxes is not None and boxes.dim() == 4:  # boxes: (B, n_cls, H, W)
+    #             B, n_cls, H, W = boxes.shape
+    #             selected = []
+    #             for i in range(B):
+    #                 class_idx = random.randint(0, n_cls - 1)
+    #                 selected_mask = boxes[i, class_idx]  # (H, W)
+    #                 selected.append(selected_mask.unsqueeze(0))  # (1, H, W)
+    #             selected = torch.stack(selected, dim=0)  # (B, 1, H, W)
+
+    #             assert input_type is not None, "input_type must be provided when using box_control"
+    #             box_feats = self.box_encoder(selected, input_type=input_type)
+
+             
+    #     # Cross-attention conditioning
+    #     c_crossattn = self.text_adapter(latents, self.class_embeddings, self.gamma)
+    #     t = torch.ones((img.shape[0],), device=img.device).long()
+        
+    #     # Send latents, context, and control to UNet
+
+    #     outs = self.unet(latents, t, context=c_crossattn, box_control=box_feats)
+
+    #     return outs
     
     def make_box_map(self, boxes, img_size, device):
         """Convert bounding boxes to binary control maps (1 channel)."""
@@ -196,10 +243,9 @@ class VPDSeg(BaseSegmentor):
         Returns:
             dict[str, Tensor]: a dictionary of loss components
         """
-        input_type = img_metas[0]['input_type']  # assume same for all images
 
 
-        x = self.extract_feat(img, input_type=input_type,boxes=gt_bbox_masks)
+        x = self.extract_feat(img,img_metas,gt_bbox_masks=gt_bbox_masks)
 
         if self.with_neck:
             x = self.neck(x)
@@ -218,7 +264,7 @@ class VPDSeg(BaseSegmentor):
     def encode_decode(self, img, img_metas, gt_bbox_masks=None):
         """Encode images with backbone and decode into a semantic segmentation
         map of the same size as input."""
-        x = self.extract_feat(img, boxes=gt_bbox_masks)
+        x = self.extract_feat(img,img_metas, gt_bbox_masks=gt_bbox_masks)
         if self.with_neck:
             x = list(self.neck(x))
         out = self._decode_head_forward_test(x, img_metas)  

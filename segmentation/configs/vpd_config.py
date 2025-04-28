@@ -1,7 +1,7 @@
 
 _base_ = [  
     '_base_/models/fpn_r50.py', '_base_/datasets/ade20k_vpd.py',
-    '_base_/default_runtime.py', '_base_/schedules/schedule_160k.py'
+    '_base_/default_runtime.py', '_base_/schedules/schedule_10k.py'
 ]
 
 custom_imports = dict(
@@ -45,5 +45,5 @@ fp16 = dict(loss_scale=512.0)
 
 log_level = 'INFO'
 custom_hooks = [
-    dict(type='TrainVisualizeHook', interval=1, num_samples=2, save_dir='vis')
+    dict(type='TrainVisualizeHook', interval=4000, num_samples=2, save_dir='vis')
 ]

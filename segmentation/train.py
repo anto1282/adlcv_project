@@ -24,6 +24,7 @@ import models
 import datasets
 
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a segmentor')
     parser.add_argument('config', help='train config file path')
@@ -254,8 +255,8 @@ def main():
         model = revert_sync_batchnorm(model)
 
     logger.info(model)
-
     datasets = [build_dataset(cfg.data.train)]
+    
     if len(cfg.workflow) == 2:
         val_dataset = copy.deepcopy(cfg.data.val)
         val_dataset.pipeline = cfg.data.train.pipeline

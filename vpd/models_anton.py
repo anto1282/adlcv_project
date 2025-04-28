@@ -276,7 +276,6 @@ class UNetWrapper(nn.Module):
                 elif i == 8:
                     _convs = self.zero_convs[4:6]
                 
-
                 h_trainable = _convs[0](box_control[ctrl_id]) + h
                 h_trainable = trainable_unet.input_blocks[i](h_trainable, emb, context)
                 h_trainable = _convs[1](h_trainable)
@@ -500,7 +499,6 @@ class EncoderControlNet(nn.Module):
             x = self.box_cnn(x)
         else:
             x = self.dot_cnn(x)
-
 
         out64 = self.conv64(x)
         out32 = self.conv32(out64)

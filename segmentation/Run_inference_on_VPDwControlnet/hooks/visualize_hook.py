@@ -125,7 +125,6 @@ class TrainVisualizeHook(Hook):
 
                     color = tuple(random.randint(0, 255) for _ in range(3))
                     vis_img = cv2.rectangle(vis_img, (x1, y1), (x2, y2), color, 2)
-                print(f"Empty masks = {count}")
             colored_pred = self.apply_palette(pred, ADE20K_palette)
             colored_gt = self.apply_palette(gt, ADE20K_palette)
 
