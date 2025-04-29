@@ -1,7 +1,7 @@
 import torch
 import random
 import numpy as np
-from mmseg.datasets.pipelines import Resize, RandomCrop, RandomFlip, Pad
+from mmseg.datasets.pipelines import Resize, RandomCrop, RandomFlip, Pad, LoadImageFromFile
 from mmseg.datasets.builder import PIPELINES
 
 from builtins import FileNotFoundError
@@ -11,6 +11,9 @@ import numpy as np
 import torch
 from mmseg.datasets.builder import PIPELINES
 
+
+
+
 @PIPELINES.register_module()
 class LoadPerClassMasksFromFolder:
     def __init__(self, mask_root, types=['box', 'scribble', 'dot'], suffix='.npy', random_select=True):
@@ -18,7 +21,7 @@ class LoadPerClassMasksFromFolder:
         self.types = types
         self.suffix = suffix
         self.random_select = random_select  # new argument!
-
+    
     def __call__(self, results):
         img_filename = os.path.basename(results['img_info']['filename'])
         base_name = os.path.splitext(img_filename)[0]
@@ -41,8 +44,10 @@ class LoadPerClassMasksFromFolder:
 
         if self.random_select:
             # During training → random one
+            
             chosen_type = random.choice(list(gt_bbox_masks.keys()))
-            results['gt_bbox_masks'] = gt_bbox_masks[chosen_type]
+            chosen_class = random.randint(0,len(gt_bbox_masks[chosen_type])-1)
+            results['gt_bbox_masks'] = gt_bbox_masks[chosen_type][chosen_class].unsqueeze(0)
             results['input_type'] = chosen_type
         else:
             # During validation → load all
@@ -54,6 +59,9 @@ class LoadPerClassMasksFromFolder:
 
 @PIPELINES.register_module()
 class ResizeWithBBox(Resize):
+    def __init__(self, img_scale=None, multiscale_mode='range', ratio_range=None, keep_ratio=True, min_size=None):
+        super().__init__(img_scale, multiscale_mode, ratio_range, keep_ratio, min_size)
+    
     def __call__(self, results):
         results = super().__call__(results)
         
@@ -68,6 +76,9 @@ class ResizeWithBBox(Resize):
 
 @PIPELINES.register_module()
 class RandomCropWithBBox(RandomCrop):
+    def __init__(self, crop_size, cat_max_ratio=1, ignore_index=255):
+        super().__init__(crop_size, cat_max_ratio, ignore_index)
+
     def __call__(self, results):
         if 'gt_bbox_masks' not in results:
             return super().__call__(results)
@@ -105,8 +116,11 @@ class RandomCropWithBBox(RandomCrop):
     
 @PIPELINES.register_module()
 class RandomFlipWithBBox(RandomFlip):
-    def __call__(self, results, prob=0.0):
-        results = super().__call__(results,prob=prob)
+    def __init__(self, prob=0.0, direction='horizontal'):
+        super().__init__(prob, direction)
+
+    def __call__(self, results):
+        results = super().__call__(results)
         if 'gt_bbox_masks' in results and results.get('flip', False):
             flip_direction = results.get('flip_direction', 'horizontal')
             masks = results['gt_bbox_masks']

@@ -1,0 +1,763 @@
+LatentDiffusion: Running in eps-prediction mode
+DiffusionWrapper has 859.52 M params.
+making attention of type 'vanilla' with 512 in_channels
+Working with z of shape (1, 4, 32, 32) = 4096 dimensions.
+making attention of type 'vanilla' with 512 in_channels
+Restored from /work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt with 0 missing and 199 unexpected keys
+Unexpected Keys: ['model_ema.decay', 'model_ema.num_updates', 'cond_stage_model.transformer.text_model.embeddings.position_ids', 'cond_stage_model.transformer.text_model.embeddings.token_embedding.weight', 'cond_stage_model.transformer.text_model.embeddings.position_embedding.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.layer_norm2.bias', 'cond_stage_model.transformer.text_model.final_layer_norm.weight', 'cond_stage_model.transformer.text_model.final_layer_norm.bias']
+ModuleList(
+  (0): ZeroConv2d(320, 320, kernel_size=(1, 1), stride=(1, 1))
+  (1): ZeroConv2d(320, 320, kernel_size=(1, 1), stride=(1, 1))
+  (2): ZeroConv2d(640, 640, kernel_size=(1, 1), stride=(1, 1))
+  (3): ZeroConv2d(640, 640, kernel_size=(1, 1), stride=(1, 1))
+  (4): ZeroConv2d(1280, 1280, kernel_size=(1, 1), stride=(1, 1))
+  (5): ZeroConv2d(1280, 1280, kernel_size=(1, 1), stride=(1, 1))
+)
+✅ All ZeroConv layers are correctly zero-initialized.
+Trainable parameters:
+  unet.trainable_unet.diffusion_model.time_embed.0.weight
+  unet.trainable_unet.diffusion_model.time_embed.0.bias
+  unet.trainable_unet.diffusion_model.time_embed.2.weight
+  unet.trainable_unet.diffusion_model.time_embed.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.0.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.0.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.norm.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.norm.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.input_blocks.1.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.norm.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.norm.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.input_blocks.2.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.input_blocks.3.0.op.weight
+  unet.trainable_unet.diffusion_model.input_blocks.3.0.op.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.norm.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.norm.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.input_blocks.4.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.norm.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.norm.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.input_blocks.5.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.input_blocks.6.0.op.weight
+  unet.trainable_unet.diffusion_model.input_blocks.6.0.op.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.norm.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.norm.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.input_blocks.7.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.norm.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.norm.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.input_blocks.8.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.input_blocks.9.0.op.weight
+  unet.trainable_unet.diffusion_model.input_blocks.9.0.op.bias
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.10.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.input_blocks.11.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.middle_block.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.middle_block.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.middle_block.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.middle_block.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.middle_block.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.middle_block.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.middle_block.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.middle_block.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.middle_block.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.middle_block.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.norm.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.norm.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.middle_block.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.middle_block.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.middle_block.2.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.middle_block.2.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.middle_block.2.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.middle_block.2.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.middle_block.2.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.middle_block.2.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.middle_block.2.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.middle_block.2.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.middle_block.2.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.middle_block.2.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.0.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.1.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.2.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.2.1.conv.weight
+  unet.trainable_unet.diffusion_model.output_blocks.2.1.conv.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.norm.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.norm.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.output_blocks.3.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.norm.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.norm.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.output_blocks.4.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.norm.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.norm.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.output_blocks.5.2.conv.weight
+  unet.trainable_unet.diffusion_model.output_blocks.5.2.conv.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.norm.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.norm.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.output_blocks.6.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.norm.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.norm.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.output_blocks.7.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.norm.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.norm.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.output_blocks.8.2.conv.weight
+  unet.trainable_unet.diffusion_model.output_blocks.8.2.conv.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.norm.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.norm.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.output_blocks.9.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.norm.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.norm.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.output_blocks.10.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.in_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.in_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.in_layers.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.in_layers.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.emb_layers.1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.emb_layers.1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.out_layers.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.out_layers.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.out_layers.3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.out_layers.3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.skip_connection.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.0.skip_connection.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.norm.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.norm.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.proj_in.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.proj_in.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn1.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn1.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn1.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn1.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn1.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.ff.net.0.proj.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.ff.net.0.proj.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.ff.net.2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.ff.net.2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn2.to_q.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn2.to_k.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn2.to_v.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn2.to_out.0.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.attn2.to_out.0.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.norm1.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.norm1.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.norm2.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.norm2.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.norm3.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.transformer_blocks.0.norm3.bias
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.proj_out.weight
+  unet.trainable_unet.diffusion_model.output_blocks.11.1.proj_out.bias
+  unet.trainable_unet.diffusion_model.out.0.weight
+  unet.trainable_unet.diffusion_model.out.0.bias
+  unet.trainable_unet.diffusion_model.out.2.weight
+  unet.trainable_unet.diffusion_model.out.2.bias
+  unet.zero_convs.0.weight
+  unet.zero_convs.0.bias
+  unet.zero_convs.1.weight
+  unet.zero_convs.1.bias
+  unet.zero_convs.2.weight
+  unet.zero_convs.2.bias
+  unet.zero_convs.3.weight
+  unet.zero_convs.3.bias
+  unet.zero_convs.4.weight
+  unet.zero_convs.4.bias
+  unet.zero_convs.5.weight
+  unet.zero_convs.5.bias
+  box_encoder.box_cnn.0.weight
+  box_encoder.box_cnn.0.bias
+  box_encoder.box_cnn.2.weight
+  box_encoder.box_cnn.2.bias
+  box_encoder.scribble_cnn.0.weight
+  box_encoder.scribble_cnn.0.bias
+  box_encoder.scribble_cnn.2.weight
+  box_encoder.scribble_cnn.2.bias
+  box_encoder.dot_cnn.0.weight
+  box_encoder.dot_cnn.0.bias
+  box_encoder.dot_cnn.2.weight
+  box_encoder.dot_cnn.2.bias
+  box_encoder.out64.0.weight
+  box_encoder.out64.0.bias
+  box_encoder.out32.0.weight
+  box_encoder.out32.0.bias
+  box_encoder.out16.0.weight
+  box_encoder.out16.0.bias
+  box_encoder.conv64.0.weight
+  box_encoder.conv64.0.bias
+  box_encoder.conv32.0.weight
+  box_encoder.conv32.0.bias
+  box_encoder.conv16.0.weight
+  box_encoder.conv16.0.bias
+  decode_head.conv_seg.weight
+  decode_head.conv_seg.bias
+  decode_head.scale_heads.0.0.conv.weight
+  decode_head.scale_heads.0.0.bn.weight
+  decode_head.scale_heads.0.0.bn.bias
+  decode_head.scale_heads.1.0.conv.weight
+  decode_head.scale_heads.1.0.bn.weight
+  decode_head.scale_heads.1.0.bn.bias
+  decode_head.scale_heads.2.0.conv.weight
+  decode_head.scale_heads.2.0.bn.weight
+  decode_head.scale_heads.2.0.bn.bias
+  decode_head.scale_heads.2.2.conv.weight
+  decode_head.scale_heads.2.2.bn.weight
+  decode_head.scale_heads.2.2.bn.bias
+  decode_head.scale_heads.3.0.conv.weight
+  decode_head.scale_heads.3.0.bn.weight
+  decode_head.scale_heads.3.0.bn.bias
+  decode_head.scale_heads.3.2.conv.weight
+  decode_head.scale_heads.3.2.bn.weight
+  decode_head.scale_heads.3.2.bn.bias
+  decode_head.scale_heads.3.4.conv.weight
+  decode_head.scale_heads.3.4.bn.weight
+  decode_head.scale_heads.3.4.bn.bias
+[                                                  ] 0/851, elapsed: 0s, ETA:[                                 ] 1/851, 0.2 task/s, elapsed: 5s, ETA:  4195s[                                 ] 2/851, 0.4 task/s, elapsed: 5s, ETA:  2192s[                                 ] 3/851, 0.6 task/s, elapsed: 5s, ETA:  1520s[                                 ] 4/851, 0.7 task/s, elapsed: 6s, ETA:  1184s[                                 ] 5/851, 0.9 task/s, elapsed: 6s, ETA:   982s[                                 ] 6/851, 1.0 task/s, elapsed: 6s, ETA:   847s[                                 ] 7/851, 1.1 task/s, elapsed: 6s, ETA:   751s[                                 ] 8/851, 1.2 task/s, elapsed: 6s, ETA:   678s[                                 ] 9/851, 1.4 task/s, elapsed: 7s, ETA:   622s[                                ] 10/851, 1.5 task/s, elapsed: 7s, ETA:   577s[                                ] 11/851, 1.6 task/s, elapsed: 7s, ETA:   541s[                                ] 12/851, 1.6 task/s, elapsed: 7s, ETA:   510s[                                ] 13/851, 1.7 task/s, elapsed: 8s, ETA:   484s[                                ] 14/851, 1.8 task/s, elapsed: 8s, ETA:   462s[                                ] 15/851, 1.9 task/s, elapsed: 8s, ETA:   442s[                                ] 16/851, 2.0 task/s, elapsed: 8s, ETA:   426s[                                ] 17/851, 2.0 task/s, elapsed: 8s, ETA:   411s[                                ] 18/851, 2.1 task/s, elapsed: 9s, ETA:   397s[                                ] 19/851, 2.2 task/s, elapsed: 9s, ETA:   385s[                                ] 20/851, 2.2 task/s, elapsed: 9s, ETA:   374s[                                ] 21/851, 2.3 task/s, elapsed: 9s, ETA:   364s[                                ] 22/851, 2.3 task/s, elapsed: 9s, ETA:   356s[                               ] 23/851, 2.4 task/s, elapsed: 10s, ETA:   347s[                               ] 24/851, 2.4 task/s, elapsed: 10s, ETA:   340s[                               ] 25/851, 2.5 task/s, elapsed: 10s, ETA:   333s[                               ] 26/851, 2.5 task/s, elapsed: 10s, ETA:   327s[                               ] 27/851, 2.6 task/s, elapsed: 11s, ETA:   321s[>                              ] 28/851, 2.6 task/s, elapsed: 11s, ETA:   315s[>                              ] 29/851, 2.7 task/s, elapsed: 11s, ETA:   310s[>                              ] 30/851, 2.7 task/s, elapsed: 11s, ETA:   305s[>                              ] 31/851, 2.7 task/s, elapsed: 11s, ETA:   301s[>                              ] 32/851, 2.8 task/s, elapsed: 12s, ETA:   296s[>                              ] 33/851, 2.8 task/s, elapsed: 12s, ETA:   293s[>                              ] 34/851, 2.8 task/s, elapsed: 12s, ETA:   290s[>                              ] 35/851, 2.9 task/s, elapsed: 12s, ETA:   286s[>                              ] 36/851, 2.9 task/s, elapsed: 12s, ETA:   283s[>                              ] 37/851, 2.9 task/s, elapsed: 13s, ETA:   279s[>                              ] 38/851, 2.9 task/s, elapsed: 13s, ETA:   276s[>                              ] 39/851, 3.0 task/s, elapsed: 13s, ETA:   273s[>                              ] 40/851, 3.0 task/s, elapsed: 13s, ETA:   270s[>                              ] 41/851, 3.0 task/s, elapsed: 14s, ETA:   268s[>                              ] 42/851, 3.1 task/s, elapsed: 14s, ETA:   265s[>                              ] 43/851, 3.1 task/s, elapsed: 14s, ETA:   263s[>                              ] 44/851, 3.1 task/s, elapsed: 14s, ETA:   260s[>                              ] 45/851, 3.1 task/s, elapsed: 14s, ETA:   258s[>                              ] 46/851, 3.1 task/s, elapsed: 15s, ETA:   256s[>                              ] 47/851, 3.2 task/s, elapsed: 15s, ETA:   254s[>                              ] 48/851, 3.2 task/s, elapsed: 15s, ETA:   252s[>                              ] 49/851, 3.2 task/s, elapsed: 15s, ETA:   250s[>                              ] 50/851, 3.2 task/s, elapsed: 15s, ETA:   248s[>                              ] 51/851, 3.2 task/s, elapsed: 16s, ETA:   246s[>                              ] 52/851, 3.3 task/s, elapsed: 16s, ETA:   245s[>                              ] 53/851, 3.3 task/s, elapsed: 16s, ETA:   243s[>                              ] 54/851, 3.3 task/s, elapsed: 16s, ETA:   241s[>>                             ] 55/851, 3.3 task/s, elapsed: 17s, ETA:   240s[>>                             ] 56/851, 3.3 task/s, elapsed: 17s, ETA:   238s[>>                             ] 57/851, 3.4 task/s, elapsed: 17s, ETA:   237s[>>                             ] 58/851, 3.4 task/s, elapsed: 17s, ETA:   235s[>>                             ] 59/851, 3.4 task/s, elapsed: 17s, ETA:   234s[>>                             ] 60/851, 3.4 task/s, elapsed: 18s, ETA:   233s[>>                             ] 61/851, 3.4 task/s, elapsed: 18s, ETA:   231s[>>                             ] 62/851, 3.4 task/s, elapsed: 18s, ETA:   230s[>>                             ] 63/851, 3.4 task/s, elapsed: 18s, ETA:   229s[>>                             ] 64/851, 3.5 task/s, elapsed: 19s, ETA:   228s[>>                             ] 65/851, 3.5 task/s, elapsed: 19s, ETA:   226s[>>                             ] 66/851, 3.5 task/s, elapsed: 19s, ETA:   225s[>>                             ] 67/851, 3.5 task/s, elapsed: 19s, ETA:   224s[>>                             ] 68/851, 3.5 task/s, elapsed: 19s, ETA:   223s[>>                             ] 69/851, 3.5 task/s, elapsed: 20s, ETA:   222s[>>                             ] 70/851, 3.5 task/s, elapsed: 20s, ETA:   221s[>>                             ] 71/851, 3.6 task/s, elapsed: 20s, ETA:   220s[>>                             ] 72/851, 3.6 task/s, elapsed: 20s, ETA:   219s[>>                             ] 73/851, 3.6 task/s, elapsed: 20s, ETA:   218s[>>                             ] 74/851, 3.6 task/s, elapsed: 21s, ETA:   217s[>>                             ] 75/851, 3.6 task/s, elapsed: 21s, ETA:   216s[>>                             ] 76/851, 3.6 task/s, elapsed: 21s, ETA:   215s[>>                             ] 77/851, 3.6 task/s, elapsed: 21s, ETA:   214s[>>                             ] 78/851, 3.6 task/s, elapsed: 21s, ETA:   213s[>>                             ] 79/851, 3.6 task/s, elapsed: 22s, ETA:   212s[>>                             ] 80/851, 3.7 task/s, elapsed: 22s, ETA:   211s[>>                             ] 81/851, 3.7 task/s, elapsed: 22s, ETA:   210s[>>                             ] 82/851, 3.7 task/s, elapsed: 22s, ETA:   209s[>>>                            ] 83/851, 3.7 task/s, elapsed: 23s, ETA:   209s[>>>                            ] 84/851, 3.7 task/s, elapsed: 23s, ETA:   208s[>>>                            ] 85/851, 3.7 task/s, elapsed: 23s, ETA:   207s[>>>                            ] 86/851, 3.7 task/s, elapsed: 23s, ETA:   206s[>>>                            ] 87/851, 3.7 task/s, elapsed: 23s, ETA:   206s[>>>                            ] 88/851, 3.7 task/s, elapsed: 24s, ETA:   205s[>>>                            ] 89/851, 3.7 task/s, elapsed: 24s, ETA:   204s[>>>                            ] 90/851, 3.7 task/s, elapsed: 24s, ETA:   203s[>>>                            ] 91/851, 3.7 task/s, elapsed: 24s, ETA:   203s[>>>                            ] 92/851, 3.8 task/s, elapsed: 25s, ETA:   202s[>>>                            ] 93/851, 3.8 task/s, elapsed: 25s, ETA:   202s[>>>                            ] 94/851, 3.8 task/s, elapsed: 25s, ETA:   201s[>>>                            ] 95/851, 3.8 task/s, elapsed: 25s, ETA:   200s[>>>                            ] 96/851, 3.8 task/s, elapsed: 25s, ETA:   200s[>>>                            ] 97/851, 3.8 task/s, elapsed: 26s, ETA:   199s[>>>                            ] 98/851, 3.8 task/s, elapsed: 26s, ETA:   198s[>>>                            ] 99/851, 3.8 task/s, elapsed: 26s, ETA:   198s[>>>                           ] 100/851, 3.8 task/s, elapsed: 26s, ETA:   197s[>>>                           ] 101/851, 3.8 task/s, elapsed: 26s, ETA:   197s[>>>                           ] 102/851, 3.8 task/s, elapsed: 27s, ETA:   196s[>>>                           ] 103/851, 3.8 task/s, elapsed: 27s, ETA:   195s[>>>                           ] 104/851, 3.8 task/s, elapsed: 27s, ETA:   195s[>>>                           ] 105/851, 3.8 task/s, elapsed: 27s, ETA:   194s[>>>                           ] 106/851, 3.8 task/s, elapsed: 28s, ETA:   194s[>>>                           ] 107/851, 3.9 task/s, elapsed: 28s, ETA:   193s[>>>                           ] 108/851, 3.9 task/s, elapsed: 28s, ETA:   192s[>>>                           ] 109/851, 3.9 task/s, elapsed: 28s, ETA:   192s[>>>                           ] 110/851, 3.9 task/s, elapsed: 28s, ETA:   191s[>>>                           ] 111/851, 3.9 task/s, elapsed: 29s, ETA:   191s[>>>                           ] 112/851, 3.9 task/s, elapsed: 29s, ETA:   190s[>>>                           ] 113/851, 3.9 task/s, elapsed: 29s, ETA:   190s[>>>>                          ] 114/851, 3.9 task/s, elapsed: 29s, ETA:   190s[>>>>                          ] 115/851, 3.9 task/s, elapsed: 30s, ETA:   189s[>>>>                          ] 116/851, 3.9 task/s, elapsed: 30s, ETA:   189s[>>>>                          ] 117/851, 3.9 task/s, elapsed: 30s, ETA:   188s[>>>>                          ] 118/851, 3.9 task/s, elapsed: 30s, ETA:   188s[>>>>                          ] 119/851, 3.9 task/s, elapsed: 30s, ETA:   187s[>>>>                          ] 120/851, 3.9 task/s, elapsed: 31s, ETA:   187s[>>>>                          ] 121/851, 3.9 task/s, elapsed: 31s, ETA:   186s[>>>>                          ] 122/851, 3.9 task/s, elapsed: 31s, ETA:   186s[>>>>                          ] 123/851, 3.9 task/s, elapsed: 31s, ETA:   185s[>>>>                          ] 124/851, 3.9 task/s, elapsed: 31s, ETA:   185s[>>>>                          ] 125/851, 3.9 task/s, elapsed: 32s, ETA:   184s[>>>>                          ] 126/851, 3.9 task/s, elapsed: 32s, ETA:   184s[>>>>                          ] 127/851, 4.0 task/s, elapsed: 32s, ETA:   183s[>>>>                          ] 128/851, 4.0 task/s, elapsed: 32s, ETA:   183s[>>>>                          ] 129/851, 4.0 task/s, elapsed: 33s, ETA:   182s[>>>>                          ] 130/851, 4.0 task/s, elapsed: 33s, ETA:   182s[>>>>                          ] 131/851, 4.0 task/s, elapsed: 33s, ETA:   181s[>>>>                          ] 132/851, 4.0 task/s, elapsed: 33s, ETA:   181s[>>>>                          ] 133/851, 4.0 task/s, elapsed: 33s, ETA:   180s[>>>>                          ] 134/851, 4.0 task/s, elapsed: 34s, ETA:   180s[>>>>                          ] 135/851, 4.0 task/s, elapsed: 34s, ETA:   180s[>>>>                          ] 136/851, 4.0 task/s, elapsed: 34s, ETA:   179s[>>>>                          ] 137/851, 4.0 task/s, elapsed: 34s, ETA:   179s[>>>>                          ] 138/851, 4.0 task/s, elapsed: 34s, ETA:   178s[>>>>                          ] 139/851, 4.0 task/s, elapsed: 35s, ETA:   178s[>>>>                          ] 140/851, 4.0 task/s, elapsed: 35s, ETA:   177s[>>>>                          ] 141/851, 4.0 task/s, elapsed: 35s, ETA:   177s[>>>>>                         ] 142/851, 4.0 task/s, elapsed: 35s, ETA:   177s[>>>>>                         ] 143/851, 4.0 task/s, elapsed: 36s, ETA:   176s[>>>>>                         ] 144/851, 4.0 task/s, elapsed: 36s, ETA:   176s[>>>>>                         ] 145/851, 4.0 task/s, elapsed: 36s, ETA:   175s[>>>>>                         ] 146/851, 4.0 task/s, elapsed: 36s, ETA:   175s[>>>>>                         ] 147/851, 4.0 task/s, elapsed: 36s, ETA:   175s[>>>>>                         ] 148/851, 4.0 task/s, elapsed: 37s, ETA:   174s[>>>>>                         ] 149/851, 4.0 task/s, elapsed: 37s, ETA:   174s[>>>>>                         ] 150/851, 4.0 task/s, elapsed: 37s, ETA:   173s[>>>>>                         ] 151/851, 4.0 task/s, elapsed: 37s, ETA:   173s[>>>>>                         ] 152/851, 4.0 task/s, elapsed: 38s, ETA:   173s[>>>>>                         ] 153/851, 4.1 task/s, elapsed: 38s, ETA:   172s[>>>>>                         ] 154/851, 4.1 task/s, elapsed: 38s, ETA:   172s[>>>>>                         ] 155/851, 4.1 task/s, elapsed: 38s, ETA:   172s[>>>>>                         ] 156/851, 4.1 task/s, elapsed: 38s, ETA:   171s[>>>>>                         ] 157/851, 4.1 task/s, elapsed: 39s, ETA:   171s[>>>>>                         ] 158/851, 4.1 task/s, elapsed: 39s, ETA:   171s[>>>>>                         ] 159/851, 4.1 task/s, elapsed: 39s, ETA:   170s[>>>>>                         ] 160/851, 4.1 task/s, elapsed: 39s, ETA:   170s[>>>>>                         ] 161/851, 4.1 task/s, elapsed: 40s, ETA:   170s[>>>>>                         ] 162/851, 4.1 task/s, elapsed: 40s, ETA:   169s[>>>>>                         ] 163/851, 4.1 task/s, elapsed: 40s, ETA:   169s[>>>>>                         ] 164/851, 4.1 task/s, elapsed: 40s, ETA:   169s[>>>>>                         ] 165/851, 4.1 task/s, elapsed: 40s, ETA:   168s[>>>>>                         ] 166/851, 4.1 task/s, elapsed: 41s, ETA:   168s[>>>>>                         ] 167/851, 4.1 task/s, elapsed: 41s, ETA:   167s[>>>>>                         ] 168/851, 4.1 task/s, elapsed: 41s, ETA:   167s[>>>>>                         ] 169/851, 4.1 task/s, elapsed: 41s, ETA:   167s[>>>>>                         ] 170/851, 4.1 task/s, elapsed: 42s, ETA:   166s[>>>>>>                        ] 171/851, 4.1 task/s, elapsed: 42s, ETA:   166s[>>>>>>                        ] 172/851, 4.1 task/s, elapsed: 42s, ETA:   166s[>>>>>>                        ] 173/851, 4.1 task/s, elapsed: 42s, ETA:   165s[>>>>>>                        ] 174/851, 4.1 task/s, elapsed: 42s, ETA:   165s[>>>>>>                        ] 175/851, 4.1 task/s, elapsed: 43s, ETA:   165s[>>>>>>                        ] 176/851, 4.1 task/s, elapsed: 43s, ETA:   164s[>>>>>>                        ] 177/851, 4.1 task/s, elapsed: 43s, ETA:   164s[>>>>>>                        ] 178/851, 4.1 task/s, elapsed: 43s, ETA:   164s[>>>>>>                        ] 179/851, 4.1 task/s, elapsed: 44s, ETA:   163s[>>>>>>                        ] 180/851, 4.1 task/s, elapsed: 44s, ETA:   163s[>>>>>>                        ] 181/851, 4.1 task/s, elapsed: 44s, ETA:   163s[>>>>>>                        ] 182/851, 4.1 task/s, elapsed: 44s, ETA:   162s[>>>>>>                        ] 183/851, 4.1 task/s, elapsed: 44s, ETA:   162s[>>>>>>                        ] 184/851, 4.1 task/s, elapsed: 45s, ETA:   162s[>>>>>>                        ] 185/851, 4.1 task/s, elapsed: 45s, ETA:   161s[>>>>>>                        ] 186/851, 4.1 task/s, elapsed: 45s, ETA:   161s[>>>>>>                        ] 187/851, 4.1 task/s, elapsed: 45s, ETA:   161s[>>>>>>                        ] 188/851, 4.1 task/s, elapsed: 45s, ETA:   160s[>>>>>>                        ] 189/851, 4.1 task/s, elapsed: 46s, ETA:   160s[>>>>>>                        ] 190/851, 4.1 task/s, elapsed: 46s, ETA:   160s[>>>>>>                        ] 191/851, 4.1 task/s, elapsed: 46s, ETA:   159s[>>>>>>                        ] 192/851, 4.1 task/s, elapsed: 46s, ETA:   159s[>>>>>>                        ] 193/851, 4.1 task/s, elapsed: 47s, ETA:   159s[>>>>>>                        ] 194/851, 4.2 task/s, elapsed: 47s, ETA:   158s[>>>>>>                        ] 195/851, 4.2 task/s, elapsed: 47s, ETA:   158s[>>>>>>                        ] 196/851, 4.2 task/s, elapsed: 47s, ETA:   158s[>>>>>>                        ] 197/851, 4.2 task/s, elapsed: 47s, ETA:   157s[>>>>>>                        ] 198/851, 4.2 task/s, elapsed: 48s, ETA:   157s[>>>>>>>                       ] 199/851, 4.2 task/s, elapsed: 48s, ETA:   157s[>>>>>>>                       ] 200/851, 4.2 task/s, elapsed: 48s, ETA:   156s[>>>>>>>                       ] 201/851, 4.2 task/s, elapsed: 48s, ETA:   156s[>>>>>>>                       ] 202/851, 4.2 task/s, elapsed: 48s, ETA:   156s[>>>>>>>                       ] 203/851, 4.2 task/s, elapsed: 49s, ETA:   155s[>>>>>>>                       ] 204/851, 4.2 task/s, elapsed: 49s, ETA:   155s[>>>>>>>                       ] 205/851, 4.2 task/s, elapsed: 49s, ETA:   155s[>>>>>>>                       ] 206/851, 4.2 task/s, elapsed: 49s, ETA:   154s[>>>>>>>                       ] 207/851, 4.2 task/s, elapsed: 50s, ETA:   154s[>>>>>>>                       ] 208/851, 4.2 task/s, elapsed: 50s, ETA:   154s[>>>>>>>                       ] 209/851, 4.2 task/s, elapsed: 50s, ETA:   154s[>>>>>>>                       ] 210/851, 4.2 task/s, elapsed: 50s, ETA:   153s[>>>>>>>                       ] 211/851, 4.2 task/s, elapsed: 50s, ETA:   153s[>>>>>>>                       ] 212/851, 4.2 task/s, elapsed: 51s, ETA:   153s[>>>>>>>                       ] 213/851, 4.2 task/s, elapsed: 51s, ETA:   152s[>>>>>>>                       ] 214/851, 4.2 task/s, elapsed: 51s, ETA:   152s[>>>>>>>                       ] 215/851, 4.2 task/s, elapsed: 51s, ETA:   152s[>>>>>>>                       ] 216/851, 4.2 task/s, elapsed: 51s, ETA:   151s[>>>>>>>                       ] 217/851, 4.2 task/s, elapsed: 52s, ETA:   151s[>>>>>>>                       ] 218/851, 4.2 task/s, elapsed: 52s, ETA:   151s[>>>>>>>                       ] 219/851, 4.2 task/s, elapsed: 52s, ETA:   150s[>>>>>>>                       ] 220/851, 4.2 task/s, elapsed: 52s, ETA:   150s[>>>>>>>                       ] 221/851, 4.2 task/s, elapsed: 53s, ETA:   150s[>>>>>>>                       ] 222/851, 4.2 task/s, elapsed: 53s, ETA:   150s[>>>>>>>                       ] 223/851, 4.2 task/s, elapsed: 53s, ETA:   149s[>>>>>>>                       ] 224/851, 4.2 task/s, elapsed: 53s, ETA:   149s[>>>>>>>                       ] 225/851, 4.2 task/s, elapsed: 53s, ETA:   149s[>>>>>>>                       ] 226/851, 4.2 task/s, elapsed: 54s, ETA:   148s[>>>>>>>>                      ] 227/851, 4.2 task/s, elapsed: 54s, ETA:   148s[>>>>>>>>                      ] 228/851, 4.2 task/s, elapsed: 54s, ETA:   148s[>>>>>>>>                      ] 229/851, 4.2 task/s, elapsed: 54s, ETA:   147s[>>>>>>>>                      ] 230/851, 4.2 task/s, elapsed: 54s, ETA:   147s[>>>>>>>>                      ] 231/851, 4.2 task/s, elapsed: 55s, ETA:   147s[>>>>>>>>                      ] 232/851, 4.2 task/s, elapsed: 55s, ETA:   147s[>>>>>>>>                      ] 233/851, 4.2 task/s, elapsed: 55s, ETA:   146s[>>>>>>>>                      ] 234/851, 4.2 task/s, elapsed: 55s, ETA:   146s[>>>>>>>>                      ] 235/851, 4.2 task/s, elapsed: 56s, ETA:   146s[>>>>>>>>                      ] 236/851, 4.2 task/s, elapsed: 56s, ETA:   145s[>>>>>>>>                      ] 237/851, 4.2 task/s, elapsed: 56s, ETA:   145s[>>>>>>>>                      ] 238/851, 4.2 task/s, elapsed: 56s, ETA:   145s[>>>>>>>>                      ] 239/851, 4.2 task/s, elapsed: 56s, ETA:   145s[>>>>>>>>                      ] 240/851, 4.2 task/s, elapsed: 57s, ETA:   144s[>>>>>>>>                      ] 241/851, 4.2 task/s, elapsed: 57s, ETA:   144s[>>>>>>>>                      ] 242/851, 4.2 task/s, elapsed: 57s, ETA:   144s[>>>>>>>>                      ] 243/851, 4.2 task/s, elapsed: 57s, ETA:   143s[>>>>>>>>                      ] 244/851, 4.2 task/s, elapsed: 58s, ETA:   143s[>>>>>>>>                      ] 245/851, 4.2 task/s, elapsed: 58s, ETA:   143s[>>>>>>>>                      ] 246/851, 4.2 task/s, elapsed: 58s, ETA:   142s[>>>>>>>>                      ] 247/851, 4.2 task/s, elapsed: 58s, ETA:   142s[>>>>>>>>                      ] 248/851, 4.2 task/s, elapsed: 58s, ETA:   142s[>>>>>>>>                      ] 249/851, 4.3 task/s, elapsed: 59s, ETA:   142s[>>>>>>>>                      ] 250/851, 4.3 task/s, elapsed: 59s, ETA:   141s[>>>>>>>>                      ] 251/851, 4.3 task/s, elapsed: 59s, ETA:   141s[>>>>>>>>                      ] 252/851, 4.3 task/s, elapsed: 59s, ETA:   141s[>>>>>>>>                      ] 253/851, 4.3 task/s, elapsed: 59s, ETA:   140s[>>>>>>>>                      ] 254/851, 4.3 task/s, elapsed: 60s, ETA:   140s[>>>>>>>>                      ] 255/851, 4.3 task/s, elapsed: 60s, ETA:   140s[>>>>>>>>>                     ] 256/851, 4.3 task/s, elapsed: 60s, ETA:   140s[>>>>>>>>>                     ] 257/851, 4.3 task/s, elapsed: 60s, ETA:   139s[>>>>>>>>>                     ] 258/851, 4.3 task/s, elapsed: 61s, ETA:   139s[>>>>>>>>>                     ] 259/851, 4.3 task/s, elapsed: 61s, ETA:   139s[>>>>>>>>>                     ] 260/851, 4.3 task/s, elapsed: 61s, ETA:   139s[>>>>>>>>>                     ] 261/851, 4.3 task/s, elapsed: 61s, ETA:   138s[>>>>>>>>>                     ] 262/851, 4.3 task/s, elapsed: 61s, ETA:   138s[>>>>>>>>>                     ] 263/851, 4.3 task/s, elapsed: 62s, ETA:   138s[>>>>>>>>>                     ] 264/851, 4.3 task/s, elapsed: 62s, ETA:   137s[>>>>>>>>>                     ] 265/851, 4.3 task/s, elapsed: 62s, ETA:   137s[>>>>>>>>>                     ] 266/851, 4.3 task/s, elapsed: 62s, ETA:   137s[>>>>>>>>>                     ] 267/851, 4.3 task/s, elapsed: 62s, ETA:   137s[>>>>>>>>>                     ] 268/851, 4.3 task/s, elapsed: 63s, ETA:   136s[>>>>>>>>>                     ] 269/851, 4.3 task/s, elapsed: 63s, ETA:   136s[>>>>>>>>>                     ] 270/851, 4.3 task/s, elapsed: 63s, ETA:   136s[>>>>>>>>>                     ] 271/851, 4.3 task/s, elapsed: 63s, ETA:   135s[>>>>>>>>>                     ] 272/851, 4.3 task/s, elapsed: 64s, ETA:   135s[>>>>>>>>>                     ] 273/851, 4.3 task/s, elapsed: 64s, ETA:   135s[>>>>>>>>>                     ] 274/851, 4.3 task/s, elapsed: 64s, ETA:   135s[>>>>>>>>>                     ] 275/851, 4.3 task/s, elapsed: 64s, ETA:   134s[>>>>>>>>>                     ] 276/851, 4.3 task/s, elapsed: 64s, ETA:   134s[>>>>>>>>>                     ] 277/851, 4.3 task/s, elapsed: 65s, ETA:   134s[>>>>>>>>>                     ] 278/851, 4.3 task/s, elapsed: 65s, ETA:   134s[>>>>>>>>>                     ] 279/851, 4.3 task/s, elapsed: 65s, ETA:   133s[>>>>>>>>>                     ] 280/851, 4.3 task/s, elapsed: 65s, ETA:   133s[>>>>>>>>>                     ] 281/851, 4.3 task/s, elapsed: 65s, ETA:   133s[>>>>>>>>>                     ] 282/851, 4.3 task/s, elapsed: 66s, ETA:   133s[>>>>>>>>>                     ] 283/851, 4.3 task/s, elapsed: 66s, ETA:   132s[>>>>>>>>>>                    ] 284/851, 4.3 task/s, elapsed: 66s, ETA:   132s[>>>>>>>>>>                    ] 285/851, 4.3 task/s, elapsed: 66s, ETA:   132s[>>>>>>>>>>                    ] 286/851, 4.3 task/s, elapsed: 67s, ETA:   131s[>>>>>>>>>>                    ] 287/851, 4.3 task/s, elapsed: 67s, ETA:   131s[>>>>>>>>>>                    ] 288/851, 4.3 task/s, elapsed: 67s, ETA:   131s[>>>>>>>>>>                    ] 289/851, 4.3 task/s, elapsed: 67s, ETA:   131s[>>>>>>>>>>                    ] 290/851, 4.3 task/s, elapsed: 67s, ETA:   130s[>>>>>>>>>>                    ] 291/851, 4.3 task/s, elapsed: 68s, ETA:   130s[>>>>>>>>>>                    ] 292/851, 4.3 task/s, elapsed: 68s, ETA:   130s[>>>>>>>>>>                    ] 293/851, 4.3 task/s, elapsed: 68s, ETA:   130s[>>>>>>>>>>                    ] 294/851, 4.3 task/s, elapsed: 68s, ETA:   129s[>>>>>>>>>>                    ] 295/851, 4.3 task/s, elapsed: 68s, ETA:   129s[>>>>>>>>>>                    ] 296/851, 4.3 task/s, elapsed: 69s, ETA:   129s[>>>>>>>>>>                    ] 297/851, 4.3 task/s, elapsed: 69s, ETA:   129s[>>>>>>>>>>                    ] 298/851, 4.3 task/s, elapsed: 69s, ETA:   128s[>>>>>>>>>>                    ] 299/851, 4.3 task/s, elapsed: 69s, ETA:   128s[>>>>>>>>>>                    ] 300/851, 4.3 task/s, elapsed: 70s, ETA:   128s[>>>>>>>>>>                    ] 301/851, 4.3 task/s, elapsed: 70s, ETA:   127s[>>>>>>>>>>                    ] 302/851, 4.3 task/s, elapsed: 70s, ETA:   127s[>>>>>>>>>>                    ] 303/851, 4.3 task/s, elapsed: 70s, ETA:   127s[>>>>>>>>>>                    ] 304/851, 4.3 task/s, elapsed: 70s, ETA:   127s[>>>>>>>>>>                    ] 305/851, 4.3 task/s, elapsed: 71s, ETA:   126s[>>>>>>>>>>                    ] 306/851, 4.3 task/s, elapsed: 71s, ETA:   126s[>>>>>>>>>>                    ] 307/851, 4.3 task/s, elapsed: 71s, ETA:   126s[>>>>>>>>>>                    ] 308/851, 4.3 task/s, elapsed: 71s, ETA:   126s[>>>>>>>>>>                    ] 309/851, 4.3 task/s, elapsed: 71s, ETA:   125s[>>>>>>>>>>                    ] 310/851, 4.3 task/s, elapsed: 72s, ETA:   125s[>>>>>>>>>>                    ] 311/851, 4.3 task/s, elapsed: 72s, ETA:   125s[>>>>>>>>>>                    ] 312/851, 4.3 task/s, elapsed: 72s, ETA:   125s[>>>>>>>>>>>                   ] 313/851, 4.3 task/s, elapsed: 72s, ETA:   124s[>>>>>>>>>>>                   ] 314/851, 4.3 task/s, elapsed: 73s, ETA:   124s[>>>>>>>>>>>                   ] 315/851, 4.3 task/s, elapsed: 73s, ETA:   124s[>>>>>>>>>>>                   ] 316/851, 4.3 task/s, elapsed: 73s, ETA:   124s[>>>>>>>>>>>                   ] 317/851, 4.3 task/s, elapsed: 73s, ETA:   123s[>>>>>>>>>>>                   ] 318/851, 4.3 task/s, elapsed: 73s, ETA:   123s[>>>>>>>>>>>                   ] 319/851, 4.3 task/s, elapsed: 74s, ETA:   123s[>>>>>>>>>>>                   ] 320/851, 4.3 task/s, elapsed: 74s, ETA:   123s[>>>>>>>>>>>                   ] 321/851, 4.3 task/s, elapsed: 74s, ETA:   122s[>>>>>>>>>>>                   ] 322/851, 4.3 task/s, elapsed: 74s, ETA:   122s[>>>>>>>>>>>                   ] 323/851, 4.3 task/s, elapsed: 75s, ETA:   122s[>>>>>>>>>>>                   ] 324/851, 4.3 task/s, elapsed: 75s, ETA:   122s[>>>>>>>>>>>                   ] 325/851, 4.3 task/s, elapsed: 75s, ETA:   121s[>>>>>>>>>>>                   ] 326/851, 4.3 task/s, elapsed: 75s, ETA:   121s[>>>>>>>>>>>                   ] 327/851, 4.3 task/s, elapsed: 75s, ETA:   121s[>>>>>>>>>>>                   ] 328/851, 4.3 task/s, elapsed: 76s, ETA:   121s[>>>>>>>>>>>                   ] 329/851, 4.3 task/s, elapsed: 76s, ETA:   120s[>>>>>>>>>>>                   ] 330/851, 4.3 task/s, elapsed: 76s, ETA:   120s[>>>>>>>>>>>                   ] 331/851, 4.3 task/s, elapsed: 76s, ETA:   120s[>>>>>>>>>>>                   ] 332/851, 4.3 task/s, elapsed: 76s, ETA:   120s[>>>>>>>>>>>                   ] 333/851, 4.3 task/s, elapsed: 77s, ETA:   119s[>>>>>>>>>>>                   ] 334/851, 4.3 task/s, elapsed: 77s, ETA:   119s[>>>>>>>>>>>                   ] 335/851, 4.3 task/s, elapsed: 77s, ETA:   119s[>>>>>>>>>>>                   ] 336/851, 4.3 task/s, elapsed: 77s, ETA:   119s[>>>>>>>>>>>                   ] 337/851, 4.3 task/s, elapsed: 78s, ETA:   118s[>>>>>>>>>>>                   ] 338/851, 4.3 task/s, elapsed: 78s, ETA:   118s[>>>>>>>>>>>                   ] 339/851, 4.3 task/s, elapsed: 78s, ETA:   118s[>>>>>>>>>>>                   ] 340/851, 4.3 task/s, elapsed: 78s, ETA:   118s[>>>>>>>>>>>>                  ] 341/851, 4.3 task/s, elapsed: 78s, ETA:   117s[>>>>>>>>>>>>                  ] 342/851, 4.4 task/s, elapsed: 79s, ETA:   117s[>>>>>>>>>>>>                  ] 343/851, 4.4 task/s, elapsed: 79s, ETA:   117s[>>>>>>>>>>>>                  ] 344/851, 4.4 task/s, elapsed: 79s, ETA:   117s[>>>>>>>>>>>>                  ] 345/851, 4.4 task/s, elapsed: 79s, ETA:   116s[>>>>>>>>>>>>                  ] 346/851, 4.4 task/s, elapsed: 79s, ETA:   116s[>>>>>>>>>>>>                  ] 347/851, 4.4 task/s, elapsed: 80s, ETA:   116s[>>>>>>>>>>>>                  ] 348/851, 4.4 task/s, elapsed: 80s, ETA:   116s[>>>>>>>>>>>>                  ] 349/851, 4.4 task/s, elapsed: 80s, ETA:   115s[>>>>>>>>>>>>                  ] 350/851, 4.4 task/s, elapsed: 80s, ETA:   115s[>>>>>>>>>>>>                  ] 351/851, 4.4 task/s, elapsed: 81s, ETA:   115s[>>>>>>>>>>>>                  ] 352/851, 4.4 task/s, elapsed: 81s, ETA:   115s[>>>>>>>>>>>>                  ] 353/851, 4.4 task/s, elapsed: 81s, ETA:   114s[>>>>>>>>>>>>                  ] 354/851, 4.4 task/s, elapsed: 81s, ETA:   114s[>>>>>>>>>>>>                  ] 355/851, 4.4 task/s, elapsed: 81s, ETA:   114s[>>>>>>>>>>>>                  ] 356/851, 4.4 task/s, elapsed: 82s, ETA:   114s[>>>>>>>>>>>>                  ] 357/851, 4.4 task/s, elapsed: 82s, ETA:   113s[>>>>>>>>>>>>                  ] 358/851, 4.4 task/s, elapsed: 82s, ETA:   113s[>>>>>>>>>>>>                  ] 359/851, 4.4 task/s, elapsed: 82s, ETA:   113s[>>>>>>>>>>>>                  ] 360/851, 4.4 task/s, elapsed: 83s, ETA:   113s[>>>>>>>>>>>>                  ] 361/851, 4.4 task/s, elapsed: 83s, ETA:   112s[>>>>>>>>>>>>                  ] 362/851, 4.4 task/s, elapsed: 83s, ETA:   112s[>>>>>>>>>>>>                  ] 363/851, 4.4 task/s, elapsed: 83s, ETA:   112s[>>>>>>>>>>>>                  ] 364/851, 4.4 task/s, elapsed: 83s, ETA:   112s[>>>>>>>>>>>>                  ] 365/851, 4.4 task/s, elapsed: 84s, ETA:   111s[>>>>>>>>>>>>                  ] 366/851, 4.4 task/s, elapsed: 84s, ETA:   111s[>>>>>>>>>>>>                  ] 367/851, 4.4 task/s, elapsed: 84s, ETA:   111s[>>>>>>>>>>>>                  ] 368/851, 4.4 task/s, elapsed: 84s, ETA:   111s[>>>>>>>>>>>>>                 ] 369/851, 4.4 task/s, elapsed: 84s, ETA:   110s[>>>>>>>>>>>>>                 ] 370/851, 4.4 task/s, elapsed: 85s, ETA:   110s[>>>>>>>>>>>>>                 ] 371/851, 4.4 task/s, elapsed: 85s, ETA:   110s[>>>>>>>>>>>>>                 ] 372/851, 4.4 task/s, elapsed: 85s, ETA:   110s[>>>>>>>>>>>>>                 ] 373/851, 4.4 task/s, elapsed: 85s, ETA:   109s[>>>>>>>>>>>>>                 ] 374/851, 4.4 task/s, elapsed: 86s, ETA:   109s[>>>>>>>>>>>>>                 ] 375/851, 4.4 task/s, elapsed: 86s, ETA:   109s[>>>>>>>>>>>>>                 ] 376/851, 4.4 task/s, elapsed: 86s, ETA:   109s[>>>>>>>>>>>>>                 ] 377/851, 4.4 task/s, elapsed: 86s, ETA:   108s[>>>>>>>>>>>>>                 ] 378/851, 4.4 task/s, elapsed: 86s, ETA:   108s[>>>>>>>>>>>>>                 ] 379/851, 4.4 task/s, elapsed: 87s, ETA:   108s[>>>>>>>>>>>>>                 ] 380/851, 4.4 task/s, elapsed: 87s, ETA:   108s[>>>>>>>>>>>>>                 ] 381/851, 4.4 task/s, elapsed: 87s, ETA:   107s[>>>>>>>>>>>>>                 ] 382/851, 4.4 task/s, elapsed: 87s, ETA:   107s[>>>>>>>>>>>>>                 ] 383/851, 4.4 task/s, elapsed: 87s, ETA:   107s[>>>>>>>>>>>>>                 ] 384/851, 4.4 task/s, elapsed: 88s, ETA:   107s[>>>>>>>>>>>>>                 ] 385/851, 4.4 task/s, elapsed: 88s, ETA:   106s[>>>>>>>>>>>>>                 ] 386/851, 4.4 task/s, elapsed: 88s, ETA:   106s[>>>>>>>>>>>>>                 ] 387/851, 4.4 task/s, elapsed: 88s, ETA:   106s[>>>>>>>>>>>>>                 ] 388/851, 4.4 task/s, elapsed: 89s, ETA:   106s[>>>>>>>>>>>>>                 ] 389/851, 4.4 task/s, elapsed: 89s, ETA:   105s[>>>>>>>>>>>>>                 ] 390/851, 4.4 task/s, elapsed: 89s, ETA:   105s[>>>>>>>>>>>>>                 ] 391/851, 4.4 task/s, elapsed: 89s, ETA:   105s[>>>>>>>>>>>>>                 ] 392/851, 4.4 task/s, elapsed: 89s, ETA:   105s[>>>>>>>>>>>>>                 ] 393/851, 4.4 task/s, elapsed: 90s, ETA:   104s[>>>>>>>>>>>>>                 ] 394/851, 4.4 task/s, elapsed: 90s, ETA:   104s[>>>>>>>>>>>>>                 ] 395/851, 4.4 task/s, elapsed: 90s, ETA:   104s[>>>>>>>>>>>>>                 ] 396/851, 4.4 task/s, elapsed: 90s, ETA:   104s[>>>>>>>>>>>>>                 ] 397/851, 4.4 task/s, elapsed: 90s, ETA:   103s[>>>>>>>>>>>>>>                ] 398/851, 4.4 task/s, elapsed: 91s, ETA:   103s[>>>>>>>>>>>>>>                ] 399/851, 4.4 task/s, elapsed: 91s, ETA:   103s[>>>>>>>>>>>>>>                ] 400/851, 4.4 task/s, elapsed: 91s, ETA:   103s[>>>>>>>>>>>>>>                ] 401/851, 4.4 task/s, elapsed: 91s, ETA:   102s[>>>>>>>>>>>>>>                ] 402/851, 4.4 task/s, elapsed: 92s, ETA:   102s[>>>>>>>>>>>>>>                ] 403/851, 4.4 task/s, elapsed: 92s, ETA:   102s[>>>>>>>>>>>>>>                ] 404/851, 4.4 task/s, elapsed: 92s, ETA:   102s[>>>>>>>>>>>>>>                ] 405/851, 4.4 task/s, elapsed: 92s, ETA:   102s[>>>>>>>>>>>>>>                ] 406/851, 4.4 task/s, elapsed: 92s, ETA:   101s[>>>>>>>>>>>>>>                ] 407/851, 4.4 task/s, elapsed: 93s, ETA:   101s[>>>>>>>>>>>>>>                ] 408/851, 4.4 task/s, elapsed: 93s, ETA:   101s[>>>>>>>>>>>>>>                ] 409/851, 4.4 task/s, elapsed: 93s, ETA:   101s[>>>>>>>>>>>>>>                ] 410/851, 4.4 task/s, elapsed: 93s, ETA:   100s[>>>>>>>>>>>>>>                ] 411/851, 4.4 task/s, elapsed: 93s, ETA:   100s[>>>>>>>>>>>>>>                ] 412/851, 4.4 task/s, elapsed: 94s, ETA:   100s[>>>>>>>>>>>>>>                ] 413/851, 4.4 task/s, elapsed: 94s, ETA:   100s[>>>>>>>>>>>>>>                ] 414/851, 4.4 task/s, elapsed: 94s, ETA:    99s[>>>>>>>>>>>>>>                ] 415/851, 4.4 task/s, elapsed: 94s, ETA:    99s[>>>>>>>>>>>>>>                ] 416/851, 4.4 task/s, elapsed: 95s, ETA:    99s[>>>>>>>>>>>>>>                ] 417/851, 4.4 task/s, elapsed: 95s, ETA:    99s[>>>>>>>>>>>>>>                ] 418/851, 4.4 task/s, elapsed: 95s, ETA:    98s[>>>>>>>>>>>>>>                ] 419/851, 4.4 task/s, elapsed: 95s, ETA:    98s[>>>>>>>>>>>>>>                ] 420/851, 4.4 task/s, elapsed: 95s, ETA:    98s[>>>>>>>>>>>>>>                ] 421/851, 4.4 task/s, elapsed: 96s, ETA:    98s[>>>>>>>>>>>>>>                ] 422/851, 4.4 task/s, elapsed: 96s, ETA:    97s[>>>>>>>>>>>>>>                ] 423/851, 4.4 task/s, elapsed: 96s, ETA:    97s[>>>>>>>>>>>>>>                ] 424/851, 4.4 task/s, elapsed: 96s, ETA:    97s[>>>>>>>>>>>>>>                ] 425/851, 4.4 task/s, elapsed: 96s, ETA:    97s[>>>>>>>>>>>>>>>               ] 426/851, 4.4 task/s, elapsed: 97s, ETA:    96s[>>>>>>>>>>>>>>>               ] 427/851, 4.4 task/s, elapsed: 97s, ETA:    96s[>>>>>>>>>>>>>>>               ] 428/851, 4.4 task/s, elapsed: 97s, ETA:    96s[>>>>>>>>>>>>>>>               ] 429/851, 4.4 task/s, elapsed: 97s, ETA:    96s[>>>>>>>>>>>>>>>               ] 430/851, 4.4 task/s, elapsed: 98s, ETA:    96s[>>>>>>>>>>>>>>>               ] 431/851, 4.4 task/s, elapsed: 98s, ETA:    95s[>>>>>>>>>>>>>>>               ] 432/851, 4.4 task/s, elapsed: 98s, ETA:    95s[>>>>>>>>>>>>>>>               ] 433/851, 4.4 task/s, elapsed: 98s, ETA:    95s[>>>>>>>>>>>>>>>               ] 434/851, 4.4 task/s, elapsed: 98s, ETA:    95s[>>>>>>>>>>>>>>>               ] 435/851, 4.4 task/s, elapsed: 99s, ETA:    94s[>>>>>>>>>>>>>>>               ] 436/851, 4.4 task/s, elapsed: 99s, ETA:    94s[>>>>>>>>>>>>>>>               ] 437/851, 4.4 task/s, elapsed: 99s, ETA:    94s[>>>>>>>>>>>>>>>               ] 438/851, 4.4 task/s, elapsed: 99s, ETA:    94s[>>>>>>>>>>>>>>>               ] 439/851, 4.4 task/s, elapsed: 99s, ETA:    93s[>>>>>>>>>>>>>>               ] 440/851, 4.4 task/s, elapsed: 100s, ETA:    93s[>>>>>>>>>>>>>>>              ] 441/851, 4.4 task/s, elapsed: 100s, ETA:    93s[>>>>>>>>>>>>>>>              ] 442/851, 4.4 task/s, elapsed: 100s, ETA:    93s[>>>>>>>>>>>>>>>              ] 443/851, 4.4 task/s, elapsed: 100s, ETA:    92s[>>>>>>>>>>>>>>>              ] 444/851, 4.4 task/s, elapsed: 101s, ETA:    92s[>>>>>>>>>>>>>>>              ] 445/851, 4.4 task/s, elapsed: 101s, ETA:    92s[>>>>>>>>>>>>>>>              ] 446/851, 4.4 task/s, elapsed: 101s, ETA:    92s[>>>>>>>>>>>>>>>              ] 447/851, 4.4 task/s, elapsed: 101s, ETA:    91s[>>>>>>>>>>>>>>>              ] 448/851, 4.4 task/s, elapsed: 101s, ETA:    91s[>>>>>>>>>>>>>>>              ] 449/851, 4.4 task/s, elapsed: 102s, ETA:    91s[>>>>>>>>>>>>>>>              ] 450/851, 4.4 task/s, elapsed: 102s, ETA:    91s[>>>>>>>>>>>>>>>              ] 451/851, 4.4 task/s, elapsed: 102s, ETA:    91s[>>>>>>>>>>>>>>>              ] 452/851, 4.4 task/s, elapsed: 102s, ETA:    90s[>>>>>>>>>>>>>>>              ] 453/851, 4.4 task/s, elapsed: 103s, ETA:    90s[>>>>>>>>>>>>>>>              ] 454/851, 4.4 task/s, elapsed: 103s, ETA:    90s[>>>>>>>>>>>>>>>              ] 455/851, 4.4 task/s, elapsed: 103s, ETA:    90s[>>>>>>>>>>>>>>>              ] 456/851, 4.4 task/s, elapsed: 103s, ETA:    89s[>>>>>>>>>>>>>>>              ] 457/851, 4.4 task/s, elapsed: 103s, ETA:    89s[>>>>>>>>>>>>>>>              ] 458/851, 4.4 task/s, elapsed: 104s, ETA:    89s[>>>>>>>>>>>>>>>              ] 459/851, 4.4 task/s, elapsed: 104s, ETA:    89s[>>>>>>>>>>>>>>>              ] 460/851, 4.4 task/s, elapsed: 104s, ETA:    88s[>>>>>>>>>>>>>>>              ] 461/851, 4.4 task/s, elapsed: 104s, ETA:    88s[>>>>>>>>>>>>>>>              ] 462/851, 4.4 task/s, elapsed: 104s, ETA:    88s[>>>>>>>>>>>>>>>              ] 463/851, 4.4 task/s, elapsed: 105s, ETA:    88s[>>>>>>>>>>>>>>>              ] 464/851, 4.4 task/s, elapsed: 105s, ETA:    87s[>>>>>>>>>>>>>>>              ] 465/851, 4.4 task/s, elapsed: 105s, ETA:    87s[>>>>>>>>>>>>>>>              ] 466/851, 4.4 task/s, elapsed: 105s, ETA:    87s[>>>>>>>>>>>>>>>              ] 467/851, 4.4 task/s, elapsed: 106s, ETA:    87s[>>>>>>>>>>>>>>>              ] 468/851, 4.4 task/s, elapsed: 106s, ETA:    87s[>>>>>>>>>>>>>>>              ] 469/851, 4.4 task/s, elapsed: 106s, ETA:    86s[>>>>>>>>>>>>>>>>             ] 470/851, 4.4 task/s, elapsed: 106s, ETA:    86s[>>>>>>>>>>>>>>>>             ] 471/851, 4.4 task/s, elapsed: 106s, ETA:    86s[>>>>>>>>>>>>>>>>             ] 472/851, 4.4 task/s, elapsed: 107s, ETA:    86s[>>>>>>>>>>>>>>>>             ] 473/851, 4.4 task/s, elapsed: 107s, ETA:    85s[>>>>>>>>>>>>>>>>             ] 474/851, 4.4 task/s, elapsed: 107s, ETA:    85s[>>>>>>>>>>>>>>>>             ] 475/851, 4.4 task/s, elapsed: 107s, ETA:    85s[>>>>>>>>>>>>>>>>             ] 476/851, 4.4 task/s, elapsed: 107s, ETA:    85s[>>>>>>>>>>>>>>>>             ] 477/851, 4.4 task/s, elapsed: 108s, ETA:    84s[>>>>>>>>>>>>>>>>             ] 478/851, 4.4 task/s, elapsed: 108s, ETA:    84s[>>>>>>>>>>>>>>>>             ] 479/851, 4.4 task/s, elapsed: 108s, ETA:    84s[>>>>>>>>>>>>>>>>             ] 480/851, 4.4 task/s, elapsed: 108s, ETA:    84s[>>>>>>>>>>>>>>>>             ] 481/851, 4.4 task/s, elapsed: 109s, ETA:    84s[>>>>>>>>>>>>>>>>             ] 482/851, 4.4 task/s, elapsed: 109s, ETA:    83s[>>>>>>>>>>>>>>>>             ] 483/851, 4.4 task/s, elapsed: 109s, ETA:    83s[>>>>>>>>>>>>>>>>             ] 484/851, 4.4 task/s, elapsed: 109s, ETA:    83s[>>>>>>>>>>>>>>>>             ] 485/851, 4.4 task/s, elapsed: 109s, ETA:    83s[>>>>>>>>>>>>>>>>             ] 486/851, 4.4 task/s, elapsed: 110s, ETA:    82s[>>>>>>>>>>>>>>>>             ] 487/851, 4.4 task/s, elapsed: 110s, ETA:    82s[>>>>>>>>>>>>>>>>             ] 488/851, 4.4 task/s, elapsed: 110s, ETA:    82s[>>>>>>>>>>>>>>>>             ] 489/851, 4.4 task/s, elapsed: 110s, ETA:    82s[>>>>>>>>>>>>>>>>             ] 490/851, 4.4 task/s, elapsed: 111s, ETA:    81s[>>>>>>>>>>>>>>>>             ] 491/851, 4.4 task/s, elapsed: 111s, ETA:    81s[>>>>>>>>>>>>>>>>             ] 492/851, 4.4 task/s, elapsed: 111s, ETA:    81s[>>>>>>>>>>>>>>>>             ] 493/851, 4.4 task/s, elapsed: 111s, ETA:    81s[>>>>>>>>>>>>>>>>             ] 494/851, 4.4 task/s, elapsed: 111s, ETA:    80s[>>>>>>>>>>>>>>>>             ] 495/851, 4.4 task/s, elapsed: 112s, ETA:    80s[>>>>>>>>>>>>>>>>             ] 496/851, 4.4 task/s, elapsed: 112s, ETA:    80s[>>>>>>>>>>>>>>>>             ] 497/851, 4.4 task/s, elapsed: 112s, ETA:    80s[>>>>>>>>>>>>>>>>             ] 498/851, 4.4 task/s, elapsed: 112s, ETA:    80s[>>>>>>>>>>>>>>>>>            ] 499/851, 4.4 task/s, elapsed: 112s, ETA:    79s[>>>>>>>>>>>>>>>>>            ] 500/851, 4.4 task/s, elapsed: 113s, ETA:    79s[>>>>>>>>>>>>>>>>>            ] 501/851, 4.4 task/s, elapsed: 113s, ETA:    79s[>>>>>>>>>>>>>>>>>            ] 502/851, 4.4 task/s, elapsed: 113s, ETA:    79s[>>>>>>>>>>>>>>>>>            ] 503/851, 4.4 task/s, elapsed: 113s, ETA:    78s[>>>>>>>>>>>>>>>>>            ] 504/851, 4.4 task/s, elapsed: 113s, ETA:    78s[>>>>>>>>>>>>>>>>>            ] 505/851, 4.4 task/s, elapsed: 114s, ETA:    78s[>>>>>>>>>>>>>>>>>            ] 506/851, 4.4 task/s, elapsed: 114s, ETA:    78s[>>>>>>>>>>>>>>>>>            ] 507/851, 4.4 task/s, elapsed: 114s, ETA:    77s[>>>>>>>>>>>>>>>>>            ] 508/851, 4.4 task/s, elapsed: 114s, ETA:    77s[>>>>>>>>>>>>>>>>>            ] 509/851, 4.4 task/s, elapsed: 115s, ETA:    77s[>>>>>>>>>>>>>>>>>            ] 510/851, 4.4 task/s, elapsed: 115s, ETA:    77s[>>>>>>>>>>>>>>>>>            ] 511/851, 4.4 task/s, elapsed: 115s, ETA:    77s[>>>>>>>>>>>>>>>>>            ] 512/851, 4.4 task/s, elapsed: 115s, ETA:    76s[>>>>>>>>>>>>>>>>>            ] 513/851, 4.4 task/s, elapsed: 115s, ETA:    76s[>>>>>>>>>>>>>>>>>            ] 514/851, 4.4 task/s, elapsed: 116s, ETA:    76s[>>>>>>>>>>>>>>>>>            ] 515/851, 4.4 task/s, elapsed: 116s, ETA:    76s[>>>>>>>>>>>>>>>>>            ] 516/851, 4.4 task/s, elapsed: 116s, ETA:    75s[>>>>>>>>>>>>>>>>>            ] 517/851, 4.4 task/s, elapsed: 116s, ETA:    75s[>>>>>>>>>>>>>>>>>            ] 518/851, 4.4 task/s, elapsed: 117s, ETA:    75s[>>>>>>>>>>>>>>>>>            ] 519/851, 4.4 task/s, elapsed: 117s, ETA:    75s[>>>>>>>>>>>>>>>>>            ] 520/851, 4.4 task/s, elapsed: 117s, ETA:    74s[>>>>>>>>>>>>>>>>>            ] 521/851, 4.4 task/s, elapsed: 117s, ETA:    74s[>>>>>>>>>>>>>>>>>            ] 522/851, 4.4 task/s, elapsed: 117s, ETA:    74s[>>>>>>>>>>>>>>>>>            ] 523/851, 4.4 task/s, elapsed: 118s, ETA:    74s[>>>>>>>>>>>>>>>>>            ] 524/851, 4.4 task/s, elapsed: 118s, ETA:    74s[>>>>>>>>>>>>>>>>>            ] 525/851, 4.4 task/s, elapsed: 118s, ETA:    73s[>>>>>>>>>>>>>>>>>            ] 526/851, 4.4 task/s, elapsed: 118s, ETA:    73s[>>>>>>>>>>>>>>>>>            ] 527/851, 4.4 task/s, elapsed: 119s, ETA:    73s[>>>>>>>>>>>>>>>>>            ] 528/851, 4.4 task/s, elapsed: 119s, ETA:    73s[>>>>>>>>>>>>>>>>>>           ] 529/851, 4.4 task/s, elapsed: 119s, ETA:    72s[>>>>>>>>>>>>>>>>>>           ] 530/851, 4.4 task/s, elapsed: 119s, ETA:    72s[>>>>>>>>>>>>>>>>>>           ] 531/851, 4.4 task/s, elapsed: 119s, ETA:    72s[>>>>>>>>>>>>>>>>>>           ] 532/851, 4.4 task/s, elapsed: 120s, ETA:    72s[>>>>>>>>>>>>>>>>>>           ] 533/851, 4.4 task/s, elapsed: 120s, ETA:    72s[>>>>>>>>>>>>>>>>>>           ] 534/851, 4.4 task/s, elapsed: 120s, ETA:    71s[>>>>>>>>>>>>>>>>>>           ] 535/851, 4.4 task/s, elapsed: 120s, ETA:    71s[>>>>>>>>>>>>>>>>>>           ] 536/851, 4.4 task/s, elapsed: 121s, ETA:    71s[>>>>>>>>>>>>>>>>>>           ] 537/851, 4.4 task/s, elapsed: 121s, ETA:    71s[>>>>>>>>>>>>>>>>>>           ] 538/851, 4.4 task/s, elapsed: 121s, ETA:    70s[>>>>>>>>>>>>>>>>>>           ] 539/851, 4.4 task/s, elapsed: 121s, ETA:    70s[>>>>>>>>>>>>>>>>>>           ] 540/851, 4.4 task/s, elapsed: 121s, ETA:    70s[>>>>>>>>>>>>>>>>>>           ] 541/851, 4.5 task/s, elapsed: 122s, ETA:    70s[>>>>>>>>>>>>>>>>>>           ] 542/851, 4.4 task/s, elapsed: 122s, ETA:    69s[>>>>>>>>>>>>>>>>>>           ] 543/851, 4.4 task/s, elapsed: 122s, ETA:    69s[>>>>>>>>>>>>>>>>>>           ] 544/851, 4.5 task/s, elapsed: 122s, ETA:    69s[>>>>>>>>>>>>>>>>>>           ] 545/851, 4.5 task/s, elapsed: 122s, ETA:    69s[>>>>>>>>>>>>>>>>>>           ] 546/851, 4.5 task/s, elapsed: 123s, ETA:    69s[>>>>>>>>>>>>>>>>>>           ] 547/851, 4.5 task/s, elapsed: 123s, ETA:    68s[>>>>>>>>>>>>>>>>>>           ] 548/851, 4.5 task/s, elapsed: 123s, ETA:    68s[>>>>>>>>>>>>>>>>>>           ] 549/851, 4.5 task/s, elapsed: 123s, ETA:    68s[>>>>>>>>>>>>>>>>>>           ] 550/851, 4.5 task/s, elapsed: 124s, ETA:    68s[>>>>>>>>>>>>>>>>>>           ] 551/851, 4.5 task/s, elapsed: 124s, ETA:    67s[>>>>>>>>>>>>>>>>>>           ] 552/851, 4.5 task/s, elapsed: 124s, ETA:    67s[>>>>>>>>>>>>>>>>>>           ] 553/851, 4.5 task/s, elapsed: 124s, ETA:    67s[>>>>>>>>>>>>>>>>>>           ] 554/851, 4.5 task/s, elapsed: 124s, ETA:    67s[>>>>>>>>>>>>>>>>>>           ] 555/851, 4.5 task/s, elapsed: 125s, ETA:    66s[>>>>>>>>>>>>>>>>>>           ] 556/851, 4.5 task/s, elapsed: 125s, ETA:    66s[>>>>>>>>>>>>>>>>>>           ] 557/851, 4.5 task/s, elapsed: 125s, ETA:    66s[>>>>>>>>>>>>>>>>>>>          ] 558/851, 4.5 task/s, elapsed: 125s, ETA:    66s[>>>>>>>>>>>>>>>>>>>          ] 559/851, 4.5 task/s, elapsed: 125s, ETA:    66s[>>>>>>>>>>>>>>>>>>>          ] 560/851, 4.5 task/s, elapsed: 126s, ETA:    65s[>>>>>>>>>>>>>>>>>>>          ] 561/851, 4.5 task/s, elapsed: 126s, ETA:    65s[>>>>>>>>>>>>>>>>>>>          ] 562/851, 4.5 task/s, elapsed: 126s, ETA:    65s[>>>>>>>>>>>>>>>>>>>          ] 563/851, 4.5 task/s, elapsed: 126s, ETA:    65s[>>>>>>>>>>>>>>>>>>>          ] 564/851, 4.5 task/s, elapsed: 127s, ETA:    64s[>>>>>>>>>>>>>>>>>>>          ] 565/851, 4.5 task/s, elapsed: 127s, ETA:    64s[>>>>>>>>>>>>>>>>>>>          ] 566/851, 4.5 task/s, elapsed: 127s, ETA:    64s[>>>>>>>>>>>>>>>>>>>          ] 567/851, 4.5 task/s, elapsed: 127s, ETA:    64s[>>>>>>>>>>>>>>>>>>>          ] 568/851, 4.5 task/s, elapsed: 127s, ETA:    63s[>>>>>>>>>>>>>>>>>>>          ] 569/851, 4.5 task/s, elapsed: 128s, ETA:    63s[>>>>>>>>>>>>>>>>>>>          ] 570/851, 4.5 task/s, elapsed: 128s, ETA:    63s[>>>>>>>>>>>>>>>>>>>          ] 571/851, 4.5 task/s, elapsed: 128s, ETA:    63s[>>>>>>>>>>>>>>>>>>>          ] 572/851, 4.5 task/s, elapsed: 128s, ETA:    63s[>>>>>>>>>>>>>>>>>>>          ] 573/851, 4.5 task/s, elapsed: 128s, ETA:    62s[>>>>>>>>>>>>>>>>>>>          ] 574/851, 4.5 task/s, elapsed: 129s, ETA:    62s[>>>>>>>>>>>>>>>>>>>          ] 575/851, 4.5 task/s, elapsed: 129s, ETA:    62s[>>>>>>>>>>>>>>>>>>>          ] 576/851, 4.5 task/s, elapsed: 129s, ETA:    62s[>>>>>>>>>>>>>>>>>>>          ] 577/851, 4.5 task/s, elapsed: 129s, ETA:    61s[>>>>>>>>>>>>>>>>>>>          ] 578/851, 4.5 task/s, elapsed: 130s, ETA:    61s[>>>>>>>>>>>>>>>>>>>          ] 579/851, 4.5 task/s, elapsed: 130s, ETA:    61s[>>>>>>>>>>>>>>>>>>>          ] 580/851, 4.5 task/s, elapsed: 130s, ETA:    61s[>>>>>>>>>>>>>>>>>>>          ] 581/851, 4.5 task/s, elapsed: 130s, ETA:    60s[>>>>>>>>>>>>>>>>>>>          ] 582/851, 4.5 task/s, elapsed: 130s, ETA:    60s[>>>>>>>>>>>>>>>>>>>          ] 583/851, 4.5 task/s, elapsed: 131s, ETA:    60s[>>>>>>>>>>>>>>>>>>>          ] 584/851, 4.5 task/s, elapsed: 131s, ETA:    60s[>>>>>>>>>>>>>>>>>>>          ] 585/851, 4.5 task/s, elapsed: 131s, ETA:    60s[>>>>>>>>>>>>>>>>>>>          ] 586/851, 4.5 task/s, elapsed: 131s, ETA:    59s[>>>>>>>>>>>>>>>>>>>>         ] 587/851, 4.5 task/s, elapsed: 131s, ETA:    59s[>>>>>>>>>>>>>>>>>>>>         ] 588/851, 4.5 task/s, elapsed: 132s, ETA:    59s[>>>>>>>>>>>>>>>>>>>>         ] 589/851, 4.5 task/s, elapsed: 132s, ETA:    59s[>>>>>>>>>>>>>>>>>>>>         ] 590/851, 4.5 task/s, elapsed: 132s, ETA:    58s[>>>>>>>>>>>>>>>>>>>>         ] 591/851, 4.5 task/s, elapsed: 132s, ETA:    58s[>>>>>>>>>>>>>>>>>>>>         ] 592/851, 4.5 task/s, elapsed: 133s, ETA:    58s[>>>>>>>>>>>>>>>>>>>>         ] 593/851, 4.5 task/s, elapsed: 133s, ETA:    58s[>>>>>>>>>>>>>>>>>>>>         ] 594/851, 4.5 task/s, elapsed: 133s, ETA:    58s[>>>>>>>>>>>>>>>>>>>>         ] 595/851, 4.5 task/s, elapsed: 133s, ETA:    57s[>>>>>>>>>>>>>>>>>>>>         ] 596/851, 4.5 task/s, elapsed: 133s, ETA:    57s[>>>>>>>>>>>>>>>>>>>>         ] 597/851, 4.5 task/s, elapsed: 134s, ETA:    57s[>>>>>>>>>>>>>>>>>>>>         ] 598/851, 4.5 task/s, elapsed: 134s, ETA:    57s[>>>>>>>>>>>>>>>>>>>>         ] 599/851, 4.5 task/s, elapsed: 134s, ETA:    56s[>>>>>>>>>>>>>>>>>>>>         ] 600/851, 4.5 task/s, elapsed: 134s, ETA:    56s[>>>>>>>>>>>>>>>>>>>>         ] 601/851, 4.5 task/s, elapsed: 134s, ETA:    56s[>>>>>>>>>>>>>>>>>>>>         ] 602/851, 4.5 task/s, elapsed: 135s, ETA:    56s[>>>>>>>>>>>>>>>>>>>>         ] 603/851, 4.5 task/s, elapsed: 135s, ETA:    55s[>>>>>>>>>>>>>>>>>>>>         ] 604/851, 4.5 task/s, elapsed: 135s, ETA:    55s[>>>>>>>>>>>>>>>>>>>>         ] 605/851, 4.5 task/s, elapsed: 135s, ETA:    55s[>>>>>>>>>>>>>>>>>>>>         ] 606/851, 4.5 task/s, elapsed: 136s, ETA:    55s[>>>>>>>>>>>>>>>>>>>>         ] 607/851, 4.5 task/s, elapsed: 136s, ETA:    55s[>>>>>>>>>>>>>>>>>>>>         ] 608/851, 4.5 task/s, elapsed: 136s, ETA:    54s[>>>>>>>>>>>>>>>>>>>>         ] 609/851, 4.5 task/s, elapsed: 136s, ETA:    54s[>>>>>>>>>>>>>>>>>>>>         ] 610/851, 4.5 task/s, elapsed: 136s, ETA:    54s[>>>>>>>>>>>>>>>>>>>>         ] 611/851, 4.5 task/s, elapsed: 137s, ETA:    54s[>>>>>>>>>>>>>>>>>>>>         ] 612/851, 4.5 task/s, elapsed: 137s, ETA:    53s[>>>>>>>>>>>>>>>>>>>>         ] 613/851, 4.5 task/s, elapsed: 137s, ETA:    53s[>>>>>>>>>>>>>>>>>>>>         ] 614/851, 4.5 task/s, elapsed: 137s, ETA:    53s[>>>>>>>>>>>>>>>>>>>>         ] 615/851, 4.5 task/s, elapsed: 137s, ETA:    53s[>>>>>>>>>>>>>>>>>>>>         ] 616/851, 4.5 task/s, elapsed: 138s, ETA:    53s[>>>>>>>>>>>>>>>>>>>>>        ] 617/851, 4.5 task/s, elapsed: 138s, ETA:    52s[>>>>>>>>>>>>>>>>>>>>>        ] 618/851, 4.5 task/s, elapsed: 138s, ETA:    52s[>>>>>>>>>>>>>>>>>>>>>        ] 619/851, 4.5 task/s, elapsed: 138s, ETA:    52s[>>>>>>>>>>>>>>>>>>>>>        ] 620/851, 4.5 task/s, elapsed: 139s, ETA:    52s[>>>>>>>>>>>>>>>>>>>>>        ] 621/851, 4.5 task/s, elapsed: 139s, ETA:    51s[>>>>>>>>>>>>>>>>>>>>>        ] 622/851, 4.5 task/s, elapsed: 139s, ETA:    51s[>>>>>>>>>>>>>>>>>>>>>        ] 623/851, 4.5 task/s, elapsed: 139s, ETA:    51s[>>>>>>>>>>>>>>>>>>>>>        ] 624/851, 4.5 task/s, elapsed: 139s, ETA:    51s[>>>>>>>>>>>>>>>>>>>>>        ] 625/851, 4.5 task/s, elapsed: 140s, ETA:    50s[>>>>>>>>>>>>>>>>>>>>>        ] 626/851, 4.5 task/s, elapsed: 140s, ETA:    50s[>>>>>>>>>>>>>>>>>>>>>        ] 627/851, 4.5 task/s, elapsed: 140s, ETA:    50s[>>>>>>>>>>>>>>>>>>>>>        ] 628/851, 4.5 task/s, elapsed: 140s, ETA:    50s[>>>>>>>>>>>>>>>>>>>>>        ] 629/851, 4.5 task/s, elapsed: 141s, ETA:    50s[>>>>>>>>>>>>>>>>>>>>>        ] 630/851, 4.5 task/s, elapsed: 141s, ETA:    49s[>>>>>>>>>>>>>>>>>>>>>        ] 631/851, 4.5 task/s, elapsed: 141s, ETA:    49s[>>>>>>>>>>>>>>>>>>>>>        ] 632/851, 4.5 task/s, elapsed: 141s, ETA:    49s[>>>>>>>>>>>>>>>>>>>>>        ] 633/851, 4.5 task/s, elapsed: 141s, ETA:    49s[>>>>>>>>>>>>>>>>>>>>>        ] 634/851, 4.5 task/s, elapsed: 142s, ETA:    48s[>>>>>>>>>>>>>>>>>>>>>        ] 635/851, 4.5 task/s, elapsed: 142s, ETA:    48s[>>>>>>>>>>>>>>>>>>>>>        ] 636/851, 4.5 task/s, elapsed: 142s, ETA:    48s[>>>>>>>>>>>>>>>>>>>>>        ] 637/851, 4.5 task/s, elapsed: 142s, ETA:    48s[>>>>>>>>>>>>>>>>>>>>>        ] 638/851, 4.5 task/s, elapsed: 142s, ETA:    48s[>>>>>>>>>>>>>>>>>>>>>        ] 639/851, 4.5 task/s, elapsed: 143s, ETA:    47s[>>>>>>>>>>>>>>>>>>>>>        ] 640/851, 4.5 task/s, elapsed: 143s, ETA:    47s[>>>>>>>>>>>>>>>>>>>>>        ] 641/851, 4.5 task/s, elapsed: 143s, ETA:    47s[>>>>>>>>>>>>>>>>>>>>>        ] 642/851, 4.5 task/s, elapsed: 143s, ETA:    47s[>>>>>>>>>>>>>>>>>>>>>        ] 643/851, 4.5 task/s, elapsed: 144s, ETA:    46s[>>>>>>>>>>>>>>>>>>>>>        ] 644/851, 4.5 task/s, elapsed: 144s, ETA:    46s[>>>>>>>>>>>>>>>>>>>>>        ] 645/851, 4.5 task/s, elapsed: 144s, ETA:    46s[>>>>>>>>>>>>>>>>>>>>>>       ] 646/851, 4.5 task/s, elapsed: 144s, ETA:    46s[>>>>>>>>>>>>>>>>>>>>>>       ] 647/851, 4.5 task/s, elapsed: 144s, ETA:    46s[>>>>>>>>>>>>>>>>>>>>>>       ] 648/851, 4.5 task/s, elapsed: 145s, ETA:    45s[>>>>>>>>>>>>>>>>>>>>>>       ] 649/851, 4.5 task/s, elapsed: 145s, ETA:    45s[>>>>>>>>>>>>>>>>>>>>>>       ] 650/851, 4.5 task/s, elapsed: 145s, ETA:    45s[>>>>>>>>>>>>>>>>>>>>>>       ] 651/851, 4.5 task/s, elapsed: 145s, ETA:    45s[>>>>>>>>>>>>>>>>>>>>>>       ] 652/851, 4.5 task/s, elapsed: 145s, ETA:    44s[>>>>>>>>>>>>>>>>>>>>>>       ] 653/851, 4.5 task/s, elapsed: 146s, ETA:    44s[>>>>>>>>>>>>>>>>>>>>>>       ] 654/851, 4.5 task/s, elapsed: 146s, ETA:    44s[>>>>>>>>>>>>>>>>>>>>>>       ] 655/851, 4.5 task/s, elapsed: 146s, ETA:    44s[>>>>>>>>>>>>>>>>>>>>>>       ] 656/851, 4.5 task/s, elapsed: 146s, ETA:    44s[>>>>>>>>>>>>>>>>>>>>>>       ] 657/851, 4.5 task/s, elapsed: 147s, ETA:    43s[>>>>>>>>>>>>>>>>>>>>>>       ] 658/851, 4.5 task/s, elapsed: 147s, ETA:    43s[>>>>>>>>>>>>>>>>>>>>>>       ] 659/851, 4.5 task/s, elapsed: 147s, ETA:    43s[>>>>>>>>>>>>>>>>>>>>>>       ] 660/851, 4.5 task/s, elapsed: 147s, ETA:    43s[>>>>>>>>>>>>>>>>>>>>>>       ] 661/851, 4.5 task/s, elapsed: 147s, ETA:    42s[>>>>>>>>>>>>>>>>>>>>>>       ] 662/851, 4.5 task/s, elapsed: 148s, ETA:    42s[>>>>>>>>>>>>>>>>>>>>>>       ] 663/851, 4.5 task/s, elapsed: 148s, ETA:    42s[>>>>>>>>>>>>>>>>>>>>>>       ] 664/851, 4.5 task/s, elapsed: 148s, ETA:    42s[>>>>>>>>>>>>>>>>>>>>>>       ] 665/851, 4.5 task/s, elapsed: 148s, ETA:    41s[>>>>>>>>>>>>>>>>>>>>>>       ] 666/851, 4.5 task/s, elapsed: 149s, ETA:    41s[>>>>>>>>>>>>>>>>>>>>>>       ] 667/851, 4.5 task/s, elapsed: 149s, ETA:    41s[>>>>>>>>>>>>>>>>>>>>>>       ] 668/851, 4.5 task/s, elapsed: 149s, ETA:    41s[>>>>>>>>>>>>>>>>>>>>>>       ] 669/851, 4.5 task/s, elapsed: 149s, ETA:    41s[>>>>>>>>>>>>>>>>>>>>>>       ] 670/851, 4.5 task/s, elapsed: 149s, ETA:    40s[>>>>>>>>>>>>>>>>>>>>>>       ] 671/851, 4.5 task/s, elapsed: 150s, ETA:    40s[>>>>>>>>>>>>>>>>>>>>>>       ] 672/851, 4.5 task/s, elapsed: 150s, ETA:    40s[>>>>>>>>>>>>>>>>>>>>>>       ] 673/851, 4.5 task/s, elapsed: 150s, ETA:    40s[>>>>>>>>>>>>>>>>>>>>>>       ] 674/851, 4.5 task/s, elapsed: 150s, ETA:    39s[>>>>>>>>>>>>>>>>>>>>>>>      ] 675/851, 4.5 task/s, elapsed: 150s, ETA:    39s[>>>>>>>>>>>>>>>>>>>>>>>      ] 676/851, 4.5 task/s, elapsed: 151s, ETA:    39s[>>>>>>>>>>>>>>>>>>>>>>>      ] 677/851, 4.5 task/s, elapsed: 151s, ETA:    39s[>>>>>>>>>>>>>>>>>>>>>>>      ] 678/851, 4.5 task/s, elapsed: 151s, ETA:    39s[>>>>>>>>>>>>>>>>>>>>>>>      ] 679/851, 4.5 task/s, elapsed: 151s, ETA:    38s[>>>>>>>>>>>>>>>>>>>>>>>      ] 680/851, 4.5 task/s, elapsed: 152s, ETA:    38s[>>>>>>>>>>>>>>>>>>>>>>>      ] 681/851, 4.5 task/s, elapsed: 152s, ETA:    38s[>>>>>>>>>>>>>>>>>>>>>>>      ] 682/851, 4.5 task/s, elapsed: 152s, ETA:    38s[>>>>>>>>>>>>>>>>>>>>>>>      ] 683/851, 4.5 task/s, elapsed: 152s, ETA:    37s[>>>>>>>>>>>>>>>>>>>>>>>      ] 684/851, 4.5 task/s, elapsed: 152s, ETA:    37s[>>>>>>>>>>>>>>>>>>>>>>>      ] 685/851, 4.5 task/s, elapsed: 153s, ETA:    37s[>>>>>>>>>>>>>>>>>>>>>>>      ] 686/851, 4.5 task/s, elapsed: 153s, ETA:    37s[>>>>>>>>>>>>>>>>>>>>>>>      ] 687/851, 4.5 task/s, elapsed: 153s, ETA:    37s[>>>>>>>>>>>>>>>>>>>>>>>      ] 688/851, 4.5 task/s, elapsed: 153s, ETA:    36s[>>>>>>>>>>>>>>>>>>>>>>>      ] 689/851, 4.5 task/s, elapsed: 153s, ETA:    36s[>>>>>>>>>>>>>>>>>>>>>>>      ] 690/851, 4.5 task/s, elapsed: 154s, ETA:    36s[>>>>>>>>>>>>>>>>>>>>>>>      ] 691/851, 4.5 task/s, elapsed: 154s, ETA:    36s[>>>>>>>>>>>>>>>>>>>>>>>      ] 692/851, 4.5 task/s, elapsed: 154s, ETA:    35s[>>>>>>>>>>>>>>>>>>>>>>>      ] 693/851, 4.5 task/s, elapsed: 154s, ETA:    35s[>>>>>>>>>>>>>>>>>>>>>>>      ] 694/851, 4.5 task/s, elapsed: 155s, ETA:    35s[>>>>>>>>>>>>>>>>>>>>>>>      ] 695/851, 4.5 task/s, elapsed: 155s, ETA:    35s[>>>>>>>>>>>>>>>>>>>>>>>      ] 696/851, 4.5 task/s, elapsed: 155s, ETA:    35s[>>>>>>>>>>>>>>>>>>>>>>>      ] 697/851, 4.5 task/s, elapsed: 155s, ETA:    34s[>>>>>>>>>>>>>>>>>>>>>>>      ] 698/851, 4.5 task/s, elapsed: 155s, ETA:    34s[>>>>>>>>>>>>>>>>>>>>>>>      ] 699/851, 4.5 task/s, elapsed: 156s, ETA:    34s[>>>>>>>>>>>>>>>>>>>>>>>      ] 700/851, 4.5 task/s, elapsed: 156s, ETA:    34s[>>>>>>>>>>>>>>>>>>>>>>>      ] 701/851, 4.5 task/s, elapsed: 156s, ETA:    33s[>>>>>>>>>>>>>>>>>>>>>>>      ] 702/851, 4.5 task/s, elapsed: 156s, ETA:    33s[>>>>>>>>>>>>>>>>>>>>>>>      ] 703/851, 4.5 task/s, elapsed: 157s, ETA:    33s[>>>>>>>>>>>>>>>>>>>>>>>      ] 704/851, 4.5 task/s, elapsed: 157s, ETA:    33s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 705/851, 4.5 task/s, elapsed: 157s, ETA:    33s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 706/851, 4.5 task/s, elapsed: 157s, ETA:    32s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 707/851, 4.5 task/s, elapsed: 157s, ETA:    32s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 708/851, 4.5 task/s, elapsed: 158s, ETA:    32s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 709/851, 4.5 task/s, elapsed: 158s, ETA:    32s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 710/851, 4.5 task/s, elapsed: 158s, ETA:    31s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 711/851, 4.5 task/s, elapsed: 158s, ETA:    31s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 712/851, 4.5 task/s, elapsed: 158s, ETA:    31s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 713/851, 4.5 task/s, elapsed: 159s, ETA:    31s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 714/851, 4.5 task/s, elapsed: 159s, ETA:    30s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 715/851, 4.5 task/s, elapsed: 159s, ETA:    30s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 716/851, 4.5 task/s, elapsed: 159s, ETA:    30s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 717/851, 4.5 task/s, elapsed: 160s, ETA:    30s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 718/851, 4.5 task/s, elapsed: 160s, ETA:    30s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 719/851, 4.5 task/s, elapsed: 160s, ETA:    29s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 720/851, 4.5 task/s, elapsed: 160s, ETA:    29s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 721/851, 4.5 task/s, elapsed: 160s, ETA:    29s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 722/851, 4.5 task/s, elapsed: 161s, ETA:    29s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 723/851, 4.5 task/s, elapsed: 161s, ETA:    28s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 724/851, 4.5 task/s, elapsed: 161s, ETA:    28s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 725/851, 4.5 task/s, elapsed: 161s, ETA:    28s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 726/851, 4.5 task/s, elapsed: 161s, ETA:    28s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 727/851, 4.5 task/s, elapsed: 162s, ETA:    28s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 728/851, 4.5 task/s, elapsed: 162s, ETA:    27s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 729/851, 4.5 task/s, elapsed: 162s, ETA:    27s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 730/851, 4.5 task/s, elapsed: 162s, ETA:    27s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 731/851, 4.5 task/s, elapsed: 163s, ETA:    27s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 732/851, 4.5 task/s, elapsed: 163s, ETA:    26s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 733/851, 4.5 task/s, elapsed: 163s, ETA:    26s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 734/851, 4.5 task/s, elapsed: 163s, ETA:    26s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 735/851, 4.5 task/s, elapsed: 163s, ETA:    26s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 736/851, 4.5 task/s, elapsed: 164s, ETA:    26s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 737/851, 4.5 task/s, elapsed: 164s, ETA:    25s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 738/851, 4.5 task/s, elapsed: 164s, ETA:    25s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 739/851, 4.5 task/s, elapsed: 164s, ETA:    25s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 740/851, 4.5 task/s, elapsed: 164s, ETA:    25s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 741/851, 4.5 task/s, elapsed: 165s, ETA:    24s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 742/851, 4.5 task/s, elapsed: 165s, ETA:    24s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 743/851, 4.5 task/s, elapsed: 165s, ETA:    24s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 744/851, 4.5 task/s, elapsed: 165s, ETA:    24s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 745/851, 4.5 task/s, elapsed: 166s, ETA:    24s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 746/851, 4.5 task/s, elapsed: 166s, ETA:    23s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 747/851, 4.5 task/s, elapsed: 166s, ETA:    23s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 748/851, 4.5 task/s, elapsed: 166s, ETA:    23s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 749/851, 4.5 task/s, elapsed: 166s, ETA:    23s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 750/851, 4.5 task/s, elapsed: 167s, ETA:    22s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 751/851, 4.5 task/s, elapsed: 167s, ETA:    22s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 752/851, 4.5 task/s, elapsed: 167s, ETA:    22s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 753/851, 4.5 task/s, elapsed: 167s, ETA:    22s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 754/851, 4.5 task/s, elapsed: 167s, ETA:    22s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 755/851, 4.5 task/s, elapsed: 168s, ETA:    21s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 756/851, 4.5 task/s, elapsed: 168s, ETA:    21s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 757/851, 4.5 task/s, elapsed: 168s, ETA:    21s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 758/851, 4.5 task/s, elapsed: 168s, ETA:    21s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 759/851, 4.5 task/s, elapsed: 169s, ETA:    20s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 760/851, 4.5 task/s, elapsed: 169s, ETA:    20s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 761/851, 4.5 task/s, elapsed: 169s, ETA:    20s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 762/851, 4.5 task/s, elapsed: 169s, ETA:    20s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 763/851, 4.5 task/s, elapsed: 169s, ETA:    20s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 764/851, 4.5 task/s, elapsed: 170s, ETA:    19s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 765/851, 4.5 task/s, elapsed: 170s, ETA:    19s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 766/851, 4.5 task/s, elapsed: 170s, ETA:    19s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 767/851, 4.5 task/s, elapsed: 170s, ETA:    19s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 768/851, 4.5 task/s, elapsed: 170s, ETA:    18s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 769/851, 4.5 task/s, elapsed: 171s, ETA:    18s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 770/851, 4.5 task/s, elapsed: 171s, ETA:    18s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 771/851, 4.5 task/s, elapsed: 171s, ETA:    18s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 772/851, 4.5 task/s, elapsed: 171s, ETA:    18s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 773/851, 4.5 task/s, elapsed: 172s, ETA:    17s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 774/851, 4.5 task/s, elapsed: 172s, ETA:    17s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 775/851, 4.5 task/s, elapsed: 172s, ETA:    17s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 776/851, 4.5 task/s, elapsed: 172s, ETA:    17s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 777/851, 4.5 task/s, elapsed: 172s, ETA:    16s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 778/851, 4.5 task/s, elapsed: 173s, ETA:    16s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 779/851, 4.5 task/s, elapsed: 173s, ETA:    16s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 780/851, 4.5 task/s, elapsed: 173s, ETA:    16s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 781/851, 4.5 task/s, elapsed: 173s, ETA:    16s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 782/851, 4.5 task/s, elapsed: 173s, ETA:    15s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 783/851, 4.5 task/s, elapsed: 174s, ETA:    15s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 784/851, 4.5 task/s, elapsed: 174s, ETA:    15s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 785/851, 4.5 task/s, elapsed: 174s, ETA:    15s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 786/851, 4.5 task/s, elapsed: 174s, ETA:    14s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 787/851, 4.5 task/s, elapsed: 175s, ETA:    14s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 788/851, 4.5 task/s, elapsed: 175s, ETA:    14s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 789/851, 4.5 task/s, elapsed: 175s, ETA:    14s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 790/851, 4.5 task/s, elapsed: 175s, ETA:    14s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 791/851, 4.5 task/s, elapsed: 175s, ETA:    13s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 792/851, 4.5 task/s, elapsed: 176s, ETA:    13s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 793/851, 4.5 task/s, elapsed: 176s, ETA:    13s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 794/851, 4.5 task/s, elapsed: 176s, ETA:    13s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 795/851, 4.5 task/s, elapsed: 176s, ETA:    12s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 796/851, 4.5 task/s, elapsed: 176s, ETA:    12s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 797/851, 4.5 task/s, elapsed: 177s, ETA:    12s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 798/851, 4.5 task/s, elapsed: 177s, ETA:    12s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 799/851, 4.5 task/s, elapsed: 177s, ETA:    12s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 800/851, 4.5 task/s, elapsed: 177s, ETA:    11s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 801/851, 4.5 task/s, elapsed: 178s, ETA:    11s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 802/851, 4.5 task/s, elapsed: 178s, ETA:    11s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 803/851, 4.5 task/s, elapsed: 178s, ETA:    11s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 804/851, 4.5 task/s, elapsed: 178s, ETA:    10s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 805/851, 4.5 task/s, elapsed: 178s, ETA:    10s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 806/851, 4.5 task/s, elapsed: 179s, ETA:    10s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 807/851, 4.5 task/s, elapsed: 179s, ETA:    10s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 808/851, 4.5 task/s, elapsed: 179s, ETA:    10s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 809/851, 4.5 task/s, elapsed: 179s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 810/851, 4.5 task/s, elapsed: 179s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 811/851, 4.5 task/s, elapsed: 180s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 812/851, 4.5 task/s, elapsed: 180s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 813/851, 4.5 task/s, elapsed: 180s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 814/851, 4.5 task/s, elapsed: 180s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 815/851, 4.5 task/s, elapsed: 181s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 816/851, 4.5 task/s, elapsed: 181s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 817/851, 4.5 task/s, elapsed: 181s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 818/851, 4.5 task/s, elapsed: 181s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 819/851, 4.5 task/s, elapsed: 181s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 820/851, 4.5 task/s, elapsed: 182s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 821/851, 4.5 task/s, elapsed: 182s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 822/851, 4.5 task/s, elapsed: 182s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 823/851, 4.5 task/s, elapsed: 182s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 824/851, 4.5 task/s, elapsed: 182s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 825/851, 4.5 task/s, elapsed: 183s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 826/851, 4.5 task/s, elapsed: 183s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 827/851, 4.5 task/s, elapsed: 183s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 828/851, 4.5 task/s, elapsed: 183s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 829/851, 4.5 task/s, elapsed: 184s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 830/851, 4.5 task/s, elapsed: 184s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 831/851, 4.5 task/s, elapsed: 184s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 832/851, 4.5 task/s, elapsed: 184s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 833/851, 4.5 task/s, elapsed: 184s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 834/851, 4.5 task/s, elapsed: 185s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 835/851, 4.5 task/s, elapsed: 185s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 836/851, 4.5 task/s, elapsed: 185s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 837/851, 4.5 task/s, elapsed: 185s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 838/851, 4.5 task/s, elapsed: 185s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 839/851, 4.5 task/s, elapsed: 186s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 840/851, 4.5 task/s, elapsed: 186s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 841/851, 4.5 task/s, elapsed: 186s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 842/851, 4.5 task/s, elapsed: 186s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 843/851, 4.5 task/s, elapsed: 187s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 844/851, 4.5 task/s, elapsed: 187s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 845/851, 4.5 task/s, elapsed: 187s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 846/851, 4.5 task/s, elapsed: 187s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 847/851, 4.5 task/s, elapsed: 188s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 848/851, 4.5 task/s, elapsed: 188s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 849/851, 4.5 task/s, elapsed: 188s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 850/851, 4.5 task/s, elapsed: 188s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] 851/851, 4.5 task/s, elapsed: 188s, ETA:     0s

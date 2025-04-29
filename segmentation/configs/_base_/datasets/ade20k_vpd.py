@@ -132,7 +132,7 @@ test_pipeline = [
 
 
 data = dict(
-    samples_per_gpu=2,
+    samples_per_gpu=4,
     workers_per_gpu=8,
     train=dict(
         type=dataset_type,
@@ -148,7 +148,7 @@ data = dict(
         pipeline=val_pipeline,
         ),
     test=dict(
-        type=dataset_type,
+        type=CustomDatasetWithClassFilter,
         data_root=data_root,
         img_dir='images/validation',
         ann_dir='annotations/validation',

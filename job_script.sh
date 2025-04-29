@@ -1,8 +1,10 @@
 #!/bin/bash
-#BSUB -q gpuv100
+##BSUB -q gpuv100
+#BSUB -q gpua100
+
 #BSUB -J train_vpd_controlNet
 #BSUB -n 4
-#BSUB -R "select[gpu32gb]"
+## BSUB -R "select[gpu32gb]"
 #BSUB -gpu "num=1:mode=exclusive_process"
 #BSUB -W 8:00
 #BSUB -R "rusage[mem=16GB]"

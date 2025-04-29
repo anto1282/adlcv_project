@@ -1,7 +1,7 @@
 
 _base_ = [  
     '_base_/models/fpn_r50.py', '_base_/datasets/ade20k_vpd.py',
-    '_base_/default_runtime.py', '_base_/schedules/schedule_10k.py'
+    '_base_/default_runtime.py', '_base_/schedules/schedule_20k.py'
 ]
 
 custom_imports = dict(
