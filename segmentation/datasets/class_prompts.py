@@ -3,6 +3,15 @@ import cv2
 import torch
 import random
 from mmseg.datasets.builder import PIPELINES
+import os
+import sys
+from tqdm import tqdm # Progress bar
+import argparse
+import mmcv # Using mmcv.imread for robust loading
+import cv2
+from scipy.interpolate import splprep, splev
+from mmcv.utils import Config
+import mmcv
 
 # #SETTINGS
 # # Parameters for generators
@@ -210,7 +219,6 @@ class GenerateClassCentroidDotMask:
 #       A list of tuples, where each tuple is (cx, cy) representing the integer
 #       coordinates of one component's centroid for the 'selected_prompt_class'.
 #       Empty list if no class was selected or no components found.
-
 
 @PIPELINES.register_module()
 class GenerateClassScribbleMask:
