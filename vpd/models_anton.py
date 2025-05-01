@@ -281,10 +281,11 @@ class UNetWrapper(nn.Module):
         frozen_hs = []
 
         trainable_h = x.type(trainable_unet.dtype)
-        trainable_hs = []
 
         ctrl_id = 0
 
+        
+        print(f"{self.zero_convs[0].weight.mean().item():.10f}")
         if box_control is not None: 
             box_control = self.zero_convs[0](trainable_h)
             trainable_h = trainable_h + box_control
@@ -306,7 +307,6 @@ class UNetWrapper(nn.Module):
         frozen_h += middle_zero 
         with torch.no_grad():
             frozen_h = frozen_unet.middle_block(frozen_h, emb, context)
-
 
 
         out_list = []
@@ -440,9 +440,10 @@ from copy import deepcopy
 class ZeroConv2d(nn.Conv2d):
     def __init__(self, in_channels, out_channels, kernel_size=1, stride=1, padding=0, bias=True):
         super().__init__(in_channels, out_channels, kernel_size, stride, padding, bias=bias)
-        nn.init.zeros_(self.weight)
-        if self.bias is not None:
-            nn.init.zeros_(self.bias)
+        with torch.no_grad():
+            self.weight.data.fill_(0.1)  # all weights set to 0.1
+            if self.bias is not None:
+                self.bias.data.zero_()
     
     def reset_parameters(self):
         # Override to do nothing (super().__init__ will call this)
@@ -463,52 +464,36 @@ class EncoderControlNet(nn.Module):
         super().__init__()
 
         self.box_cnn = nn.Sequential(
-            nn.Conv2d(1, 128, 3, stride=2, padding=1),  # /2
+            nn.Conv2d(1, 64, 3, stride=2, padding=1),  # /2
             nn.ReLU(inplace=True),
-            nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
+            nn.Conv2d(64, 64, 3, stride=2, padding=1),  # /4
             nn.ReLU(inplace=True),
         )
         self.scribble_cnn = nn.Sequential(
-            nn.Conv2d(1, 128, 3, stride=2, padding=1),  # /2
+            nn.Conv2d(1, 64, 3, stride=2, padding=1),  # /2
             nn.ReLU(inplace=True),
-            nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
+            nn.Conv2d(64, 64, 3, stride=2, padding=1),  # /4
             nn.ReLU(inplace=True)
             )
         self.dot_cnn = nn.Sequential(
-            nn.Conv2d(1, 128, 3, stride=2, padding=1),  # /2
+            nn.Conv2d(1, 64, 3, stride=2, padding=1),  # /2
             nn.ReLU(inplace=True),
-            nn.Conv2d(128, 320, 3, stride=2, padding=1),  # /4
+            nn.Conv2d(64, 64, 3, stride=2, padding=1),  # /4
             nn.ReLU(inplace=True)
             )
 
-        self.out64 = nn.Sequential(               
-            nn.Conv2d(320, 320, 3, padding=1),
-            nn.ReLU(inplace=True))
-        
-        self.out32 = nn.Sequential(               
-            nn.Conv2d(640, 640, 3, padding=1),
-            nn.ReLU(inplace=True))
-        
-        self.out16 = nn.Sequential(               
-            nn.Conv2d(1280, 1280, 3, padding=1),
-            nn.ReLU(inplace=True))
-        
-            # 1/8 resolution (64x64)
+
         self.conv64 = nn.Sequential(
-            nn.Conv2d(320, 320, 3, stride=2, padding=1),  # /8
+            nn.Conv2d(64, 32, 3, stride=2, padding=1),  # /8
             nn.ReLU(inplace=True),
         )
-        # 1/16 resolution (32x32)
-        self.conv32 = nn.Sequential(
-            nn.Conv2d(320, 640, 3, stride=2, padding=1),  # /16
-            nn.ReLU(inplace=True),
-        )
-        # 1/32 resolution (16x16)
-        self.conv16 = nn.Sequential(
-            nn.Conv2d(640, 1280, 3, stride=2, padding=1),  # /32
-            nn.ReLU(inplace=True),
-        )
-    
+
+        self.out64 = nn.Sequential(               
+            nn.Conv2d(32, 4, 3, padding=1),
+            nn.ReLU(inplace=True))
+            # 1/8 resolution (64x64)
+
+  
 
     def forward(self, x, input_type: str):
 
@@ -519,8 +504,8 @@ class EncoderControlNet(nn.Module):
         else:
             x = self.dot_cnn(x)
 
-        out64 = self.conv64(x)
-        out32 = self.conv32(out64)
-        out16 = self.conv16(out32)
-        return [self.out64(out64), self.out32(out32), self.out16(out16)]
+
+        out64 = self.out64(self.conv64(x))
+
+        return out64
 

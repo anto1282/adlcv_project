@@ -216,7 +216,7 @@ def main():
         print(conv.weight.mean())
 
 
-    return
+    
     # First freeze everything
     for param in model.parameters():
         param.requires_grad = False
