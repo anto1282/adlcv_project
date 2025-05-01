@@ -214,10 +214,12 @@ def main():
     conv_list = model.unet.zero_convs
     print(conv_list)
     for i, conv in enumerate(conv_list):
+        print(conv.weight)
         if not torch.allclose(conv.weight.data, torch.zeros_like(conv.weight), atol=1e-7):
+            
             raise ValueError(f"ZeroConv {i} has non-zero weights!")
         if conv.bias is not None and not torch.allclose(conv.bias.data, torch.zeros_like(conv.bias), atol=1e-7):
-            raise ValueError(f"ZeroConv {i} has non-zero bias!")
+            raise ValueError(f"ZeroConv {i} has non-zero b½ias!")
     print("✅ All ZeroConv layers are correctly zero-initialized.")
 
 

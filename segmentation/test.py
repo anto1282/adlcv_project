@@ -54,6 +54,13 @@ def parse_args():
         nargs='+',
         help='evaluation metrics, which depends on the dataset, e.g., "mIoU"'
         ' for generic datasets, and "cityscapes" for Cityscapes')
+    parser.add_argument(
+        '--input-type',
+        type=str,
+        default=None,
+        choices=['box', 'scribble', 'dot'],
+        help='Choose which input_type to load masks from'
+    )
     parser.add_argument('--show', action='store_true', help='show results')
     parser.add_argument(
         '--show-dir', help='directory where painted images will be saved')
@@ -107,6 +114,11 @@ def parse_args():
         type=float,
         default=0.5,
         help='Opacity of painted segmentation map. In (0, 1] range.')
+    parser.add_argument(
+        '--class-filter',
+        type=int,
+        nargs='+',
+        help='Specify one or more class ids to filter images by.')
     parser.add_argument('--local_rank', type=int, default=0)
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
@@ -140,6 +152,12 @@ def main():
         raise ValueError('The output file must be a pkl file.')
 
     cfg = mmcv.Config.fromfile(args.config)
+
+    if args.class_filter is not None:
+        if 'class_filter' in cfg.data.test:
+            cfg.data.test['class_filter'] = args.class_filter
+        else:
+            raise RuntimeError('Test dataset does not support class filtering! Make sure you are using CustomDatasetWithClassFilter.')
     if args.cfg_options is not None:
         cfg.merge_from_dict(args.cfg_options)
 
@@ -178,16 +196,25 @@ def main():
         init_dist(args.launcher, **cfg.dist_params)
 
     rank, _ = get_dist_info()
+    
     # allows not to create
     if args.work_dir is not None and rank == 0:
         mmcv.mkdir_or_exist(osp.abspath(args.work_dir))
         timestamp = time.strftime('%Y%m%d_%H%M%S', time.localtime())
-        if args.aug_test:
-            json_file = osp.join(args.work_dir,
-                                 f'eval_multi_scale_{timestamp}.json')
+        
+        # === New part: insert class ID into filename ===
+        if hasattr(args, 'class_filter') and args.class_filter is not None:
+            class_id_str = '_'.join(str(c) for c in args.class_filter)
+            if args.aug_test:
+                json_file = osp.join(args.work_dir, f'eval_multi_scale_class{class_id_str}_{timestamp}.json')
+            else:
+                json_file = osp.join(args.work_dir, f'eval_single_scale_class{class_id_str}_{timestamp}.json')
         else:
-            json_file = osp.join(args.work_dir,
-                                 f'eval_single_scale_{timestamp}.json')
+            if args.aug_test:
+                json_file = osp.join(args.work_dir, f'eval_multi_scale_{timestamp}.json')
+            else:
+                json_file = osp.join(args.work_dir, f'eval_single_scale_{timestamp}.json')
+                
     elif rank == 0:
         work_dir = osp.join('./work_dirs',
                             osp.splitext(osp.basename(args.config))[0])
@@ -202,6 +229,15 @@ def main():
 
     # build the dataloader
     # TODO: support multiple images per gpu (only minor changes are needed)
+    # Modify input_type inside LoadPerClassMasksFromFolder
+    if args.input_type is not None:
+        for t in cfg.data.test.pipeline:
+            if t['type'] == 'MultiScaleFlipAug':
+                for sub_t in t['transforms']:
+                    if sub_t['type'] == 'LoadPerClassMasksFromFolder':
+                        sub_t['types'] = [args.input_type]
+                        print(f"✅ Set input_type to {args.input_type}")
+
     dataset = build_dataset(cfg.data.test)
     # The default loader config
     loader_cfg = dict(
@@ -229,10 +265,22 @@ def main():
     # build the model and load checkpoint
     cfg.model.train_cfg = None
     model = build_segmentor(cfg.model, test_cfg=cfg.get('test_cfg'))
+    
+
     fp16_cfg = cfg.get('fp16', None)
     if fp16_cfg is not None:
         wrap_fp16_model(model)
     checkpoint = load_checkpoint(model, args.checkpoint, map_location='cpu')
+
+    conv_list = model.unet.zero_convs
+    print(conv_list)
+    for i, conv in enumerate(conv_list):
+        if not torch.allclose(conv.weight.data, torch.zeros_like(conv.weight), atol=1e-7):
+            raise ValueError(f"ZeroConv {i} has non-zero weights!")
+        if conv.bias is not None and not torch.allclose(conv.bias.data, torch.zeros_like(conv.bias), atol=1e-7):
+            raise ValueError(f"ZeroConv {i} has non-zero bias!")
+    print("✅ All ZeroConv layers are correctly zero-initialized.")
+    
     if 'CLASSES' in checkpoint.get('meta', {}):
         model.CLASSES = checkpoint['meta']['CLASSES']
     else:

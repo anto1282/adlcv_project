@@ -1,0 +1,177 @@
+✅ Set input_type to dot
+Filtered dataset: 27 / 851 images kept.
+LatentDiffusion: Running in eps-prediction mode
+DiffusionWrapper has 859.52 M params.
+making attention of type 'vanilla' with 512 in_channels
+Working with z of shape (1, 4, 32, 32) = 4096 dimensions.
+making attention of type 'vanilla' with 512 in_channels
+Restored from /work3/s203557/checkpoints/v1-5-pruned-emaonly.ckpt with 0 missing and 199 unexpected keys
+Unexpected Keys: ['model_ema.decay', 'model_ema.num_updates', 'cond_stage_model.transformer.text_model.embeddings.position_ids', 'cond_stage_model.transformer.text_model.embeddings.token_embedding.weight', 'cond_stage_model.transformer.text_model.embeddings.position_embedding.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.0.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.0.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.1.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.1.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.2.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.2.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.3.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.3.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.4.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.4.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.5.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.5.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.6.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.6.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.7.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.7.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.8.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.8.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.9.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.9.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.10.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.10.layer_norm2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.k_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.k_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.v_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.v_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.q_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.q_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.out_proj.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.self_attn.out_proj.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.layer_norm1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.layer_norm1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc1.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc1.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.mlp.fc2.bias', 'cond_stage_model.transformer.text_model.encoder.layers.11.layer_norm2.weight', 'cond_stage_model.transformer.text_model.encoder.layers.11.layer_norm2.bias', 'cond_stage_model.transformer.text_model.final_layer_norm.weight', 'cond_stage_model.transformer.text_model.final_layer_norm.bias']
+load checkpoint from local path: /work3/s203557/experiments/control_net_vpd/iter_12000.pth
+The model and loaded state dict do not match exactly
+
+unexpected key in source state_dict: sd_model.lvlb_weights
+
+[                                                  ] 0/27, elapsed: 0s, ETA:[>                                 ] 1/27, 0.2 task/s, elapsed: 6s, ETA:   168s[>>                                ] 2/27, 0.3 task/s, elapsed: 7s, ETA:    84s[>>>                               ] 3/27, 0.4 task/s, elapsed: 7s, ETA:    55s[>>>>>                             ] 4/27, 0.6 task/s, elapsed: 7s, ETA:    40s[>>>>>>                            ] 5/27, 0.7 task/s, elapsed: 7s, ETA:    32s[>>>>>>>                           ] 6/27, 0.8 task/s, elapsed: 7s, ETA:    26s[>>>>>>>>                          ] 7/27, 0.9 task/s, elapsed: 7s, ETA:    21s[>>>>>>>>>>                        ] 8/27, 1.0 task/s, elapsed: 8s, ETA:    18s[>>>>>>>>>>>                       ] 9/27, 1.1 task/s, elapsed: 8s, ETA:    16s[>>>>>>>>>>>>                     ] 10/27, 1.3 task/s, elapsed: 8s, ETA:    14s[>>>>>>>>>>>>>                    ] 11/27, 1.3 task/s, elapsed: 8s, ETA:    12s[>>>>>>>>>>>>>>                   ] 12/27, 1.4 task/s, elapsed: 8s, ETA:    10s[>>>>>>>>>>>>>>>                  ] 13/27, 1.5 task/s, elapsed: 8s, ETA:     9s[>>>>>>>>>>>>>>>>>                ] 14/27, 1.6 task/s, elapsed: 9s, ETA:     8s[>>>>>>>>>>>>>>>>>>               ] 15/27, 1.7 task/s, elapsed: 9s, ETA:     7s[>>>>>>>>>>>>>>>>>>>              ] 16/27, 1.8 task/s, elapsed: 9s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>             ] 17/27, 1.9 task/s, elapsed: 9s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>           ] 18/27, 1.9 task/s, elapsed: 9s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>          ] 19/27, 2.0 task/s, elapsed: 9s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>         ] 20/27, 2.1 task/s, elapsed: 10s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>        ] 21/27, 2.1 task/s, elapsed: 10s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>      ] 22/27, 2.2 task/s, elapsed: 10s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>     ] 23/27, 2.3 task/s, elapsed: 10s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>>    ] 24/27, 2.3 task/s, elapsed: 10s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 25/27, 2.4 task/s, elapsed: 10s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 26/27, 2.5 task/s, elapsed: 11s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] 27/27, 2.5 task/s, elapsed: 11s, ETA:     0sper class results:
+
++---------------------+-------+-------+
+|        Class        |  IoU  |  Acc  |
++---------------------+-------+-------+
+|         wall        | 93.25 |  96.3 |
+|       building      | 41.76 |  66.0 |
+|         sky         | 98.01 | 99.25 |
+|        floor        |  nan  |  nan  |
+|         tree        | 48.23 |  89.4 |
+|       ceiling       |  nan  |  nan  |
+|         road        | 94.83 | 97.44 |
+|         bed         |  nan  |  nan  |
+|      windowpane     |  nan  |  nan  |
+|        grass        | 18.88 |  20.6 |
+|       cabinet       |  nan  |  nan  |
+|       sidewalk      |  8.54 | 62.59 |
+|        person       | 66.56 |  89.0 |
+|        earth        | 51.55 | 69.59 |
+|         door        |  0.0  |  0.0  |
+|        table        |  nan  |  nan  |
+|       mountain      | 15.12 | 58.57 |
+|        plant        | 11.93 |  13.0 |
+|       curtain       |  nan  |  nan  |
+|        chair        |  nan  |  nan  |
+|         car         | 91.07 | 95.61 |
+|        water        |  0.0  |  0.0  |
+|       painting      |  nan  |  nan  |
+|         sofa        |  nan  |  nan  |
+|        shelf        |  nan  |  nan  |
+|        house        | 10.89 | 11.22 |
+|         sea         | 92.63 | 97.03 |
+|        mirror       |  nan  |  nan  |
+|         rug         |  nan  |  nan  |
+|        field        | 20.25 | 81.66 |
+|       armchair      |  nan  |  nan  |
+|         seat        |  nan  |  nan  |
+|        fence        | 49.16 | 83.32 |
+|         desk        |  nan  |  nan  |
+|         rock        | 28.17 |  38.2 |
+|       wardrobe      |  nan  |  nan  |
+|         lamp        |  nan  |  nan  |
+|       bathtub       |  nan  |  nan  |
+|       railing       | 61.88 | 62.45 |
+|       cushion       |  nan  |  nan  |
+|         base        |  nan  |  nan  |
+|         box         |  nan  |  nan  |
+|        column       |  nan  |  nan  |
+|      signboard      | 69.83 | 74.68 |
+|   chest of drawers  |  nan  |  nan  |
+|       counter       |  nan  |  nan  |
+|         sand        | 51.86 |  52.6 |
+|         sink        |  nan  |  nan  |
+|      skyscraper     |  nan  |  nan  |
+|      fireplace      |  nan  |  nan  |
+|     refrigerator    |  nan  |  nan  |
+|      grandstand     |  nan  |  nan  |
+|         path        |  0.0  |  nan  |
+|        stairs       |  0.0  |  0.0  |
+|        runway       |  nan  |  nan  |
+|         case        |  nan  |  nan  |
+|      pool table     |  nan  |  nan  |
+|        pillow       |  nan  |  nan  |
+|     screen door     |  nan  |  nan  |
+|       stairway      |  0.0  |  0.0  |
+|        river        |  0.0  |  0.0  |
+|        bridge       |  90.7 |  90.8 |
+|       bookcase      |  nan  |  nan  |
+|        blind        |  nan  |  nan  |
+|     coffee table    |  nan  |  nan  |
+|        toilet       |  nan  |  nan  |
+|        flower       |  0.0  |  0.0  |
+|         book        |  nan  |  nan  |
+|         hill        | 23.66 | 25.17 |
+|        bench        |  nan  |  nan  |
+|      countertop     |  nan  |  nan  |
+|        stove        |  nan  |  nan  |
+|         palm        | 43.78 |  94.8 |
+|    kitchen island   |  nan  |  nan  |
+|       computer      |  nan  |  nan  |
+|     swivel chair    |  nan  |  nan  |
+|         boat        | 75.39 | 75.43 |
+|         bar         |  nan  |  nan  |
+|    arcade machine   |  nan  |  nan  |
+|        hovel        |  nan  |  nan  |
+|         bus         |  nan  |  nan  |
+|        towel        |  nan  |  nan  |
+|        light        |  nan  |  nan  |
+|        truck        | 14.08 | 39.57 |
+|        tower        |  nan  |  nan  |
+|      chandelier     |  nan  |  nan  |
+|        awning       |  nan  |  nan  |
+|     streetlight     | 21.93 | 25.66 |
+|        booth        |  nan  |  nan  |
+| television receiver |  nan  |  nan  |
+|       airplane      |  nan  |  nan  |
+|      dirt track     |  0.0  |  nan  |
+|       apparel       |  nan  |  nan  |
+|         pole        |  0.0  |  0.0  |
+|         land        |  0.0  |  0.0  |
+|      bannister      |  nan  |  nan  |
+|      escalator      |  nan  |  nan  |
+|       ottoman       |  nan  |  nan  |
+|        bottle       |  nan  |  nan  |
+|        buffet       |  nan  |  nan  |
+|        poster       |  nan  |  nan  |
+|        stage        |  nan  |  nan  |
+|         van         |  0.0  |  0.0  |
+|         ship        |  nan  |  nan  |
+|       fountain      |  nan  |  nan  |
+|    conveyer belt    |  nan  |  nan  |
+|        canopy       |  nan  |  nan  |
+|        washer       |  nan  |  nan  |
+|      plaything      |  0.0  |  nan  |
+|    swimming pool    |  nan  |  nan  |
+|        stool        |  nan  |  nan  |
+|        barrel       |  nan  |  nan  |
+|        basket       |  nan  |  nan  |
+|      waterfall      | 94.36 | 99.94 |
+|         tent        |  0.0  |  nan  |
+|         bag         |  nan  |  nan  |
+|       minibike      |  nan  |  nan  |
+|        cradle       |  nan  |  nan  |
+|         oven        |  nan  |  nan  |
+|         ball        |  nan  |  nan  |
+|         food        |  nan  |  nan  |
+|         step        |  nan  |  nan  |
+|         tank        |  nan  |  nan  |
+|      trade name     |  nan  |  nan  |
+|      microwave      |  nan  |  nan  |
+|         pot         |  nan  |  nan  |
+|        animal       | 77.18 |  92.1 |
+|       bicycle       |  0.0  |  0.0  |
+|         lake        |  nan  |  nan  |
+|      dishwasher     |  nan  |  nan  |
+|        screen       |  nan  |  nan  |
+|       blanket       |  nan  |  nan  |
+|      sculpture      |  0.0  |  0.0  |
+|         hood        |  nan  |  nan  |
+|        sconce       |  nan  |  nan  |
+|         vase        |  nan  |  nan  |
+|    traffic light    |  0.0  |  nan  |
+|         tray        |  nan  |  nan  |
+|        ashcan       |  nan  |  nan  |
+|         fan         |  nan  |  nan  |
+|         pier        |  nan  |  nan  |
+|      crt screen     |  nan  |  nan  |
+|        plate        |  nan  |  nan  |
+|       monitor       |  nan  |  nan  |
+|    bulletin board   |  nan  |  nan  |
+|        shower       |  nan  |  nan  |
+|       radiator      |  nan  |  nan  |
+|        glass        |  nan  |  nan  |
+|        clock        |  nan  |  nan  |
+|         flag        |  nan  |  nan  |
++---------------------+-------+-------+
+Summary:
+
++-------+-------+-------+
+|  aAcc |  mIoU |  mAcc |
++-------+-------+-------+
+| 74.71 | 33.31 | 48.77 |
++-------+-------+-------+

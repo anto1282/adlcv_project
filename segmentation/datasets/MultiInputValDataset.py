@@ -18,8 +18,8 @@ class CustomDatasetWithClassFilter(ADE20KDataset):
         
         super().__init__(**kwargs)
         
-    def load_annotations(self):
-        data_infos = super().load_annotations()
+    def load_annotations(self, img_dir, img_suffix, ann_dir, seg_map_suffix, split):
+        data_infos = super().load_annotations(img_dir, img_suffix, ann_dir, seg_map_suffix, split)
         
         filtered_infos = []
         for info in data_infos:
