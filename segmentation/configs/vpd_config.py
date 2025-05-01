@@ -32,10 +32,12 @@ lr_config = dict(policy='poly', power=1, min_lr=0.0, by_epoch=False,
 
 
 optimizer = dict(type='AdamW', lr=0.00008, weight_decay=0.001,
-        paramwise_cfg=dict(custom_keys={'trainable_unet': dict(lr_mult=0.1),
-                                        'encoder_vq': dict(lr_mult=0.0),
-                                        # 'text_encoder': dict(lr_mult=0.0),
-                                        # 'norm': dict(decay_mult=0.)
+        paramwise_cfg=dict(custom_keys={'unet.trainable_unet': dict(lr_mult=0.1),
+                                        'unet.encoder_vq': dict(lr_mult=0.0),
+                                        "unet.zero_convs": dict(lr_mult=1),
+                                        "unet.box_encoder": dict(lr_mult=1),
+                                        'text_encoder': dict(lr_mult=0.0),
+                                        'norm': dict(decay_mult=0.)
                                         }))
                                         
 
@@ -45,5 +47,5 @@ fp16 = dict(loss_scale=512.0)
 
 log_level = 'INFO'
 custom_hooks = [
-    dict(type='TrainVisualizeHook', interval=4000, num_samples=2, save_dir='vis')
+    dict(type='TrainVisualizeHook', interval=2, num_samples=2, save_dir='vis')
 ]

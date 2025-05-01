@@ -195,9 +195,6 @@ def register_hier_output(model):
         for i,module in enumerate(self.input_blocks):
             # import pdb; pdb.set_trace()
             h = module(h, emb, context)
-            if control is not None and i in [1, 4, 7]:
-                h = h + control[ctrl_id]
-                ctrl_id += 1
             hs.append(h)
 
         h = self.middle_block(h, emb, context)
@@ -223,15 +220,32 @@ class UNetWrapper(nn.Module):
         super().__init__()
         self.unet = unet_a
         self.trainable_unet = copy.deepcopy(self.unet)
+        del self.trainable_unet.diffusion_model.output_blocks
+
         self.interleave_indices = interleave_indices
         self.use_attn = use_attn
         self.zero_convs = nn.ModuleList([
-            ZeroConv2d(320, 320),  # for encoder block 2
+            ZeroConv2d(4,4), # input_block
+
+            ZeroConv2d(320, 320),  # for decoder block 
             ZeroConv2d(320, 320),
-            ZeroConv2d(640, 640),  # for encoder block 5
+            ZeroConv2d(320, 320),
+            ZeroConv2d(320, 320),
+
+
+            ZeroConv2d(640, 640),  # for decoder block 
             ZeroConv2d(640, 640),
-            ZeroConv2d(1280, 1280),  # for encoder block 8
+            ZeroConv2d(640, 640),
+        
+            ZeroConv2d(1280, 1280),  # for decoder block
             ZeroConv2d(1280, 1280),
+            ZeroConv2d(1280, 1280),
+
+            ZeroConv2d(1280, 1280),
+            ZeroConv2d(1280, 1280),
+
+
+            ZeroConv2d(1280,1280), # middle_block
         ])
         # Attention
         self.attention_store = AttentionStore(base_size=base_size // 8, max_size=max_attn_size)
@@ -263,44 +277,48 @@ class UNetWrapper(nn.Module):
         if frozen_unet.num_classes is not None:
             emb = emb + trainable_unet.label_emb(y)
 
-        h = x.type(frozen_unet.dtype)
-        hs = []
+        frozen_h = x.type(frozen_unet.dtype)
+        frozen_hs = []
+
+        trainable_h = x.type(trainable_unet.dtype)
+        trainable_hs = []
+
         ctrl_id = 0
 
+        if box_control is not None: 
+            box_control = self.zero_convs[0](trainable_h)
+            trainable_h = trainable_h + box_control
+        
+        
+
         for i in range(len(trainable_unet.input_blocks)):
-            if box_control is not None and i in [2, 5, 8]:
-                if i == 2:
-                    _convs = self.zero_convs[0:2]
-                elif i == 5:
-                    _convs = self.zero_convs[2:4]
-                elif i == 8:
-                    _convs = self.zero_convs[4:6]
-                
-                h_trainable = _convs[0](box_control[ctrl_id]) + h
-                h_trainable = trainable_unet.input_blocks[i](h_trainable, emb, context)
-                h_trainable = _convs[1](h_trainable)
-                ctrl_id += 1
 
-                with torch.no_grad():
-                    h_frozen = frozen_unet.input_blocks[i](h, emb, context)
-                h = h_frozen + h_trainable
-            else:
-                with torch.no_grad():
-                    h = frozen_unet.input_blocks[i](h, emb, context)
-            hs.append(h)
+            trainable_h = trainable_unet.input_blocks[i](trainable_h,emb, context)
+            zero_trainable = self.zero_convs[i+1](trainable_h)
 
+            with torch.no_grad():
+                frozen_h = frozen_unet.input_blocks[i](frozen_h, emb, context)
+                frozen_hs.append(frozen_h + zero_trainable)
+        
+        #### Middle Block ####
+        trainable_h = trainable_unet.middle_block(trainable_h, emb, context)
+        middle_zero = self.zero_convs[-1](trainable_h) #8x8x1280
+        frozen_h += middle_zero 
         with torch.no_grad():
-            h = frozen_unet.middle_block(h, emb, context)
+            frozen_h = frozen_unet.middle_block(frozen_h, emb, context)
+
+
 
         out_list = []
-        with torch.no_grad():
-            for i_out in range(len(frozen_unet.output_blocks)):
-                h = torch.cat([h, hs.pop()], dim=1)
-                h = frozen_unet.output_blocks[i_out](h, emb, context)
-                if i_out in [1, 4, 7]:
-                    out_list.append(h)
+        #### Output Block ####
+        for i_out in range(len(frozen_unet.output_blocks)):            
+            frozen_h = torch.cat([frozen_h,frozen_hs.pop()], dim = 1)
+            frozen_h = frozen_unet.output_blocks[i_out](frozen_h,emb,context)
 
-        h = h.type(x.dtype)
+            if i_out in [1, 4, 7]:
+                out_list.append(frozen_h)
+
+        h = frozen_h.type(x.dtype)
         out_list.append(h)
 
         if self.use_attn:
@@ -427,16 +445,17 @@ class ZeroConv2d(nn.Conv2d):
             nn.init.zeros_(self.bias)
     
     def reset_parameters(self):
-    # PyTorch’s default would Kaiming-init here; we override
-        nn.init.constant_(self.weight, 0.)
-        if self.bias is not None:
-            nn.init.constant_(self.bias, 0.)
-
-    # Optional: do nothing when mmseg calls init_weights()
-    def init_weights(self):
+        # Override to do nothing (super().__init__ will call this)
         pass
 
+    def init_weights(self):
+        # mmseg will call this; safe to do nothing
+        pass
 
+    def load_state_dict(self, state_dict, strict=True):
+        # Called when loading a checkpoint
+        print("[ZeroConv2d] Loaded weights from checkpoint")
+        return super().load_state_dict(state_dict, strict)
 
 
 class EncoderControlNet(nn.Module):

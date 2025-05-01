@@ -209,27 +209,21 @@ def main():
 
     model.init_weights()
 
-    model.unet.trainable_unet.load_state_dict(model.unet.unet.state_dict())
+    model.unet.trainable_unet.load_state_dict(model.unet.unet.state_dict(), strict = False)
 
     conv_list = model.unet.zero_convs
-    print(conv_list)
     for i, conv in enumerate(conv_list):
-        print(conv.weight)
-        if not torch.allclose(conv.weight.data, torch.zeros_like(conv.weight), atol=1e-7):
-            
-            raise ValueError(f"ZeroConv {i} has non-zero weights!")
-        if conv.bias is not None and not torch.allclose(conv.bias.data, torch.zeros_like(conv.bias), atol=1e-7):
-            raise ValueError(f"ZeroConv {i} has non-zero b½ias!")
-    print("✅ All ZeroConv layers are correctly zero-initialized.")
+        print(conv.weight.mean())
 
 
+    return
     # First freeze everything
     for param in model.parameters():
         param.requires_grad = False
 
     for param in model.encoder_vq.parameters():
         param.requires_grad = False
-    # Then unfreeze only what you want
+
     for param in model.unet.trainable_unet.parameters():
         param.requires_grad = True
 
@@ -241,11 +235,8 @@ def main():
 
     for param in model.decode_head.parameters():
         param.requires_grad = True
-    print("Trainable parameters:")
 
-    for name, param in model.named_parameters():
-        if param.requires_grad:
-            print(f"  {name}")
+
 
 
     # SyncBN is not support for DP
@@ -256,7 +247,7 @@ def main():
             'avoid this error.')
         model = revert_sync_batchnorm(model)
 
-    logger.info(model)
+    # logger.info(model)
     datasets = [build_dataset(cfg.data.train)]
     
     if len(cfg.workflow) == 2:
