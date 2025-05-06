@@ -137,9 +137,9 @@ class VPDSeg(BaseSegmentor):
         t = torch.ones((img.shape[0],), device=img.device).long()
 
         # Send latents, context, and control to UNet
-        outs = self.unet(latents, t, context=c_crossattn, box_control=box_feats)
+        outs,box_mean = self.unet(latents, t, context=c_crossattn, box_control=box_feats)
 
-        return outs
+        return outs,box_mean
     
     # def extract_feat(self, img, boxes=None, input_type=None):
     #     """Extract features from images and apply control if boxes are provided."""
@@ -245,12 +245,14 @@ class VPDSeg(BaseSegmentor):
         """
 
 
-        x = self.extract_feat(img,img_metas,gt_bbox_masks=gt_bbox_masks)
+        x,box_mean = self.extract_feat(img,img_metas,gt_bbox_masks=gt_bbox_masks)
+        
 
         if self.with_neck:
             x = self.neck(x)
 
         losses = dict()
+        
         loss_decode = self._decode_head_forward_train(x, img_metas,
                                                       gt_semantic_seg)
         losses.update(loss_decode)
@@ -259,12 +261,14 @@ class VPDSeg(BaseSegmentor):
             loss_aux = self._auxiliary_head_forward_train(
                 x, img_metas, gt_semantic_seg)
             losses.update(loss_aux)
+
+
         return losses
 
     def encode_decode(self, img, img_metas, gt_bbox_masks=None):
         """Encode images with backbone and decode into a semantic segmentation
         map of the same size as input."""
-        x = self.extract_feat(img,img_metas, gt_bbox_masks=gt_bbox_masks)
+        x,_ = self.extract_feat(img,img_metas, gt_bbox_masks=gt_bbox_masks)
         if self.with_neck:
             x = list(self.neck(x))
         out = self._decode_head_forward_test(x, img_metas)  

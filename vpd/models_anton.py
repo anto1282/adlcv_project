@@ -255,8 +255,8 @@ class UNetWrapper(nn.Module):
         self.use_attn = use_attn
         if self.use_attn:
             register_attention_control(self.unet, self.attention_store)
-        if self.use_attn:
-            register_attention_control(self.trainable_unet, self.attention_store)
+        # if self.use_attn:
+        #     register_attention_control(self.trainable_unet, self.attention_store)
 
 
         # # Monkey patch both UNets
@@ -275,7 +275,7 @@ class UNetWrapper(nn.Module):
         emb = frozen_unet.time_embed(t_emb)
         
         if frozen_unet.num_classes is not None:
-            emb = emb + trainable_unet.label_emb(y)
+            emb = emb + frozen_unet.label_emb(y)
 
         frozen_h = x.type(frozen_unet.dtype)
         frozen_hs = []
@@ -285,7 +285,6 @@ class UNetWrapper(nn.Module):
         ctrl_id = 0
 
         
-        print(f"{self.zero_convs[0].weight.mean().item():.10f}")
         if box_control is not None: 
             box_control = self.zero_convs[0](trainable_h)
             trainable_h = trainable_h + box_control
@@ -297,17 +296,14 @@ class UNetWrapper(nn.Module):
             trainable_h = trainable_unet.input_blocks[i](trainable_h,emb, context)
             zero_trainable = self.zero_convs[i+1](trainable_h)
 
-            with torch.no_grad():
-                frozen_h = frozen_unet.input_blocks[i](frozen_h, emb, context)
-                frozen_hs.append(frozen_h + zero_trainable)
+            frozen_h = frozen_unet.input_blocks[i](frozen_h, emb, context)
+            frozen_hs.append(frozen_h + zero_trainable)
         
         #### Middle Block ####
         trainable_h = trainable_unet.middle_block(trainable_h, emb, context)
         middle_zero = self.zero_convs[-1](trainable_h) #8x8x1280
         frozen_h += middle_zero 
-        with torch.no_grad():
-            frozen_h = frozen_unet.middle_block(frozen_h, emb, context)
-
+        frozen_h = frozen_unet.middle_block(frozen_h, emb, context)
 
         out_list = []
         #### Output Block ####
@@ -329,7 +325,7 @@ class UNetWrapper(nn.Module):
             if attn64 is not None:
                 out_list[3] = torch.cat([out_list[3], attn64], dim=1)
 
-        return out_list[::-1]
+        return out_list[::-1], self.zero_convs[1].weight.data.mean()
 
     def process_attn(self, avg_attn):
         attns = {self.size16: [], self.size32: [], self.size64: []}
@@ -441,7 +437,7 @@ class ZeroConv2d(nn.Conv2d):
     def __init__(self, in_channels, out_channels, kernel_size=1, stride=1, padding=0, bias=True):
         super().__init__(in_channels, out_channels, kernel_size, stride, padding, bias=bias)
         with torch.no_grad():
-            self.weight.data.fill_(0.1)  # all weights set to 0.1
+            self.weight.data.fill_(0.0)  # all weights set to 0.1
             if self.bias is not None:
                 self.bias.data.zero_()
     

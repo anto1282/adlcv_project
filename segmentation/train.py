@@ -212,29 +212,30 @@ def main():
     model.unet.trainable_unet.load_state_dict(model.unet.unet.state_dict(), strict = False)
 
     conv_list = model.unet.zero_convs
-    for i, conv in enumerate(conv_list):
-        print(conv.weight.mean())
-
 
     
-    # First freeze everything
-    for param in model.parameters():
-        param.requires_grad = False
+    # # First freeze everything
+    # for param in model.parameters():
+    #     param.requires_grad = False
 
-    for param in model.encoder_vq.parameters():
-        param.requires_grad = False
+    # # for param in model.encoder_vq.parameters():
+    # #     param.requires_grad = False
 
-    for param in model.unet.trainable_unet.parameters():
-        param.requires_grad = True
 
-    for param in model.unet.zero_convs.parameters():
-        param.requires_grad = True
+    # for param in model.unet.trainable_unet.parameters():
+    #     param.requires_grad = True
 
-    for param in model.box_encoder.parameters():
-        param.requires_grad = True
+    # for param in model.unet.unet.parameters():
+    #     param.requires_grad = True
 
-    for param in model.decode_head.parameters():
-        param.requires_grad = True
+    # for param in model.unet.zero_convs.parameters():
+    #     param.requires_grad = True
+
+    # for param in model.box_encoder.parameters():
+    #     param.requires_grad = True
+
+    # for param in model.decode_head.parameters():
+    #     param.requires_grad = True
 
 
 

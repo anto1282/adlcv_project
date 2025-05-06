@@ -22,4 +22,4 @@ module load cuda/11.3
 source /dtu/blackhole/0e/154958/miniconda3/bin/activate ldm
 
 
-python segmentation/train.py segmentation/configs/vpd_config.py --load-from /work3/s203557/experiments/control_net_vpd/iter_4000.pth
+ python segmentation/train.py segmentation/configs/vpd_config.py --load-from /work3/s203557/checkpoints/vpd.chkpt  --work-dir /work3/s203557/experiments/only_box_training/

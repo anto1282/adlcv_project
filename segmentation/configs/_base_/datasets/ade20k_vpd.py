@@ -35,7 +35,7 @@ train_pipeline = [
     dict(
         type='LoadPerClassMasksFromFolder',
         mask_root='/work3/s203520/advanced_computer_vision/filtered_dataset/prompt_masks',
-        types=['box', 'scribble', 'dot'],
+        types=['box'],
         suffix='.npy',
         random_select=True,
     ),
@@ -64,7 +64,7 @@ val_pipeline = [
                 type='LoadPerClassMasksFromFolder',
                 mask_root='/work3/s203520/advanced_computer_vision/filtered_dataset/prompt_masks',
                 suffix='.npy',
-                types=['box', 'scribble', 'dot'],
+                types=['box'],
                 random_select=True,
             ),
             dict(type='ResizeWithBBox', keep_ratio=False),
@@ -134,26 +134,32 @@ test_pipeline = [
 
 
 data = dict(
-    samples_per_gpu=1,
-    workers_per_gpu=1,
+    samples_per_gpu=4,
+    workers_per_gpu=8,
     train=dict(
-        type=dataset_type,
+        type="CustomDatasetWithClassFilter",
+        class_filter = [42],
         data_root=data_root,
         img_dir='images/training',
         ann_dir='annotations/training',
+        json_path = "/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/datasets/validation_class_info.json",
+
         pipeline=train_pipeline),
     val=dict(
-        type=dataset_type,
+        type="CustomDatasetWithClassFilter",
+        class_filter = [42],
         data_root=data_root,
         img_dir='images/validation',
         ann_dir='annotations/validation',
+        json_path = "/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/datasets/validation_class_info.json",
         pipeline=val_pipeline,
         ),
     test=dict(
         type="CustomDatasetWithClassFilter",
-        class_filter = [42],
+        class_filter = [92 ,95 ,146 ,69 ,138 ,116 ,148 ,96 ,122 ,61 ,149 ,142 ,102 ,124 ,94 ,53 ,107 ,105 ,109, 132, 85, 42, 54, 60],
         data_root=data_root,
         img_dir='images/validation/',
         ann_dir='annotations/validation/',
         json_path = "/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/datasets/validation_class_info.json",
         pipeline=test_pipeline))
+

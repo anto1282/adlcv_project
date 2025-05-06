@@ -17,7 +17,7 @@ class CustomDatasetWithClassFilter(ADE20KDataset):
             self.image_classes = json.load(f)
         
         super().__init__(**kwargs)
-        
+
     def load_annotations(self, img_dir, img_suffix, ann_dir, seg_map_suffix, split):
         data_infos = super().load_annotations(img_dir, img_suffix, ann_dir, seg_map_suffix, split)
         
@@ -30,3 +30,14 @@ class CustomDatasetWithClassFilter(ADE20KDataset):
         
         print(f'Filtered dataset: {len(filtered_infos)} / {len(data_infos)} images kept.')
         return filtered_infos
+
+    def prepare_train_img(self, idx):
+        results = super().prepare_train_img(idx)
+        # Filter the segmentation mask to only keep target class
+        target_class = self.class_filter[0]
+        seg = results['gt_semantic_seg']
+        mask = seg == target_class
+        seg[:] = 255  # Ignore index for ADE20K
+        seg[mask] = target_class
+        results['gt_semantic_seg'] = seg
+        return results

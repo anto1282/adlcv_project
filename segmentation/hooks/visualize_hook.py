@@ -39,7 +39,37 @@ ADE20K_palette = [
     [211, 211, 211], [220, 220, 220], [169, 169, 169], [255, 250, 250],
     [240, 255, 255], [240, 248, 255], [245, 245, 245], [255, 255, 255]
 ]
+import torch.nn as nn
 
+
+@HOOKS.register_module()
+class RestoreLrMultHook(Hook):
+    def __init__(self, module_names, lr_mult=1.0, warmup_iters=1500):
+        self.module_names = module_names
+        self.lr_mult = lr_mult
+        self.warmup_iters = warmup_iters
+        self.param_map = {}  # param -> module name
+
+    def before_run(self, runner):
+        
+        model = runner.model.module if hasattr(runner.model, 'module') else runner.model
+        for name in self.module_names:
+            mod = getattr(model, name, None)
+            if mod is not None:
+                for p in mod.parameters():
+                    self.param_map[p] = name
+
+    def before_train_iter(self, runner):
+        if runner.iter == self.warmup_iters:
+            print(f"[RestoreLrMultHook] Restoring LR multipliers at iter {runner.iter}")
+            base_lr = runner.current_lr()[0]
+            for group in runner.optimizer.param_groups:
+                for p in group['params']:
+                    if p in self.param_map:
+                        module_name = self.param_map[p]
+                        print(f"Restoring LR for {module_name}")
+                        group['lr'] = base_lr * self.lr_mult
+                        break  # Done for this group
 @HOOKS.register_module()
 class TrainVisualizeHook(Hook):
     def __init__(self, interval=1000, num_samples=4, save_dir='train_vis'):

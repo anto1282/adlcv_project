@@ -1,3 +1,3 @@
 from .bbox import GenerateBoundingBoxMasksFromSeg
-from .augments import ResizeWithBBox, RandomCropWithBBox, RandomFlipWithBBox, PadToSizeWithBBox,LoadPerClassMasksFromFolder
+from .augments import ResizeWithBBox, RandomCropWithBBox, RandomFlipWithBBox, PadToSizeWithBBox,LoadPerClassMasksFromFolder, FilterSegMaskToSingleClass
 from .MultiInputValDataset import CustomDatasetWithClassFilter

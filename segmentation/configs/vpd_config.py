@@ -5,7 +5,7 @@ _base_ = [
 ]
 
 custom_imports = dict(
-    imports=['segmentation.hooks.visualize_hook'],  # adjust path if needed
+    imports=['segmentation.hooks.visualize_hook',"segmentation"],  # adjust path if needed
     allow_failed_imports=False
 )
 model = dict(
@@ -31,13 +31,40 @@ lr_config = dict(policy='poly', power=1, min_lr=0.0, by_epoch=False,
                  warmup_ratio=1e-6)
 
 
+# optimizer = dict(type='AdamW', lr=0.00008, weight_decay=0.001,
+#         paramwise_cfg=dict(custom_keys={'unet.trainable_unet': dict(lr_mult=0.1),
+#                                         'unet.encoder_vq': dict(lr_mult=0.0),
+#                                         "unet.zero_convs": dict(lr_mult=1),
+#                                         "unet.box_encoder": dict(lr_mult=1),
+#                                         'text_encoder': dict(lr_mult=0.0),
+#                                         'norm': dict(decay_mult=0.)
+#                                         }))
+                                        
+
+
 optimizer = dict(type='AdamW', lr=0.00008, weight_decay=0.001,
-        paramwise_cfg=dict(custom_keys={'unet.trainable_unet': dict(lr_mult=0.1),
+        paramwise_cfg=dict(custom_keys={
+
+                                        #Trainable Decoding
+                                        'neck': dict(lr_mult=0.),
+                                        "decode_head": dict(lr_mult=0.),
+                                        
+                                        #Frozen 
+                                        'unet.unet': dict(lr_mult=0.),
+                                        'unet': dict(lr_mult=0.),
+                                        "backbone": dict(lr_mult=0.),
                                         'unet.encoder_vq': dict(lr_mult=0.0),
+                                        'text_encoder': dict(lr_mult=0.0),
+                                        'norm': dict(decay_mult=0.),
+                                        "gamma": dict(lr_mult=0.),
+
+                                        ##Trainable Control Components
+                                        'unet.trainable_unet': dict(lr_mult=1.),
+                                        'trainable_unet': dict(lr_mult=1.),
                                         "unet.zero_convs": dict(lr_mult=1),
                                         "unet.box_encoder": dict(lr_mult=1),
-                                        'text_encoder': dict(lr_mult=0.0),
-                                        'norm': dict(decay_mult=0.)
+
+
                                         }))
                                         
 
@@ -47,5 +74,11 @@ fp16 = dict(loss_scale=512.0)
 
 log_level = 'INFO'
 custom_hooks = [
-    dict(type='TrainVisualizeHook', interval=2, num_samples=2, save_dir='vis')
+    dict(type='TrainVisualizeHook', interval=2000, num_samples=2, save_dir='vis'),
+    # dict(
+    #     type='RestoreLrMultHook',
+    #     module_names=['decode_head', 'neck'],
+    #     lr_mult=1.0,
+    #     warmup_iters=2000
+    # )
 ]

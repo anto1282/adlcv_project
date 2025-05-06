@@ -162,3 +162,18 @@ class PadToSizeWithBBox(Pad):
 
 
         return results
+    
+
+@PIPELINES.register_module()
+class FilterSegMaskToSingleClass:
+    def __init__(self, keep_class=42, ignore_index=255):
+        self.keep_class = keep_class
+        self.ignore_index = ignore_index
+
+    def __call__(self, results):
+        seg = results['gt_semantic_seg']
+        mask = seg == self.keep_class
+        seg[:] = self.ignore_index  # Set everything to ignore
+        seg[mask] = self.keep_class  # Set only class 42
+        results['gt_semantic_seg'] = seg
+        return results
