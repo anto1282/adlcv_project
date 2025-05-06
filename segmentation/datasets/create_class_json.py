@@ -82,8 +82,8 @@ def extract_classes_from_masks(gt_folder, output_json_path, mask_extension=".png
 
 # --- Configuration ---
 # !!! UPDATE THESE PATHS !!!
-GT_ANNOTATION_FOLDER = "/work3/s203520/advanced_computer_vision/filtered_dataset/annotations/validation/"
-OUTPUT_JSON_FILE = "validation_class_info.json" 
+GT_ANNOTATION_FOLDER = "/work3/s203520/advanced_computer_vision/filtered_dataset/annotations/training/"
+OUTPUT_JSON_FILE = "training_class_info.json" 
 
 # Optional: Change if your masks or original images have different extensions
 MASK_FILE_EXTENSION = ".png" 

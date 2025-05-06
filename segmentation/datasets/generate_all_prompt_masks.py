@@ -140,7 +140,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     BASE_DATA_DIR = args.data_root
-    TARGET_CLASSES_0_INDEXED = [92,95,146,69,138,116,148,96,122,61,149,142,102,124,94,53,107,105,109,132,85,42,54,60]
+    TARGET_CLASSES = [92,95,146,69,138,116,148,96,122,61,149,142,102,124,94,53,107,105,109,132,85,42,54,60]
     IGNORE_LABEL = 255
     CLOSING_KERNEL = args.closing_kernel if args.closing_kernel > 1 else None
     SCRIBBLE_THICKNESS = args.scribble_thickness
@@ -149,7 +149,7 @@ if __name__ == "__main__":
         print(f"Error: Data root directory not found: {BASE_DATA_DIR}")
         sys.exit(1)
 
-    target_classes_set = set(TARGET_CLASSES_0_INDEXED)
+    target_classes_set = set(TARGET_CLASSES)
 
     bbox_gen = GenerateClassUnionBoundingBoxMask(
         target_classes=target_classes_set,
