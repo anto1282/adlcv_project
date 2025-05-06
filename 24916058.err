@@ -1491,3 +1491,4 @@ after_run:
 2025-05-06 15:20:01,934 - mmseg - INFO - Iter [11050/20000]	lr: 0.000e+00, eta: 2:20:03, time: 0.876, data_time: 0.008, memory: 73867, decode.loss_ce: 0.1702, decode.acc_seg: 93.2502, loss: 0.1702
 2025-05-06 15:20:45,579 - mmseg - INFO - Iter [11100/20000]	lr: 0.000e+00, eta: 2:19:14, time: 0.873, data_time: 0.008, memory: 73867, decode.loss_ce: 0.1705, decode.acc_seg: 92.8736, loss: 0.1705
 2025-05-06 15:21:29,426 - mmseg - INFO - Iter [11150/20000]	lr: 0.000e+00, eta: 2:18:25, time: 0.877, data_time: 0.008, memory: 73867, decode.loss_ce: 0.1614, decode.acc_seg: 93.5992, loss: 0.1614
+2025-05-06 15:22:13,140 - mmseg - INFO - Iter [11200/20000]	lr: 0.000e+00, eta: 2:17:35, time: 0.874, data_time: 0.008, memory: 73867, decode.loss_ce: 0.1546, decode.acc_seg: 93.5591, loss: 0.1546
