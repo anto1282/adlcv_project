@@ -284,13 +284,10 @@ class UNetWrapper(nn.Module):
 
         ctrl_id = 0
 
-        
         if box_control is not None: 
             box_control = self.zero_convs[0](trainable_h)
             trainable_h = trainable_h + box_control
         
-        
-
         for i in range(len(trainable_unet.input_blocks)):
 
             trainable_h = trainable_unet.input_blocks[i](trainable_h,emb, context)
@@ -316,7 +313,6 @@ class UNetWrapper(nn.Module):
 
         h = frozen_h.type(x.dtype)
         out_list.append(h)
-
         if self.use_attn:
             avg_attn = self.attention_store.get_average_attention()
             attn16, attn32, attn64 = self.process_attn(avg_attn)
@@ -324,7 +320,6 @@ class UNetWrapper(nn.Module):
             out_list[2] = torch.cat([out_list[2], attn32], dim=1)
             if attn64 is not None:
                 out_list[3] = torch.cat([out_list[3], attn64], dim=1)
-
         return out_list[::-1], self.zero_convs[1].weight.data.mean()
 
     def process_attn(self, avg_attn):

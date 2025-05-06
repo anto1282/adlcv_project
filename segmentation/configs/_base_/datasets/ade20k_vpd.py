@@ -134,16 +134,15 @@ test_pipeline = [
 
 
 data = dict(
-    samples_per_gpu=4,
-    workers_per_gpu=8,
+    samples_per_gpu=1,
+    workers_per_gpu=1,
     train=dict(
         type="CustomDatasetWithClassFilter",
         class_filter = [42],
         data_root=data_root,
         img_dir='images/training',
         ann_dir='annotations/training',
-        json_path = "/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/datasets/validation_class_info.json",
-
+        json_path = "/zhome/b6/d/154958/ADLCV_Project/VPD/segmentation/datasets/training_class_info.json",
         pipeline=train_pipeline),
     val=dict(
         type="CustomDatasetWithClassFilter",

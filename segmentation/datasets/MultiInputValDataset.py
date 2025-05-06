@@ -6,6 +6,7 @@ import numpy as np
 import torch
 import mmcv
 import json
+from mmcv.parallel import DataContainer
 
 
 @DATASETS.register_module()
@@ -33,11 +34,31 @@ class CustomDatasetWithClassFilter(ADE20KDataset):
 
     def prepare_train_img(self, idx):
         results = super().prepare_train_img(idx)
-        # Filter the segmentation mask to only keep target class
+        
+        # Access the actual segmentation mask
+        seg_container = results['gt_semantic_seg']
+        seg = seg_container.data  # torch.Tensor
+
         target_class = self.class_filter[0]
-        seg = results['gt_semantic_seg']
+        # ✅ Check what's inside the filtered segmentation mask
+        unique_vals_seg = torch.unique(seg)
+        print(f"[{idx}] Segmentation labels before filtering: {unique_vals_seg.tolist()}")
+
+        results['gt_semantic_seg'] = DataContainer(seg_filtered, stack=True)
+
+
+        # Filter: set all other classes to 255 (ignore index)
         mask = seg == target_class
-        seg[:] = 255  # Ignore index for ADE20K
-        seg[mask] = target_class
-        results['gt_semantic_seg'] = seg
+        seg_filtered = seg.clone()
+        seg_filtered[:] = 255
+        seg_filtered[mask] = target_class
+
+        # ✅ Check what's inside the filtered segmentation mask
+        unique_vals_seg = torch.unique(seg_filtered)
+        print(f"[{idx}] Segmentation labels after filtering: {unique_vals_seg.tolist()}")
+
+        results['gt_semantic_seg'] = DataContainer(seg_filtered, stack=True)
+
+
+
         return results
